@@ -1,0 +1,51 @@
+<!doctype HTML>
+<html>
+  <head>
+    <style>
+      body {
+        text-align: center;
+      }
+      a {
+        display: none;
+      }
+      img {
+        display: none;
+        height: 150px;
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <h1>Upload CSV</h1>
+    <input type="file" id="csv_file"><br>
+    <button>Upload</button>
+    <img src="./img/spinner.gif" />
+    <a href="" download>Download Converted CSV</a>
+    <script>
+      $('button').click(function(){
+        var formData = new FormData();
+        var file = document.getElementById('csv_file').files[0];
+        formData.append('csv_upload', file);
+        $('img').css('display', 'block');
+        $.ajax({
+          type: 'POST',
+          url: '/upload/',
+
+          data: formData,
+          cache: false,
+          contentType: false,
+          processData: false,
+
+          success: function(data, textStatus, jqXHR) {
+            $('img').css('display', '');
+            $('a').attr('href', '/urop-client/convert/img/' + data.content.filename);
+            $('a').css('display', 'block');
+          },
+          error: function() {
+            $('img').css('display', '');
+          }
+        })
+      })
+    </script>
+  </body>
+</html>
