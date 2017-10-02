@@ -74,7 +74,8 @@ class RadiationSplit:
     def _run_gen_reindl(self):
         args_list = ['gen_reindl', '-i', self._get_file_path(True),
                 '-o', self._get_file_path(False), '-m', '75',
-                '-a', str(self.latidude), '-l', str(self.longitude)]
+                '-a', str(self.latitude), '-l', str(self.longitude)]
+        print args_list
         subprocess.Popen(args_list)
 
     def _read_output_file(self):
@@ -104,5 +105,5 @@ class RadiationSplit:
             _filename += '-in.txt'
         else:
             _filename += '-out.txt'
-        filename = os.path.join(self.GEN_REINDL_DIRECTORY, _input_filename)
+        filename = os.path.join(self.GEN_REINDL_DIRECTORY, _filename)
         return filename
