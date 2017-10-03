@@ -4,7 +4,7 @@ from datetime import datetime
 from functools import reduce
 
 input_path = "input_files/weather1.csv"
-output_path = "output_files/Edited_EPW.csv"
+output_path = "/srv/mit-energy-model/client/hobolink/BUILDING_1_WEATHER_STATION.epw"
 abs_input_path = os.path.join(os.path.dirname(__file__), input_path)
 abs_output_path = os.path.join(os.path.dirname(__file__), output_path)
 
