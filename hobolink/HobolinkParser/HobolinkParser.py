@@ -4,6 +4,7 @@ from datetime import datetime
 import csv
 
 import pandas as pd
+import numpy as np
 from functools import reduce
 
 from converters import ConverterConfig
@@ -18,18 +19,20 @@ class HobolinkParser:
 
     HOBOLINK_HEADERS_MAPPING = {
         'Date': 'date',
-        #'Solar Radiation (S-LIB 10290124:2375831-1), W/m^2, Building 1 roof': 'direct_normal_radiation',
+        'Solar Radiation (S-LIB 10290124:2375831-1), W/m^2, Building 1 roof': 'direct_normal_radiation',
         'Pressure (S-BPB 10290124:10236707-1), mbar, Building 1 roof': 'atmospheric_station_pressure',
         #'Wind Direction (S-WDA 10290124:10260440-1), *, Building 1 roof': 'wind_direction',
         'Temperature (S-THB 10290124:10268927-1), *C, Building 1 roof': 'dry_bulb_temperature',
         'RH (S-THB 10290124:10268927-2), %, Building 1 roof': 'relative_humidity',
         'Dew Point (S-THB 10290124:10268927-3), *C, Building 1 roof': 'dew_point_temperature',
-        'Wind Speed (S-WSB 10290124:20214879-1), m/s, Building 1 roof': 'wind_speed'
+        'Wind Speed (S-WSA 10290124:10260479-1), m/s, Building 1 roof': 'wind_speed'
     }
 
     def __init__(self, input_path, master_path):
         self.input_path = input_path
         self.master_path = master_path
+        master_csv = pd.read_csv(self.master_path)
+        self.epw_headers = list(master_csv)
 
     def update_master(self):
         epw_values = self._get_converted_values()
@@ -73,7 +76,10 @@ class HobolinkParser:
                     row.append(self._get_null_value(col_index)) # get null value per column
                     continue
                 else:
-                    row.append(str(epw_values[col_index][hour]))
+                    converted_value = epw_values[col_index][hour]
+                    if np.isnan(converted_value):
+                        converted_value = self._get_null_value(col_index)
+                    row.append(str(converted_value))
             rows_to_append.append(row)
 
         master_file = open(self.master_path, 'a')
@@ -82,4 +88,4 @@ class HobolinkParser:
         master_file.close()
 
     def _get_null_value(self, epw_column):
-        return ''
+        return ConverterConfig.get_epw_null_value(self.epw_headers[epw_column])

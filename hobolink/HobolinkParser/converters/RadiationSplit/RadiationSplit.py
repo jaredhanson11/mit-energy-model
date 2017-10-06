@@ -45,15 +45,16 @@ class RadiationSplit:
         Splits solar radiation.
 
         Returns:
-            tuple: Containing direct normal irradiances and horizontal diffuse.
+            dict: Containing direct normal irradiances and horizontal diffuse.
 
-            (dir_norm_irrad, dif_hor_irrad) -> (float, float)
+            {dir_norm_irrad: float, dif_hor_irrad: float}
         '''
         self._write_input_file()
         self._run_gen_reindl()
         output = self._read_output_file()
         self._clean_up()
-        return output
+        ret = {'dir_norm_irrad': output[0], 'dif_hor_irrad': output[1]}
+        return ret
 
     def _write_input_file(self):
         '''
