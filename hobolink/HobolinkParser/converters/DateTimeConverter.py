@@ -4,16 +4,13 @@ class DateTimeConverter(HoboLinkConverter):
 
     def convert(self):
 
-        initial_hour = self.datetime_values[0].hour
-        final_dt = self.datetime_values[len(self.datetime_values) - 1]
-
         mins = []
         hours = []
         days = []
         months = []
         years = []
         for dt in self.datetime_values:
-            if dt.hour not in hours + [initial_hour]:
+            if dt.hour not in hours:
                 mins.append(0)
                 hours.append(dt.hour)
                 days.append(dt.day)
