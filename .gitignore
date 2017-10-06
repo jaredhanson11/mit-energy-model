@@ -1,5 +1,5 @@
 venv
 *.pyc
-*config.py
+*/config.py
 *.idea*
 *.DS_Store
