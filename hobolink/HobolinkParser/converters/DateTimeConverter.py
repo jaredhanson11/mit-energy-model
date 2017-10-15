@@ -17,12 +17,6 @@ class DateTimeConverter(HoboLinkConverter):
                 months.append(dt.month)
                 years.append(dt.year)
 
-        mins.append(0)
-        hours.append(final_dt.hour)
-        days.append(final_dt.day)
-        months.append(final_dt.month)
-        years.append(final_dt.year)
-
         conversions = {}
 
         epw_output = self.get_epw_column()
