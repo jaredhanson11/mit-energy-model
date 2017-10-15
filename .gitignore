@@ -3,3 +3,4 @@ venv
 */config.py
 *.idea*
 *.DS_Store
+*/node_modules/*
