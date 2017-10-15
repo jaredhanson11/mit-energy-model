@@ -13,6 +13,7 @@ DATATYPE_TO_CONVERTER = {
     'direct_normal_radiation': SolarRadiationConverter
 }
 
+
 def get_converter(data_type):
     return DATATYPE_TO_CONVERTER.get(data_type)
 
@@ -35,6 +36,7 @@ DATATYPE_TO_EPW_COLUMN = {
     'dif_hor_irrad': 15
 }
 
+
 def get_epw_column(data_type):
     return DATATYPE_TO_EPW_COLUMN.get(data_type)
 
@@ -46,8 +48,29 @@ EPW_NULL_INPUTS = {
     'atmospheric_station_pressure': 999999,
     'extraterrestrial_horizontal_radiation': 9999,
     'extraterrestrial_direct_normal_radiation': 9999,
-    'horizontal_infrared_radiation_intensity': 9999
+    'horizontal_infrared_radiation_intensity': 9999,
+    'global_horizonal_radiation': 9999,
+    'direct_normal_radiation': 0,
+    'diffuse_horizontal_radiation': 0,
+    'global_horizontal_illuminance': 999999,
+    'direct_normal_illuminance': 999999,
+    'diffuse_horizontal_illuminance': 999999,
+    'zenith_luminance': 9999,
+    'wind_direction': 999,
+    'wind_speed': 999,
+    'total_sky_cover': 99,
+    'opaque_sky_cover': 99,
+    'visibility': 9999,
+    'ceiling_height': 99999,
+    'present_weather_observation': 9,
+    'present_weather_codes': 999999999,
+    'precipitable_weather': 999,
+    'aerosol_optical_depth': 999,
+    'snow_depth': 999,
+    'days_since_last_snowfall': 99,
+    'liquid_precipitation_depth': 1.5
 }
+
 
 def get_epw_null_value(epw_header):
     return EPW_NULL_INPUTS.get(epw_header, '')
