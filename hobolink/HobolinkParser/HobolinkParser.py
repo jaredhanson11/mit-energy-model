@@ -9,7 +9,6 @@ from functools import reduce
 
 from converters import ConverterConfig
 
-
 class HobolinkParser:
     '''Handles downloading and saving hobolink daily data.
     '''
