@@ -1,22 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+// import { Provider } from 'react-redux';
 
 import MITEnergyModelContainer from './containers/MITEnergyModelContainer.jsx';
 
-var initialState = {
-  isLoading: false,
-  isLoaded: false,
-  buildings: [],
-  error: false,
-  errorMessage: ''
-};
+// var initialState = {
+//   isLoading: false,
+//   isLoaded: false,
+//   buildings: [],
+//   error: false,
+//   errorMessage: ''
+// };
 
-var store = configureStore(initialState);
+// var store = configureStore(initialState);
 
 ReactDOM.render(
-  <Provider store={ store }>
     <MITEnergyModelContainer />
-  </Provider>
     , document.getElementById('main')
 )
