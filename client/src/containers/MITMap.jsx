@@ -2,8 +2,8 @@ import React from 'react';
 
 import Building from './Building.jsx';
 import {Map, TileLayer, GeoJSON, Marker, Popup} from 'react-leaflet';
-const center = [42.362432, -71.086086];
-const zoom = 14
+const center = [42.358888, -71.093624];
+const zoom = 15.5;
 var GJV = require("geojson-validation");
 
 import campus from './data.json';
@@ -16,14 +16,22 @@ import campus from './data.json';
 // });
 
 class MITMap extends React.Component {
+
+    constructor(props) {
+      super(props);
+      console.log(this.props);
+      this.style = this.style.bind(this);
+    }
+
     onEachFeature(feature, layer) {
+
       if (feature.properties && feature.properties.building_number) {
         layer.bindPopup(feature.properties.building_number);
       }
     }
     style(feature) {
-        console.log(feature.properties.building_number)
-        if ("W" == feature.properties.building_number.charAt(0)) {
+        // console.log(feature.properties.building_number)
+        if (this.props.utility == "Total") {
             return {
                weight: 2,
                opacity: 1,
@@ -33,7 +41,7 @@ class MITMap extends React.Component {
                fillColor: '#ff0000'
             };
         }
-        else if ("E" == feature.properties.building_number.charAt(0)){
+        else if (this.props.utility == "Electricity"){
             return {
                 weight: 2,
                 opacity: 1,
@@ -43,7 +51,7 @@ class MITMap extends React.Component {
                 fillColor: '#f9fb0a'
             };
         }
-        else if ("N" == feature.properties.building_number.charAt(0)){
+        else if (this.props.utility == "Water"){
             return {
                 weight: 2,
                 opacity: 1,

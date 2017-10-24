@@ -1,4 +1,5 @@
 import React from 'react';
+// import Dropdown from 'react-dropdown'; uninstlal later
 import {
     Charts,
     ChartContainer,
@@ -10,19 +11,42 @@ import Building from './Building.jsx';
 import MITMap from './MITMap.jsx';
 
 class MITEnergyModelContainer extends React.Component {
+
+    constructor(props) {
+      super(props);
+      this.state = {
+        clickedButton: "Total"
+      }
+
+      this.handleClick = this.handleClick.bind(this);
+    }
+
+    componentWillMount() {
+      this.setState({
+        clickedButton: "Total"
+      })
+    }
+
+
+    handleClick(e) {
+
+      this.setState({
+        clickedButton : e.target.id
+      })
+    }
+
     render() {
         return (
             <div>
                 <div>
-                  <Building id = {1} usage = {98}/>
-                  <Building id = {2} usage = {160}/>
-                  <Building id = {3} usage = {210}/>
-                  <Building id = {4} usage = {380}/>
-                  <Building id = {5} usage = {442}/>
-                  <Building id = {6} usage = {509}/>
+                  <p>You are looking at: {this.state.clickedButton}</p>
+                  <button id="Total" onClick={(e) => this.handleClick(e)}> Total </button>
+                  <button id="Electricity" onClick={(e) => this.handleClick(e)}> Electricity </button>
+                  <button id="Water" onClick={(e) => this.handleClick(e)}> Chilled Water </button>
+                  <button id="Steam" onClick={(e) => this.handleClick(e)}> Steam </button>
                 </div>
                 <div>
-                  <MITMap />
+                  <MITMap utility={this.state.clickedButton}/>
                 </div>
             </div>
         )
