@@ -16,13 +16,18 @@ import campus from './data.json';
 // });
 
 class MITMap extends React.Component {
+    onEachFeature(feature, layer) {
+      if (feature.properties && feature.properties.building_number) {
+        layer.bindPopup(feature.properties.building_number);
+      }
+    }
     style(feature) {
         console.log(feature.properties.building_number)
         if ("W" == feature.properties.building_number.charAt(0)) {
             return {
                weight: 2,
                opacity: 1,
-               color: '#4b4b4b',
+               color: '#5c5c5c',
                dashArray: '3',
                fillOpacity: 0.5,
                fillColor: '#ff0000'
@@ -32,7 +37,7 @@ class MITMap extends React.Component {
             return {
                 weight: 2,
                 opacity: 1,
-                color: '#4b4b4b',
+                color: '#5c5c5c',
                 dashArray: '3',
                 fillOpacity: 0.5,
                 fillColor: '#f9fb0a'
@@ -42,7 +47,7 @@ class MITMap extends React.Component {
             return {
                 weight: 2,
                 opacity: 1,
-                color: '#4b4b4b',
+                color: '#5c5c5c',
                 dashArray: '3',
                 fillOpacity: 0.5,
                 fillColor: '#01ff1f'
@@ -52,7 +57,7 @@ class MITMap extends React.Component {
             return {
                weight: 2,
                opacity: 1,
-               color: '#4b4b4b',
+               color: '#5c5c5c',
                dashArray: '3',
                fillOpacity: 0.5,
                fillColor: '#ff8100'
@@ -77,7 +82,7 @@ class MITMap extends React.Component {
                             </div>
                         </Popup>
                     </Marker>
-                    <GeoJSON data={campus} style={this.style}/>
+                    <GeoJSON data={campus} style={this.style} onEachFeature={this.onEachFeature}/>
                 </Map>
             </div>
         )
