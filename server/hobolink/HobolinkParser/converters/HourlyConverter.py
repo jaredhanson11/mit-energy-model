@@ -14,20 +14,20 @@ class HourlyConverter(HoboLinkConverter):
     '''
 
     def convert(self):
-        next_day = self.datetime_values[0] + datetime.timedelta(days=1)
-        hours_dictionary = {i:[] for i in range(24)}
         hour_order = []
+        hours_dictionary = {}
 
         for i, dt in enumerate(self.datetime_values):
-            if dt.day == next_day.day and dt.hour == next_day.hour:
-                continue
-            if dt.hour not in hour_order:
-                hour_order.append(dt.hour)
-            hours_dictionary[dt.hour].append(float(self.input_values[i])) #TODO check
+            hour_dt = dt.strftime('%m-%d-%y:%H')
+            if hour_dt not in hour_order:
+                hour_order.append(hour_dt)
+                hours_dictionary[hour_dt] = []
+            hours_dictionary[hour_dt].append(float(self.input_values[i])) #TODO check
 
         ret = []
         for hour in hour_order:
-            average = sum(hours_dictionary[hour])/ len(hours_dictionary[hour])
-            ret.append(average)
+            if hours_dictionary[hour]:
+                average = sum(hours_dictionary[hour])/ len(hours_dictionary[hour])
+                ret.append(average)
 
         return {self.get_epw_column(): ret}
