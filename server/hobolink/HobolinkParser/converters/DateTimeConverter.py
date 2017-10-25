@@ -4,13 +4,17 @@ class DateTimeConverter(HoboLinkConverter):
 
     def convert(self):
 
+        dt_hours = []
+
         mins = []
         hours = []
         days = []
         months = []
         years = []
         for dt in self.datetime_values:
-            if dt.hour not in hours:
+            dt_hour = dt.strftime('%m-%d-%y:%H')
+            if dt_hour not in dt_hours:
+                dt_hours.append(dt_hour)
                 mins.append(0)
                 hours.append(dt.hour)
                 days.append(dt.day)
