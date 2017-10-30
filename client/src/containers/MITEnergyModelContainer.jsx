@@ -1,14 +1,10 @@
 import React from 'react';
-// import Dropdown from 'react-dropdown'; uninstlal later
-import {
-    Charts,
-    ChartContainer,
-    ChartRow,
-    YAxis,
-    LineChart
-} from "react-timeseries-charts";
-import Building from './Building.jsx';
-import MITMap from './MITMap.jsx';
+import { Provider, connect } from 'react-redux';
+import Immutable from 'immutable';
+
+import store from '../stores/MITEnergyModelStore.jsx';
+
+import MITMap from '../components/MITMap.jsx';
 
 class MITEnergyModelContainer extends React.Component {
 
@@ -53,5 +49,22 @@ class MITEnergyModelContainer extends React.Component {
     }
 }
 
+var mapStateToProps = function(state) {
+    var immutableState = Immutable.fromJS(state);
+    var newState = immutableState.toJS();
+    return newState;
+}
 
-export default MITEnergyModelContainer;
+var _MITEnergyModelContainer = connect(mapStateToProps)(MITEnergyModelContainer);
+
+class MITEnergyModelProvider extends React.Component {
+    render() {
+        return (
+            <Provider store={store}>
+                <_MITEnergyModelContainer />
+            </Provider>
+        )
+    }
+}
+
+export default MITEnergyModelProvider;
