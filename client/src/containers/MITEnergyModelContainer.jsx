@@ -4,7 +4,7 @@ import Immutable from 'immutable';
 
 import store from '../stores/MITEnergyModelStore.jsx';
 
-import MITMap from '../components/MITMap.jsx';
+import MITMap from '../containers/MITMap.jsx';
 
 class MITEnergyModelContainer extends React.Component {
 
@@ -34,13 +34,6 @@ class MITEnergyModelContainer extends React.Component {
     render() {
         return (
             <div>
-                <div>
-                  <p>You are looking at: {this.state.clickedButton}</p>
-                  <button id="Total" onClick={(e) => this.handleClick(e)}> Total </button>
-                  <button id="Electricity" onClick={(e) => this.handleClick(e)}> Electricity </button>
-                  <button id="Water" onClick={(e) => this.handleClick(e)}> Chilled Water </button>
-                  <button id="Steam" onClick={(e) => this.handleClick(e)}> Steam </button>
-                </div>
                 <div>
                   <MITMap utility={this.state.clickedButton}/>
                 </div>
