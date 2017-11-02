@@ -31,9 +31,7 @@ class MITMap extends React.Component {
 
     style(feature) {
 
-        //put the correct color in here from the feature fields passed in here
-
-        return {
+        var defaultStyle = {
             weight: 2,
             opacity: 1,
             color: 'rgb(10, 10, 4)',
@@ -41,6 +39,16 @@ class MITMap extends React.Component {
             fillOpacity: 0.5,
             fillColor: 'rgb(54, 230, 77)'
         };
+
+        if (feature.properties && feature.properties.building_number) {
+            if (feature.properties.building_number < 30) {
+                var newStyle = Object.assign({}, defaultStyle);
+                newStyle.fillColor = 'rgb(200, 50, 85)';
+                return newStyle;
+            }
+        }
+        return defaultStyle;
+
     }
 
     render() {

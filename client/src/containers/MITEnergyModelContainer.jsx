@@ -2,9 +2,10 @@ import React from 'react';
 import { Provider, connect } from 'react-redux';
 import Immutable from 'immutable';
 
+import { actionCreators } from '../actions';
 import store from '../stores/MITEnergyModelStore.jsx';
 
-import MITMap from '../containers/MITMap.jsx';
+import MITMap from '../components/MITMap.jsx';
 
 class MITEnergyModelContainer extends React.Component {
 
@@ -18,6 +19,7 @@ class MITEnergyModelContainer extends React.Component {
     }
 
     componentWillMount() {
+      this.props.dispatch(actionCreators.getBuildingData());
       this.setState({
         clickedButton: "Total"
       })

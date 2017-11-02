@@ -1,4 +1,4 @@
-import { configureStore } from './index.jsx';
+import { configureStore } from './';
 
 import  MITEnergyModelReducer  from '../reducers/MITEnergyModelReducer.jsx';
 
