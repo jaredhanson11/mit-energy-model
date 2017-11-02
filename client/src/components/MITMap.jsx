@@ -1,5 +1,4 @@
 import React from 'react';
-import Building from '../components/Building.jsx';
 import {Map, TileLayer, GeoJSON, Marker, Popup} from 'react-leaflet';
 import L from 'leaflet';
 const GJV = require("geojson-validation");
