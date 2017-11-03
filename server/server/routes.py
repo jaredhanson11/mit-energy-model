@@ -1,5 +1,6 @@
 from . import api
-import controllers.meu_converter
+import controllers.CampusEnergyDataController
 
 def add_routes():
-    api.add_resource(controllers.meu_converter.MEU_Converter, '/upload/')
+    api.add_resource(controllers.CampusEnergyDataController.CampusEnergyDataController, '/campus/')
+    api.add_resource(controllers.CampusEnergyDataController.MonthlyEnergyDataController, '/campus_meu/')

@@ -64,7 +64,7 @@ class MITMap extends React.Component {
                     attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
                     url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png'
                     />
-                    <GeoJSON data={this.props.geojson} style={this.style} onEachFeature={this.onEachFeature}/>
+                    <GeoJSON key={Math.random()} data={this.props.geojson} style={this.style} onEachFeature={this.onEachFeature}/>
                 </Map>
             </div>
         )}

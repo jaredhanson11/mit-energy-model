@@ -6,6 +6,10 @@ Flask-SQLAlchemy==2.2
 itsdangerous==0.24
 Jinja2==2.9.6
 MarkupSafe==1.0
+numpy==1.13.3
+pandas==0.20.3
+peewee==2.10.2
+psycopg2==2.7.3.2
 python-dateutil==2.6.0
 pytz==2017.2
 six==1.10.0
