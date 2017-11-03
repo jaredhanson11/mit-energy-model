@@ -2,6 +2,8 @@ import { CALL_API } from 'redux-api-middleware';
 import { API_CONFIG } from '../config.jsx';
 import actionTypes from './actionTypes.jsx';
 
+import campus from '../data.json';
+
 function getBuildingData() {
     return {
         [CALL_API] : {
@@ -13,6 +15,22 @@ function getBuildingData() {
     }
 }
 
+function loadGeojsonData() {
+    return {
+        type: actionTypes.LOAD_GEOJSON_DATA,
+        geojson: campus
+    }
+}
+
+function addGeojsonGradient(buildingColorsDictionary) {
+    return {
+        type: actionTypes.ADD_GEOJSON_GRADIENT,
+        data: buildingColorsDictionary
+    }
+}
+
 export default {
-    getBuildingData
+    getBuildingData,
+    loadGeojsonData,
+    addGeojsonGradient
 }

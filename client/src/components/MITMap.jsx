@@ -3,6 +3,8 @@ import {Map, TileLayer, GeoJSON, Marker, Popup} from 'react-leaflet';
 import L from 'leaflet';
 const GJV = require("geojson-validation");
 import campus from '../data.json';
+import { actionCreators } from '../actions';
+
 
 //Map Data and Constraints
 const zoomSettings = {
@@ -39,13 +41,12 @@ class MITMap extends React.Component {
             fillColor: 'rgb(54, 230, 77)'
         };
 
-        if (feature.properties && feature.properties.building_number) {
-            if (feature.properties.building_number < 30) {
-                var newStyle = Object.assign({}, defaultStyle);
-                newStyle.fillColor = 'rgb(200, 50, 85)';
-                return newStyle;
-            }
+        if (feature.properties.gradient) {
+            var newStyle = Object.assign({}, defaultStyle);
+            newStyle.fillColor = 'rgb(200, 50, 85)';
+            return newStyle;
         }
+
         return defaultStyle;
 
     }
@@ -63,7 +64,7 @@ class MITMap extends React.Component {
                     attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
                     url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png'
                     />
-                    <GeoJSON data={campus} style={this.style} onEachFeature={this.onEachFeature}/>
+                    <GeoJSON data={this.props.geojson} style={this.style} onEachFeature={this.onEachFeature}/>
                 </Map>
             </div>
         )}

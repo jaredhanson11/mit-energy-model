@@ -11,7 +11,9 @@ var MITEnergyModelState = {
         errorMessage: ''
     },
 
-    buildingMapData: {}
+    buildingMapData: {},
+
+    geojsonData: {}
 }
 
 var configuredStore = configureStore(MITEnergyModelReducer, MITEnergyModelState);

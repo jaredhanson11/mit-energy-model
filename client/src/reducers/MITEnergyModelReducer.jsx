@@ -45,9 +45,33 @@ var buildingMapDataReducer = function(state={}, action){
     }
 }
 
+var geojsonDataReducer = function (state={}, action) {
+    switch (action.type) {
+        case actionTypes.LOAD_GEOJSON_DATA:
+            var newState = action.geojson;
+            return newState;
+        case actionTypes.ADD_GEOJSON_GRADIENT:
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            for (var building_number in action.data) {
+                for (var i = 0; i < newState.features.length; i++) {
+                    if (state.features[i].properties.building_number == building_number) {
+                        newState.features[i].properties.gradient = action.data[building_number];
+                    }
+                }
+            }
+            return newState;
+        default:
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            return newState;
+    }
+}
+
 var MITEnergyModelReducer = combineReducers({
     buildingMapApi: buildingMapApiReducer,
-    buildingMapData: buildingMapDataReducer
+    buildingMapData: buildingMapDataReducer,
+    geojsonData: geojsonDataReducer
 })
 
 export default MITEnergyModelReducer;
