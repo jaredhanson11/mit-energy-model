@@ -1,10 +1,12 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
+from flask_cors import CORS
 
 # Initiliaze Flask app object with configs
 app = Flask(__name__)
 app.config.from_object('config')
+CORS(app)
 
 # Initialize Flask-SQLAlchemy db object
 db = SQLAlchemy(app)

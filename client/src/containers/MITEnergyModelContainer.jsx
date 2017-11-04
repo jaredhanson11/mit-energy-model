@@ -41,12 +41,19 @@ class MITEnergyModelContainer extends React.Component {
     componentWillMount() {
       this.props.dispatch(actionCreators.getBuildingData());
       this.props.dispatch(actionCreators.loadGeojsonData());
-      this.props.dispatch(actionCreators.addGeojsonGradient(dummyBuildingData['sim1']));
+      this.addGradients(dummyBuildingData['sim1']);
     }
 
     selectSim(event) {
         this.props.dispatch(actionCreators.loadGeojsonData());
-        this.props.dispatch(actionCreators.addGeojsonGradient(dummyBuildingData[event.target.id]));
+        this.addGradients(dummyBuildingData[event.target.id]);
+    }
+
+    addGradients(data) {
+        const key_name = 'gradient';
+        for (var b in data) {
+            this.props.dispatch(actionCreators.addGeojsonProperty(b, key_name, data[b]));
+        }
     }
 
     render() {

@@ -1,6 +1,7 @@
 aniso8601==1.2.1
 click==6.7
 Flask==0.12.2
+Flask-Cors==3.0.3
 Flask-RESTful==0.3.6
 Flask-SQLAlchemy==2.2
 itsdangerous==0.24

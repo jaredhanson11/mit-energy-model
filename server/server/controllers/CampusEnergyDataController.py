@@ -47,7 +47,6 @@ class MonthlyEnergyDataController(Resource):
                     continue
                 if building not in values_by_building:
                     values_by_building[building] = []
-            print headers
 
             monthly_data = cursor.fetchall()
             for row in monthly_data:
@@ -61,5 +60,16 @@ class MonthlyEnergyDataController(Resource):
                 if building not in meu_by_building:
                     meu_by_building[building] = {}
                 meu_by_building[building][table] = values_by_building[building]
+
+        for building in meu_by_building:
+            _len = len(meu_by_building[building].values()[0])
+            tot = []
+            _tot = 0
+            for i in range(_len):
+                for energy_type in meu_by_building[building]:
+                    _tot += meu_by_building[building][energy_type][i]
+                tot.append(_tot)
+            meu_by_building[building]['total'] = tot
+
 
         return meu_by_building

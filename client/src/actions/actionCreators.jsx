@@ -22,15 +22,19 @@ function loadGeojsonData() {
     }
 }
 
-function addGeojsonGradient(buildingColorsDictionary) {
+function addGeojsonProperty(building_num, property_key, property_value) {
     return {
-        type: actionTypes.ADD_GEOJSON_GRADIENT,
-        data: buildingColorsDictionary
+        type: actionTypes.ADD_GEOJSON_PROPERTY,
+        data: {
+            building_number: building_num,
+            key: property_key,
+            value: property_value
+        }
     }
 }
 
 export default {
     getBuildingData,
     loadGeojsonData,
-    addGeojsonGradient
+    addGeojsonProperty
 }
