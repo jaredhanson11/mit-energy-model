@@ -64,8 +64,8 @@ class MonthlyEnergyDataController(Resource):
         for building in meu_by_building:
             _len = len(meu_by_building[building].values()[0])
             tot = []
-            _tot = 0
             for i in range(_len):
+                _tot = 0
                 for energy_type in meu_by_building[building]:
                     _tot += meu_by_building[building][energy_type][i]
                 tot.append(_tot)
