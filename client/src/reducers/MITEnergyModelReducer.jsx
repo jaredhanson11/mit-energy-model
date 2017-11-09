@@ -38,7 +38,7 @@ var buildingMapApiReducer = function(state={}, action){
 var buildingMapDataReducer = function(state={}, action){
     switch (action.type) {
         case actionTypes.GET_BUILDING_DATA_SUCCESS:
-            var newState = {};
+            var newState = {selected: 'total'};
             newState.campus = action.payload.content.campus;
             newState.campus_summary = {};
 
@@ -46,6 +46,11 @@ var buildingMapDataReducer = function(state={}, action){
                 const data_summary = summarizeMonthlyEnergyData(newState.campus[building]);
                 newState.campus[building].measured_summary = data_summary;
             }
+            return newState;
+        case 'SELECT_ENERGY_TYPE':
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            newState.selected = action.selected;
             return newState;
         default:
             var newState = Immutable.fromJS(state);

@@ -1,4 +1,4 @@
-const BASE_URL = 'http://127.0.0.1:5000';
+const BASE_URL = 'http://jared-hanson.com/urop/api';
 const BUILDING_DATA_RESOURCE = '/campus_meu/';
 export var API_CONFIG = {
     base_url: BASE_URL,

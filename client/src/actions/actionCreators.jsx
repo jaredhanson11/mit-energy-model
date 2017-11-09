@@ -33,8 +33,16 @@ function addGeojsonProperty(building_num, property_key, property_value) {
     }
 }
 
+function selectEnergyType(energy_type) {
+    return {
+      type: 'SELECT_ENERGY_TYPE',
+      selected: energy_type
+    }
+}
+
 export default {
     getBuildingData,
     loadGeojsonData,
-    addGeojsonProperty
+    addGeojsonProperty,
+    selectEnergyType
 }

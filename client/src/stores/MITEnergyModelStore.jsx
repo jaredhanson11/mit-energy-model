@@ -11,7 +11,9 @@ var MITEnergyModelState = {
         errorMessage: ''
     },
 
-    buildingMapData: {},
+    buildingMapData: {
+          selected: 'total'
+    },
 
     geojsonData: {}
 }

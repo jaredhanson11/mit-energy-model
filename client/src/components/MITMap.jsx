@@ -11,7 +11,7 @@ const zoomSettings = {
     minZoom: 15,
     zoom: 15.5,
     center: [42.358888, -71.093624],
-    maxBounds: L.latLngBounds(L.latLng(42.368482, -71.117361), L.latLng(42.352833, -71.068609))
+    maxBounds: L.latLngBounds(L.latLng(42.368482 + .005, -71.117361 - .005), L.latLng(42.352833 - .005, -71.068609 + .005))
 }
 
 class MITMap extends React.Component {
@@ -33,18 +33,25 @@ class MITMap extends React.Component {
     style(feature) {
 
         var defaultStyle = {
-            weight: 2,
+            weight: 1,
             opacity: 1,
             color: 'rgb(10, 10, 4)',
-            dashArray: '3',
             fillOpacity: 0.5,
+            dashCapacity: 3,
             fillColor: 'rgb(54, 230, 77)'
         };
 
-        if (feature.properties.gradient) {
-            var newStyle = Object.assign({}, defaultStyle);
-            newStyle.fillColor = 'rgb(200, 50, 85)';
-            return newStyle;
+        var building_number = feature.properties.building_number;
+        var energy_type = this.props.campusData.selected;
+        if (building_number && this.props.campusData.campus) {
+            var building = this.props.campusData.campus[building_number];
+            if (building && building.measured_summary) {
+                if (building.measured_summary[energy_type].month_total > building.measured_summary[energy_type].monthly_avg){
+                var newStyle = Object.assign({}, defaultStyle);
+                newStyle.fillColor = 'rgb(200, 50, 85)';
+                return newStyle;
+                }
+            }
         }
 
         return defaultStyle;
@@ -53,7 +60,7 @@ class MITMap extends React.Component {
 
     render() {
         return (
-            <div style={{marginTop:'20px'}}>
+            <div style={{height: '100%', width: '100%'}}>
                 <Map
                 minZoom={zoomSettings.minZoom}
                 center={zoomSettings.center}

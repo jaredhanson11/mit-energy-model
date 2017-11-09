@@ -45,7 +45,7 @@ class MITEnergyModelContainer extends React.Component {
     }
 
     selectSim(event) {
-        this.props.dispatch(actionCreators.loadGeojsonData());
+        this.props.dispatch(actionCreators.selectEnergyType(event.target.id));
         this.addGradients(dummyBuildingData[event.target.id]);
     }
 
@@ -58,12 +58,13 @@ class MITEnergyModelContainer extends React.Component {
 
     render() {
         return (
-            <div>
-                <a id='sim1' onClick={this.selectSim}>Simulation 1</a>
-                <a id='sim2' onClick={this.selectSim}>Simulation 2</a>
-                <a id='sim3' onClick={this.selectSim}>Simulation 3</a>
+            <div style={{marginTop: '20px'}} >
+                <a id='total' onClick={this.selectSim}>Total</a>
+                <a id='chw' onClick={this.selectSim}>Chilled Water</a>
+                <a id='stm' onClick={this.selectSim}>Steam</a>
+                <a id='elec' onClick={this.selectSim}>Electricity</a>
                 <div>
-                  <MITMap geojson={this.props.geojsonData}/>
+                  <MITMap geojson={this.props.geojsonData} campusData={this.props.buildingMapData}/>
                 </div>
             </div>
         )
