@@ -4,6 +4,35 @@ import { actionTypes } from '../actions';
 
 import { summarizeMonthlyEnergyData } from './dataProcessing.jsx';
 
+var uiStateReducer = function(state={}, action){
+    switch (action.type) {
+        case actionTypes.SELECT_RESOURCE_TYPE:
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            newState.resourceType = action.resourceType;
+            return newState;
+        case actionTypes.START_HOVER_BUILDING:
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            newState.hoveredBuilding = action.hoveredBuilding;
+            return newState;
+        case actionTypes.STOP_HOVER_BUILDING:
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            newState.hoveredBuilding = '';
+            return newState;
+        case actionTypes.SELECT_BUILDING:
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            newState.selectedBuilding = action.selectedBuilding;
+            return newState;
+        default:
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            return newState;
+    }
+}
+
 var buildingMapApiReducer = function(state={}, action){
     switch (action.type) {
         case actionTypes.GET_BUILDING_DATA:
@@ -47,11 +76,6 @@ var buildingMapDataReducer = function(state={}, action){
                 newState.campus[building].measured_summary = data_summary;
             }
             return newState;
-        case 'SELECT_ENERGY_TYPE':
-            var newState = Immutable.fromJS(state);
-            newState = newState.toJS();
-            newState.selected = action.selected;
-            return newState;
         default:
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();
@@ -81,6 +105,7 @@ var geojsonDataReducer = function (state={}, action) {
 }
 
 var MITEnergyModelReducer = combineReducers({
+    uiState: uiStateReducer,
     buildingMapApi: buildingMapApiReducer,
     buildingMapData: buildingMapDataReducer,
     geojsonData: geojsonDataReducer

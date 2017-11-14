@@ -21,13 +21,17 @@ class MITMap extends React.Component {
         this.style = this.style.bind(this);
     }
 
-    onEachFeature(feature, layer) {
 
-        //calculate the correct color here, get the API call and load
-
-        if (feature.properties && feature.properties.building_number) {
-            layer.bindPopup(feature.properties.building_number);
+    onEachFeature(dispatch) {
+        function _onEachFeature(feature, layer) {
+            layer.on('click', function(e) {
+                if (feature.properties && feature.properties.building_number) {
+                    const building_number = feature.properties.building_number;
+                    dispatch(actionCreators.selectBuilding(building_number));
+                }
+            });
         }
+        return _onEachFeature;
     }
 
     style(feature) {
@@ -71,7 +75,7 @@ class MITMap extends React.Component {
                     attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
                     url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png'
                     />
-                    <GeoJSON key={Math.random()} data={this.props.geojson} style={this.style} onEachFeature={this.onEachFeature}/>
+                    <GeoJSON key={Math.random()} data={this.props.geojson} style={this.style} onEachFeature={this.onEachFeature(this.props.dispatch)}/>
                 </Map>
             </div>
         )}

@@ -4,6 +4,35 @@ import actionTypes from './actionTypes.jsx';
 
 import campus from '../data.json';
 
+// UI State
+function selectResourceType(resourceType) {
+    return {
+        type: actionTypes.SELECT_RESOURCE_TYPE,
+        resourceType: resourceType
+    }
+}
+
+function startHoverBuilding(hoveredBuilding) {
+    return {
+        type: actionTypes.START_HOVER_BUILDING,
+        hoveredBuilding: hoveredBuilding
+    }
+}
+
+function stopHoverBuilding() {
+    return {
+        type: actionTypes.STOP_HOVER_BUILDING
+    }
+}
+
+function selectBuilding(selectedBuilding) {
+    return {
+        type: actionTypes.SELECT_BUILDING,
+        selectedBuilding: selectedBuilding
+    }
+}
+
+
 function getBuildingData() {
     return {
         [CALL_API] : {
@@ -22,27 +51,11 @@ function loadGeojsonData() {
     }
 }
 
-function addGeojsonProperty(building_num, property_key, property_value) {
-    return {
-        type: actionTypes.ADD_GEOJSON_PROPERTY,
-        data: {
-            building_number: building_num,
-            key: property_key,
-            value: property_value
-        }
-    }
-}
-
-function selectEnergyType(energy_type) {
-    return {
-      type: 'SELECT_ENERGY_TYPE',
-      selected: energy_type
-    }
-}
-
 export default {
     getBuildingData,
     loadGeojsonData,
-    addGeojsonProperty,
-    selectEnergyType
+    selectResourceType,
+    startHoverBuilding,
+    stopHoverBuilding,
+    selectBuilding
 }

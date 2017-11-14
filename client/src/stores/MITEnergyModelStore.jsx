@@ -4,6 +4,12 @@ import  MITEnergyModelReducer  from '../reducers/MITEnergyModelReducer.jsx';
 
 var MITEnergyModelState = {
 
+    uiState: {
+        resourceType: 'total',
+        selectedBuilding: '',
+        hoveredBuilding: ''
+    },
+
     buildingMapApi: {
         loading: false,
         loaded: false,

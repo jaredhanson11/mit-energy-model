@@ -3,6 +3,8 @@ const GJV = require("geojson-validation");
 import { actionCreators } from '../actions';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
+import BuildingSummary from './BuildingSummary.jsx';
+
 const data = [
       {name: 'Page A', uv: 4000, pv: 2400, amt: 2400},
       {name: 'Page B', uv: 3000, pv: 1398, amt: 2210},
@@ -31,6 +33,7 @@ class SideBar extends React.Component {
                     <Bar dataKey="pv" stackId="a" fill="#8884d8" />
                     <Bar dataKey="uv" stackId="a" fill="#82ca9d" />
                 </BarChart>
+                <BuildingSummary selectedBuilding={this.props.uiState.selectedBuilding} />
             </div>
         )}
     }

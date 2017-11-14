@@ -6,31 +6,6 @@ import store from '../stores/MITEnergyModelStore.jsx';
 import MITMap from '../components/MITMap.jsx';
 import SideBar from '../components/SideBar.jsx';
 
-//some dummy data to test the redux flow, if it is successful these buildings will be red
-const dummyBuildingData = {
-    'sim1': {
-        "1": 0.5,
-        "2": 0.5,
-        "3": 0.5,
-        "4": 0.5,
-        "5": 0.5,
-        "6": 0.5,
-    },
-    'sim2': {
-        '7': .5,
-        '8': .5,
-        '9': .5,
-        '10': .5,
-        '11': .5
-    },
-    'sim3': {
-        '12': .5,
-        '13': .5,
-        '14': .5,
-        '15': .5,
-        '16': .5
-    }
-};
 
 class MITEnergyModelContainer extends React.Component {
 
@@ -42,19 +17,10 @@ class MITEnergyModelContainer extends React.Component {
     componentWillMount() {
       this.props.dispatch(actionCreators.getBuildingData());
       this.props.dispatch(actionCreators.loadGeojsonData());
-      this.addGradients(dummyBuildingData['sim1']);
     }
 
     selectSim(event) {
-        this.props.dispatch(actionCreators.selectEnergyType(event.target.id));
-        this.addGradients(dummyBuildingData[event.target.id]);
-    }
-
-    addGradients(data) {
-        const key_name = 'gradient';
-        for (var b in data) {
-            this.props.dispatch(actionCreators.addGeojsonProperty(b, key_name, data[b]));
-        }
+        this.props.dispatch(actionCreators.selectResourceType(event.target.id));
     }
 
     render() {
@@ -65,8 +31,13 @@ class MITEnergyModelContainer extends React.Component {
                 <a id='stm' onClick={this.selectSim}>Steam</a>
                 <a id='elec' onClick={this.selectSim}>Electricity</a>
                 <div>
-                  <MITMap geojson={this.props.geojsonData} campusData={this.props.buildingMapData}/>
-                  <SideBar />
+                    <MITMap
+                        uiState={this.props.uiState}
+                        geojson={this.props.geojsonData}
+                        campusData={this.props.buildingMapData}
+                        dispatch={this.props.dispatch}
+                    />
+                    <SideBar uiState={this.props.uiState} />
                 </div>
             </div>
         )
