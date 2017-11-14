@@ -24,12 +24,10 @@ class MITEnergyModelContainer extends React.Component {
     }
 
     render() {
+        console.log(this.props);
+        console.log(this.props.buildingMapData);
         return (
-            <div style={{marginTop: '20px'}} >
-                <a id='total' onClick={this.selectSim}>Total</a>
-                <a id='chw' onClick={this.selectSim}>Chilled Water</a>
-                <a id='stm' onClick={this.selectSim}>Steam</a>
-                <a id='elec' onClick={this.selectSim}>Electricity</a>
+            <div>
                 <div>
                     <MITMap
                         uiState={this.props.uiState}
@@ -37,8 +35,8 @@ class MITEnergyModelContainer extends React.Component {
                         campusData={this.props.buildingMapData}
                         dispatch={this.props.dispatch} />
                     <SideBar
-                        buildingData={this.props.buildingMapData}
-                        uiState={this.props.uiState} />
+                        uiState={this.props.uiState}
+                        buildingData={this.props.buildingMapData} />
                 </div>
             </div>
         )

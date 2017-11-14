@@ -14,7 +14,7 @@ export default class BuildingSummary extends React.Component {
                 alignItems: 'center',
                 alignContent: 'center',
                 width: '100%',
-                height: 'calc(100% - 322px)',
+                height: 'calc(100% - 422px)',
                 border: 'solid thin black',
                 paddingTop: '20px'
             },
@@ -52,7 +52,7 @@ export default class BuildingSummary extends React.Component {
 
         var BuildingSummaryElement;
         var TotalEnergyEle;
-        if (this.props.buildingData.campus[selectedBuilding] && this.props.buildingData.campus[selectedBuilding]){
+        if (this.props.buildingData && this.props.buildingData.campus[selectedBuilding] && this.props.buildingData.campus[selectedBuilding]){
             var resourceBreakdown = this.props.buildingData.campus[selectedBuilding].measured;
 
 
@@ -69,21 +69,21 @@ export default class BuildingSummary extends React.Component {
                 pieData.push(entry);
             }
             console.log(pieData);
-            TotalEnergyEle = (<div>Total Energy Output: {this.props.buildingData.campus[selectedBuilding].measured.total[thisMonth]}</div>);
+            TotalEnergyEle = (<div style={{marginTop: '10px'}} >Total Energy Output: {this.props.buildingData.campus[selectedBuilding].measured.total[thisMonth]}</div>);
 
             BuildingSummaryElement = (
-                <PieChart width={350} height={300}>
+                <PieChart width={350} height={200}>
                     <Pie
                         data={pieData}
                         cx='50%' cy='50%'
-                        outerRadius='100%'
+                        outerRadius='70%'
                         dataKey='value' nameKey='name'
                         paddingAngle={3}
                     >
                         {pieData.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]} />)}
                     </Pie>
-                    <Tooltip/>
                     <Legend/>
+                    <Tooltip/>
                 </PieChart>
             );
 

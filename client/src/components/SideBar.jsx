@@ -20,7 +20,6 @@ class SideBar extends React.Component {
         var monthSum = Array.apply(null, Array(12)).map(Number.prototype.valueOf,0);
         var internalData = this.props.buildingMapData['campus'];
         for (var key in internalData) {
-          console.log(key);
           var monthlyData = internalData[key]['measured']['total']
           for(var i = 0 ; i < monthlyData.length; i++){
              monthSum[i] += monthlyData[i]
@@ -33,7 +32,6 @@ class SideBar extends React.Component {
     render() {
         if (this.props.buildingMapData['campus'] != undefined) {
           var monthSum = this.calculateTotalEnergy();
-          console.log(monthSum)
           const data = [
                 {name: '2013', Jan: 0, Feb: 0, Mar: 0, Apr: 0, May: 0, Jun: 0, Jul: 0, Aug: 0, Sep: 0, Oct: 0, Nov: 0, Dec: 0},
                 {name: '2014', Jan: 0, Feb: 0, Mar: 0, Apr: 0, May: 0, Jun: 0, Jul: 0, Aug: 0, Sep: 0, Oct: 0, Nov: 0, Dec: 0},
@@ -62,6 +60,9 @@ class SideBar extends React.Component {
                       <Bar dataKey="Dec" stackId="a" fill="#8fd3c7" />
 
                   </BarChart>
+                  <BuildingSummary
+                      buildingData={this.props.buildingMapData}
+                      selectedBuilding={this.props.uiState.selectedBuilding} />
               </div>
           )
         }
