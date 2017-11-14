@@ -4,6 +4,7 @@ import Immutable from 'immutable';
 import { actionCreators } from '../actions';
 import store from '../stores/MITEnergyModelStore.jsx';
 import MITMap from '../components/MITMap.jsx';
+import SideBar from '../components/SideBar.jsx';
 
 //some dummy data to test the redux flow, if it is successful these buildings will be red
 const dummyBuildingData = {
@@ -65,6 +66,7 @@ class MITEnergyModelContainer extends React.Component {
                 <a id='elec' onClick={this.selectSim}>Electricity</a>
                 <div>
                   <MITMap geojson={this.props.geojsonData} campusData={this.props.buildingMapData}/>
+                  <SideBar />
                 </div>
             </div>
         )

@@ -60,7 +60,7 @@ class MITMap extends React.Component {
 
     render() {
         return (
-            <div style={{height: '100%', width: '100%'}}>
+            <div style={{height: '100%', width: '70%', display:'inline-block', outline:'1px solid grey'}}>
                 <Map
                 minZoom={zoomSettings.minZoom}
                 center={zoomSettings.center}
