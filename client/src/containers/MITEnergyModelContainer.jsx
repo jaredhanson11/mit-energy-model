@@ -35,9 +35,10 @@ class MITEnergyModelContainer extends React.Component {
                         uiState={this.props.uiState}
                         geojson={this.props.geojsonData}
                         campusData={this.props.buildingMapData}
-                        dispatch={this.props.dispatch}
-                    />
-                    <SideBar uiState={this.props.uiState} />
+                        dispatch={this.props.dispatch} />
+                    <SideBar
+                        buildingData={this.props.buildingMapData}
+                        uiState={this.props.uiState} />
                 </div>
             </div>
         )
