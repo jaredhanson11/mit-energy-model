@@ -62,7 +62,7 @@ class SideBar extends React.Component {
                   </BarChart>
                   <BuildingSummary
                       buildingData={this.props.buildingMapData}
-                      selectedBuilding={this.props.uiState.selectedBuilding} />
+                      selectedBuilding={this.props.filterState.selectedBuilding} />
               </div>
           )
         }

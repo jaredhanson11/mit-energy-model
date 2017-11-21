@@ -4,27 +4,32 @@ import { actionTypes } from '../actions';
 
 import { summarizeMonthlyEnergyData } from './dataProcessing.jsx';
 
-var uiStateReducer = function(state={}, action){
+var filterStateReducer = function(state={}, action){
     switch (action.type) {
         case actionTypes.SELECT_RESOURCE_TYPE:
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();
-            newState.resourceType = action.resourceType;
+            newState.selectedResource = action.selectedResource;
             return newState;
-        case actionTypes.START_HOVER_BUILDING:
+        case actionTypes.SELECT_UNIT_TYPE:
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();
-            newState.hoveredBuilding = action.hoveredBuilding;
+            newState.selectedUnits = action.selectedUnits;
             return newState;
-        case actionTypes.STOP_HOVER_BUILDING:
+        case actionTypes.SELECT_BUILDING_TYPE:
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();
-            newState.hoveredBuilding = '';
+            newState.selectedBuildingType = action.selectedBuildingType;
             return newState;
         case actionTypes.SELECT_BUILDING:
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();
             newState.selectedBuilding = action.selectedBuilding;
+            return newState;
+        case actionTypes.TOGGLE_FILTER:
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            newState.filterExpanded = action.expandFilter;
             return newState;
         default:
             var newState = Immutable.fromJS(state);
@@ -105,7 +110,7 @@ var geojsonDataReducer = function (state={}, action) {
 }
 
 var MITEnergyModelReducer = combineReducers({
-    uiState: uiStateReducer,
+    filterState: filterStateReducer,
     buildingMapApi: buildingMapApiReducer,
     buildingMapData: buildingMapDataReducer,
     geojsonData: geojsonDataReducer

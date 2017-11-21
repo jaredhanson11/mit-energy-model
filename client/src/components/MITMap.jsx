@@ -5,20 +5,14 @@ const GJV = require("geojson-validation");
 import campus from '../data.json';
 import { actionCreators } from '../actions';
 
-
-//Map Data and Constraints
-const zoomSettings = {
-    minZoom: 15,
-    zoom: 15.5,
-    center: [42.358888, -71.093624],
-    maxBounds: L.latLngBounds(L.latLng(42.368482 + .005, -71.117361 - .005), L.latLng(42.352833 - .005, -71.068609 + .005))
-}
+import _style from '../styles/MITMapStyle.js';
+import MITMapFilter from './MITMapFilter.jsx';
 
 class MITMap extends React.Component {
 
     constructor(props) {
         super(props);
-        this.style = this.style.bind(this);
+        this.featureStyle = this.featureStyle.bind(this);
     }
 
 
@@ -34,7 +28,7 @@ class MITMap extends React.Component {
         return _onEachFeature;
     }
 
-    style(feature) {
+    featureStyle(feature) {
 
         var defaultStyle = {
             weight: 1,
@@ -46,9 +40,9 @@ class MITMap extends React.Component {
         };
 
         var building_number = feature.properties.building_number;
-        var energy_type = this.props.campusData.selected;
-        if (building_number && this.props.campusData.campus) {
-            var building = this.props.campusData.campus[building_number];
+        var energy_type = this.props.buildingMapData.selected;
+        if (building_number && this.props.buildingMapData.campus) {
+            var building = this.props.buildingMapData.campus[building_number];
             if (building && building.measured_summary) {
                 if (building.measured_summary[energy_type].month_total > building.measured_summary[energy_type].monthly_avg){
                 var newStyle = Object.assign({}, defaultStyle);
@@ -64,20 +58,22 @@ class MITMap extends React.Component {
 
     render() {
         return (
-            <div style={{height: '100%', width: '70%', display:'inline-block', outline:'1px solid grey'}}>
-                <Map
-                minZoom={zoomSettings.minZoom}
-                center={zoomSettings.center}
-                zoom={zoomSettings.zoom}
-                maxBounds={zoomSettings.maxBounds}
-                >
-                    <TileLayer
-                    attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
-                    url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png'
-                    />
-                    <GeoJSON key={Math.random()} data={this.props.geojson} style={this.style} onEachFeature={this.onEachFeature(this.props.dispatch)}/>
-                </Map>
-            </div>
+            <Map style={_style.map}
+            minZoom={_style.zoomSettings.minZoom}
+            center={_style.zoomSettings.center}
+            zoom={_style.zoomSettings.zoom}
+            maxBounds={_style.zoomSettings.maxBounds}
+            >
+                <TileLayer
+                attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+                url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png'
+                />
+                <GeoJSON style={this.featureStyle}
+                    data={this.props.geojsonData}
+                    key={Math.random()}
+                    onEachFeature={this.onEachFeature(this.props.dispatch)} />
+                <MITMapFilter filterState={this.props.filterState} />
+            </Map>
         )}
     }
 
