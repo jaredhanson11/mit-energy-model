@@ -26,7 +26,9 @@ export default class FilterType extends React.Component {
     }
 
     _selectFilter(key, selectFilter) {
+        var closeHover = this.toggleHover(false);
         var _filter = (event) => {
+            closeHover();
             return selectFilter(key);
         }
         return _filter;
