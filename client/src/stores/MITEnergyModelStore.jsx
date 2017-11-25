@@ -6,7 +6,7 @@ var MITEnergyModelState = {
 
     filterState: {
         selectedResource: 'total',
-        selectedBuildingType: '',
+        selectedBuildingType: 'all',
         selectedBuilding: '',
         selectedUnits: 'kwh',
         filterExpanded: false

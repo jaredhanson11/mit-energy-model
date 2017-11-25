@@ -1,5 +1,5 @@
 import React from 'react';
-import {Map, TileLayer, GeoJSON, Marker, Popup} from 'react-leaflet';
+import { Map, TileLayer, GeoJSON, Marker, Popup, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 const GJV = require("geojson-validation");
 import campus from '../data.json';
@@ -63,7 +63,9 @@ class MITMap extends React.Component {
             center={_style.zoomSettings.center}
             zoom={_style.zoomSettings.zoom}
             maxBounds={_style.zoomSettings.maxBounds}
+            zoomControl={false}
             >
+                <ZoomControl position={_style.zoomControl.position} />
                 <TileLayer
                 attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
                 url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png'
@@ -72,7 +74,7 @@ class MITMap extends React.Component {
                     data={this.props.geojsonData}
                     key={Math.random()}
                     onEachFeature={this.onEachFeature(this.props.dispatch)} />
-                <MITMapFilter filterState={this.props.filterState} />
+                <MITMapFilter />
             </Map>
         )}
     }

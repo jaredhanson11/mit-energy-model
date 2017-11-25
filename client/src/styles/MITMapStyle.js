@@ -7,6 +7,10 @@ var style = {
         maxBounds: L.latLngBounds(L.latLng(42.368482 + .005, -71.117361 - .005), L.latLng(42.352833 - .005, -71.068609 + .005))
     },
 
+    zoomControl: {
+        position: 'topleft'
+    },
+
     map: {
         height: '100%',
         width: '70%',

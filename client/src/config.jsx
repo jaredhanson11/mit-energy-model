@@ -8,21 +8,64 @@ export var API_CONFIG = {
     }
 }
 
-var IMG_URL_MAPPING = {
-    filterIcons: {
-        total: '/imgs/total-icon.png',
-        elec: '/imgs/electricity-icon.png',
-        stm: '/imgs/steam-icon.png',
-        chw: '/imgs/chilled-water-icon.png'
+var FILTER_CONFIG = {
+    resourceType: {
+        filterStateKey: 'selectedResource',
+        keys: ['total', 'elec', 'stm', 'chw'],
+        translations: {
+            total: 'Total',
+            elec: 'Electricity',
+            stm: 'Steam',
+            chw: 'Chilled Water'
+        },
+        icons: {
+            total: '/imgs/total-icon.png',
+            elec: '/imgs/electricity-icon.png',
+            stm: '/imgs/steam-icon.png',
+            chw: '/imgs/chilled-water-icon.png'
+        }
+    },
+    unitsType: {
+        filterStateKey: 'selectedUnits',
+        keys: ['kwh', 'kwh_normalized', 'co2', 'co2_normalized'],
+        translations: {
+            kwh: 'Kilowatt Hours',
+            kwh_normalized: 'Kilowatt Hours / Building Square Footage',
+            co2: 'Carbon Dioxide',
+            co2_normalized: 'Carbon Dioxide / Building Square Footage'
+        },
+        icons: {
+            kwh: '/imgs/kwh-icon.png',
+            kwh_normalized: '/imgs/kwh_normalized-icon.png',
+            co2: '/imgs/co2-icon.png',
+            co2_normalized: '/imgs/co2_normalized-icon.png'
+        }
+    },
+    buildingType: {
+        filterStateKey: 'selectedBuildingType',
+        keys: ['all', 'academic', 'laboratory', 'residential', 'services'],
+        translations: {
+            all: 'All Building Types',
+            academic: 'Academic',
+            laboratory: 'Laboratory',
+            residential: 'Residential',
+            services: 'Services'
+        },
+        icons: {
+            all: '/imgs/all-buildings-icon.png',
+            academic: '/imgs/academic-icon.png',
+            laboratory: '/imgs/laboratory-icon.png',
+            residential: '/imgs/residential-icon.png',
+            services: '/imgs/services-icon.png'
+        }
     }
 };
 
-export function getImgUrl(imgGroup, imgKey) {
-    return IMG_URL_MAPPING[imgGroup][imgKey];
+export function getFilterConfig(filterKey) {
+    return FILTER_CONFIG[filterKey];
 }
 
 var _default = {
-    getImgUrl,
     API_CONFIG
 };
 

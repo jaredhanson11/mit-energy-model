@@ -63,6 +63,7 @@ export default {
     loadGeojsonData,
     selectResourceType,
     selectBuildingType,
+    selectUnits,
     selectBuilding,
     toggleFilter
 }
