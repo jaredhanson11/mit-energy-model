@@ -19,10 +19,10 @@ var FILTER_CONFIG = {
             chw: 'Chilled Water'
         },
         icons: {
-            total: '/imgs/total-icon.png',
-            elec: '/imgs/electricity-icon.png',
-            stm: '/imgs/steam-icon.png',
-            chw: '/imgs/chilled-water-icon.png'
+            total: './imgs/total-icon.png',
+            elec: './imgs/electricity-icon.png',
+            stm: './imgs/steam-icon.png',
+            chw: './imgs/chilled-water-icon.png'
         }
     },
     unitsType: {
@@ -35,10 +35,10 @@ var FILTER_CONFIG = {
             co2_normalized: 'Carbon Dioxide / Building Square Footage'
         },
         icons: {
-            kwh: '/imgs/kwh-icon.png',
-            kwh_normalized: '/imgs/kwh_normalized-icon.png',
-            co2: '/imgs/co2-icon.png',
-            co2_normalized: '/imgs/co2_normalized-icon.png'
+            kwh: './imgs/kwh-icon.png',
+            kwh_normalized: './imgs/kwh_normalized-icon.png',
+            co2: './imgs/co2-icon.png',
+            co2_normalized: './imgs/co2_normalized-icon.png'
         }
     },
     buildingType: {
@@ -52,11 +52,11 @@ var FILTER_CONFIG = {
             services: 'Services'
         },
         icons: {
-            all: '/imgs/all-buildings-icon.png',
-            academic: '/imgs/academic-icon.png',
-            laboratory: '/imgs/laboratory-icon.png',
-            residential: '/imgs/residential-icon.png',
-            services: '/imgs/services-icon.png'
+            all: './imgs/all-buildings-icon.png',
+            academic: './imgs/academic-icon.png',
+            laboratory: './imgs/laboratory-icon.png',
+            residential: './imgs/residential-icon.png',
+            services: './imgs/services-icon.png'
         }
     }
 };
