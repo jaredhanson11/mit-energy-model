@@ -8,20 +8,21 @@ import campus from '../data.json';
 function selectResourceType(resourceType) {
     return {
         type: actionTypes.SELECT_RESOURCE_TYPE,
-        resourceType: resourceType
+        selectedResource: resourceType
     }
 }
 
-function startHoverBuilding(hoveredBuilding) {
+function selectUnits(selectedUnits) {
     return {
-        type: actionTypes.START_HOVER_BUILDING,
-        hoveredBuilding: hoveredBuilding
+        type: actionTypes.SELECT_UNIT_TYPE,
+        selectedUnits: selectedUnits
     }
 }
 
-function stopHoverBuilding() {
+function selectBuildingType(selectedBuildingType) {
     return {
-        type: actionTypes.STOP_HOVER_BUILDING
+        type: actionTypes.SELECT_BUILDING_TYPE,
+        selectedBuildingType: selectedBuildingType
     }
 }
 
@@ -32,6 +33,12 @@ function selectBuilding(selectedBuilding) {
     }
 }
 
+function toggleFilter(expandFilter) {
+    return {
+        type: actionTypes.TOGGLE_FILTER,
+        expandFilter: expandFilter
+    }
+}
 
 function getBuildingData() {
     return {
@@ -55,7 +62,8 @@ export default {
     getBuildingData,
     loadGeojsonData,
     selectResourceType,
-    startHoverBuilding,
-    stopHoverBuilding,
-    selectBuilding
+    selectBuildingType,
+    selectUnits,
+    selectBuilding,
+    toggleFilter
 }

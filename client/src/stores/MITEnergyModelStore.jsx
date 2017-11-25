@@ -4,10 +4,12 @@ import  MITEnergyModelReducer  from '../reducers/MITEnergyModelReducer.jsx';
 
 var MITEnergyModelState = {
 
-    uiState: {
-        resourceType: 'total',
+    filterState: {
+        selectedResource: 'total',
+        selectedBuildingType: 'all',
         selectedBuilding: '',
-        hoveredBuilding: ''
+        selectedUnits: 'kwh',
+        filterExpanded: false
     },
 
     buildingMapApi: {

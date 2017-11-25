@@ -1,17 +1,19 @@
 import React from 'react';
 import { Provider, connect } from 'react-redux';
 import Immutable from 'immutable';
+
 import { actionCreators } from '../actions';
 import store from '../stores/MITEnergyModelStore.jsx';
 import MITMap from '../components/MITMap.jsx';
 import SideBar from '../components/SideBar.jsx';
+
+import _style from '../styles/MITEnergyModelContainerStyle.js';
 
 
 class MITEnergyModelContainer extends React.Component {
 
     constructor(props) {
       super(props);
-      this.selectSim = this.selectSim.bind(this);
     }
 
     componentWillMount() {
@@ -19,25 +21,18 @@ class MITEnergyModelContainer extends React.Component {
       this.props.dispatch(actionCreators.loadGeojsonData());
     }
 
-    selectSim(event) {
-        this.props.dispatch(actionCreators.selectResourceType(event.target.id));
-    }
-
     render() {
-        console.log(this.props);
-        console.log(this.props.buildingMapData);
         return (
-            <div>
-                <div>
-                    <MITMap
-                        uiState={this.props.uiState}
-                        geojson={this.props.geojsonData}
-                        campusData={this.props.buildingMapData}
-                        dispatch={this.props.dispatch} />
-                    <SideBar
-                        uiState={this.props.uiState}
-                        buildingData={this.props.buildingMapData} />
-                </div>
+            <div style={_style.fullScreenContainer} >
+                <MITMap
+                    filterState={this.props.filterState}
+                    geojsonData={this.props.geojsonData}
+                    buildingMapData={this.props.buildingMapData}
+                    buildingMapApi={this.props.buildingMapApi}
+                    dispatch={this.props.dispatch} />
+                <SideBar
+                    filterState={this.props.filterState}
+                    buildingData={this.props.buildingMapData} />
             </div>
         )
     }
