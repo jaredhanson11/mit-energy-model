@@ -4,7 +4,8 @@ var baseContainer = {
     width: '100%',
     display: 'flex',
     alignItems: 'center',
-    alignContent: 'center'
+    alignContent: 'center',
+    cursor: 'pointer'
 };
 var baseImgContainer = {
     height: '50px',
