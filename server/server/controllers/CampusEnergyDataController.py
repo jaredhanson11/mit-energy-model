@@ -4,7 +4,7 @@ from flask_restful import Resource
 import psycopg2
 from psycopg2 import sql
 
-from .. import app
+from .. import app, CampusEnergyData
 from ..utils import responses
 
 class CampusEnergyDataController(Resource):
@@ -17,8 +17,14 @@ class MonthlyEnergyDataController(Resource):
         campus = {}
         meu = self._get_monthly_energy()
 
-        for building in meu:
-            campus[building] = {'measured': meu[building]}
+        building_metadata = CampusEnergyData.building_metadata()
+        for building in CampusEnergyData.whitelisted_buildings():
+            if building not in meu:
+                continue
+            campus[building] = {
+                    'measured': meu[building],
+                    'metadata': building_metadata[building]
+            }
 
         return responses.success({'campus': campus})
 
