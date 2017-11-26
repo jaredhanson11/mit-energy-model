@@ -20,7 +20,7 @@ class SideBar extends React.Component {
         var monthSum = Array.apply(null, Array(12)).map(Number.prototype.valueOf,0);
         var internalData = this.props.buildingMapData['campus'];
         for (var key in internalData) {
-          var monthlyData = internalData[key]['measured']['total']
+          var monthlyData = internalData[key]['measured_kwh']['total']
           for(var i = 0 ; i < monthlyData.length; i++){
              monthSum[i] += monthlyData[i]
           };

@@ -68,7 +68,6 @@ export default class BuildingSummary extends React.Component {
                 entry.value = resourceBreakdown[resource][thisMonth];
                 pieData.push(entry);
             }
-            console.log(pieData);
             TotalEnergyEle = (<div style={{marginTop: '10px'}} >Total Energy Output: {this.props.buildingData.campus[selectedBuilding].measured.total[thisMonth]}</div>);
 
             BuildingSummaryElement = (

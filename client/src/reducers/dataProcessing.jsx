@@ -2,13 +2,13 @@ export function summarizeMonthlyEnergyData(building_data) {
     var today = new Date();
     var monthIndex = today.getMonth();
     var summary = {};
-    for (var energyType in building_data['measured']) {
+    for (var energyType in building_data['measured_kwh']) {
         var max = 0;
         var min = 1000000000;
         var tot = 0;
         summary[energyType] = {}
-        for (var j = 0; j < building_data['measured'][energyType].length; j++) {
-            var month = parseInt(building_data['measured'][energyType][j]);
+        for (var j = 0; j < building_data['measured_kwh'][energyType].length; j++) {
+            var month = parseInt(building_data['measured_kwh'][energyType][j]);
             if (month < min) {
                 min = month;
             }
@@ -21,7 +21,7 @@ export function summarizeMonthlyEnergyData(building_data) {
         summary[energyType].monthly_avg = tot/12.0;
         summary[energyType].min = min;
         summary[energyType].max = max;
-        summary[energyType].month_total = building_data['measured'][energyType][monthIndex];
+        summary[energyType].month_total = building_data['measured_kwh'][energyType][monthIndex];
     }
 
     return summary;
