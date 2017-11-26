@@ -4,6 +4,10 @@ import { actionTypes } from '../actions';
 
 import { summarizeMonthlyEnergyData } from './dataProcessing.jsx';
 
+import { getCampusSummary } from './getCampusSummary.jsx';
+
+import { reformatBackendData } from './reformatBackendData.jsx'
+
 var filterStateReducer = function(state={}, action){
     switch (action.type) {
         case actionTypes.SELECT_RESOURCE_TYPE:
@@ -72,16 +76,19 @@ var buildingMapApiReducer = function(state={}, action){
 var buildingMapDataReducer = function(state={}, action){
     switch (action.type) {
         case actionTypes.GET_BUILDING_DATA_SUCCESS:
-            var newState = {selected: 'total'};
-            newState.campus = action.payload.content.campus;
-            newState.campus_summary = {};
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            newState.campus = reformatBackendData(action.payload.content.campus);
+            newState.campus_summary = getCampusSummary(newState.campus);
 
+            //need to edit this, do we even need it?
             for (var building in newState.campus) {
                 const data_summary = summarizeMonthlyEnergyData(newState.campus[building]);
                 newState.campus[building].measured_summary = data_summary;
             }
             return newState;
         default:
+        //there is a problem here
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();
             return newState;
