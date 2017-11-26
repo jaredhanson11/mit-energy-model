@@ -5,6 +5,8 @@ const GJV = require("geojson-validation");
 import campus from '../data.json';
 import { actionCreators } from '../actions';
 
+import { connect } from 'react-redux';
+
 import _style from '../styles/MITMapStyle.js';
 import MITMapFilter from './MITMapFilter.jsx';
 
@@ -15,13 +17,15 @@ class MITMap extends React.Component {
         this.featureStyle = this.featureStyle.bind(this);
     }
 
+    onEachFeature() {
 
-    onEachFeature(dispatch) {
+        var that = this;
+
         function _onEachFeature(feature, layer) {
             layer.on('click', function(e) {
                 if (feature.properties && feature.properties.building_number) {
                     const building_number = feature.properties.building_number;
-                    dispatch(actionCreators.selectBuilding(building_number));
+                    that.props.selectBuilding(building_number);
                 }
             });
         }
@@ -73,10 +77,26 @@ class MITMap extends React.Component {
                 <GeoJSON style={this.featureStyle}
                     data={this.props.geojsonData}
                     key={Math.random()}
-                    onEachFeature={this.onEachFeature(this.props.dispatch)} />
+                    onEachFeature={this.onEachFeature()} />
                 <MITMapFilter />
             </Map>
         )}
     }
 
-    export default MITMap;
+
+const mapStateToProps = (state) => {
+    return {
+        filterState: state.filterState,
+        buildingMapApi: state.buildingMapApi,
+        buildingMapData: state.buildingMapData,
+        geojsonData : state.geojsonData
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        selectBuilding: (buildingNumber) => dispatch(actionCreators.selectBuilding(buildingNumber))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MITMap);
