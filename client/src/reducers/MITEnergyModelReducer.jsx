@@ -2,11 +2,7 @@ import { combineReducers } from 'redux';
 import Immutable from 'immutable';
 import { actionTypes } from '../actions';
 
-import { summarizeMonthlyEnergyData } from './dataProcessing.jsx';
-
-import { getCampusSummary } from './getCampusSummary.jsx';
-
-import { reformatBackendData } from './reformatBackendData.jsx'
+import { getCampusSummary, reformatBackendData, summarizeMonthlyEnergyData } from './dataProcessing.jsx';
 
 var filterStateReducer = function(state={}, action){
     switch (action.type) {
