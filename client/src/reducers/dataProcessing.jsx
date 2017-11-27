@@ -11,11 +11,11 @@ export function reformatBackendData(campusData) {
         var building_metadata = {
             'building_type' : campusData[building]['metadata']['building_type'],
             'area_ft2' : campusData[building]['metadata']['area_ft2'],
+            'area_m2' : campusData[building]['metadata']['area_m2'],
             'building_eui' : campusData[building]['metadata']['building_eui'],
         }
         campus_final[building] = {};
         campus_final[building]['building_metadata'] = building_metadata;
-
         campus_final[building]['building_data'] = {}
         campus_final[building]['building_data']['measured_kwh'] = {};
         campus_final[building]['building_data']['measured_c02'] = {};
@@ -25,8 +25,8 @@ export function reformatBackendData(campusData) {
         for (var energy_type in campusData[building]['measured']) {
             if (!(energy_type == 'total')) {
                 var energy_c02 = campusData[building]['measured'][energy_type].map(function(x) {return x * c02_factors[energy_type]});
-                var energy_c02_norm = energy_c02.map(function(x) {return x / building_metadata['area_ft2']});
-                var unit_norm = campusData[building]['measured'][energy_type].map(function(x) {return x / building_metadata['area_ft2']});
+                var energy_c02_norm = energy_c02.map(function(x) {return x / building_metadata['area_m2']});
+                var unit_norm = campusData[building]['measured'][energy_type].map(function(x) {return x / building_metadata['area_m2']});
                 var unit = campusData[building]['measured'][energy_type];
 
                 campus_final[building]['building_data']['measured_kwh'][energy_type] = unit;
@@ -91,24 +91,59 @@ export function summarizeMonthlyEnergyData(building_data) {
 
 export function getCampusSummary(buildingData) {
 
-    return {
-        'Academic' : {
-            'good' : 0,
-            'bad' : 99999999999
-        },
-        'Lab' : {
-            'good' : 0,
-            'bad' : 99999999999
-        },
-        'Residential' : {
-            'good' : 0,
-            'bad' : 99999999999
-        },
-        'Services' : {
-            'good' : 0,
-            'bad' : 99999999999
-        },
+    var yearly_figures = {};
+
+    var types = ['academic', 'services', 'residential', 'laboratory'];
+    var measured = ['measured_c02_norm', 'measured_kwh_norm'];
+    for (var type in types) {
+        yearly_figures[types[type]] = {};
+        for (var measure in measured) {
+            yearly_figures[types[type]][measured[measure]] = {
+                'chw' : {
+                    'year_min' : 999999999999999.99,
+                    'year_max' : 0.0
+                },
+                'elec' : {
+                    'year_min' : 999999999999999.99,
+                    'year_max' : 0.0
+                },
+                'stm' : {
+                    'year_min' : 999999999999999.99,
+                    'year_max' : 0.0
+                },
+                'total' : {
+                    'year_min' : 999999999999999.99,
+                    'year_max' : 0.0
+                }
+            };
+        }
     }
+
+    for (var building in buildingData) {
+        for (var measuredType in buildingData[building].building_summary) {
+            if (measuredType == 'measured_c02_norm' || measuredType == 'measured_kwh_norm') {
+                console.log(building);
+                var buildingType = buildingData[building].building_metadata.building_type;
+                for (var resource in buildingData[building].building_summary[measuredType]) {
+                    //for buildingTypes
+                    if (buildingData[building].building_summary[measuredType][resource].year_total < yearly_figures[buildingType][measuredType][resource].year_min) {
+                        //need to address later the problem of zero values
+                        if (buildingData[building].building_summary[measuredType][resource].year_total != 0) {
+                            yearly_figures[buildingType][measuredType][resource].year_min = buildingData[building].building_summary[measuredType][resource].year_total;
+                        }
+                    }
+                    if (buildingData[building].building_summary[measuredType][resource].year_total > yearly_figures[buildingType][measuredType][resource].year_max) {
+                        //need to address later the problem of zero values
+                        if (buildingData[building].building_summary[measuredType][resource].year_total != 0) {
+                            yearly_figures[buildingType][measuredType][resource].year_max = buildingData[building].building_summary[measuredType][resource].year_total;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return yearly_figures;
 }
 
 export default { getCampusSummary, reformatBackendData, summarizeMonthlyEnergyData }

@@ -10,11 +10,15 @@ import { connect } from 'react-redux';
 import _style from '../styles/MITMapStyle.js';
 import MITMapFilter from './MITMapFilter.jsx';
 
+import chroma from 'chroma-js';
+
 class MITMap extends React.Component {
 
     constructor(props) {
         super(props);
         this.featureStyle = this.featureStyle.bind(this);
+        this.getBuildingStyle = this.getBuildingStyle.bind(this);
+        this.interpolate = this.interpolate.bind(this);
     }
 
     onEachFeature() {
@@ -30,45 +34,69 @@ class MITMap extends React.Component {
         return _onEachFeature;
     }
 
-    featureStyle(feature) {
+    interpolate(min, max, val) {
+        return (val-min)/ (max-min)
+    }
 
-        console.log(this.props);
+    getBuildingStyle(buildingDataYear, metricsForBuildingType, EUI, buildingType) {
+        var yearly_min = metricsForBuildingType.year_min;
+        var yearly_max = metricsForBuildingType.year_max;
+        var this_building_value = buildingDataYear;
 
-        //building specific
-        var buildingNumber = feature.properties.building_number;
-        var buildingType = feature.properties.building_type;
-
-        //selected
-        var selectedResource = this.props.filterState.selected_resource;
-        var selectedUnits = this.props.filterState.selectedUnits;
-        var selectedBuildingType = this.props.filterState.selectedBuildingType;
-
-        //dynamic stuff
-        var includeBuildingBool = true;
-        if (!(selectedBuildingType == 'all')) {
-            var includeBuildingBool = buildingType == selectedBuildingType ? true : false;
+        var scale = chroma.scale(['#7d8180', '#d91111']);
+        if (buildingType == 'services') {
+            scale = chroma.scale(['#7d8180', '#06089c']);
+        } else if (buildingType == 'residential') {
+            scale = chroma.scale(['#7d8180', 'rgb(62, 242, 8)']);
+        } else if (buildingType == 'academic') {
+            scale = chroma.scale(['#7d8180', 'rgb(250, 0, 235)']);
+        } else if (buildingType == 'laboratory') {
+            scale = chroma.scale(['#7d8180', 'rgb(228, 147, 9)']);
         }
 
-        resource_alt_name = {
-            'kwh' : 'measured_kwh',
-            'co2' : 'measured_c02',
-            'kwh_normalized' : 'measured_kwh_norm',
-            'co2_normalized' : 'measured_c02_norm'
-        }
-
-        // var selectedResourceValue = this.props.buildingMapData.campus.buildingNumber.building_data[resource_alt_name[selectedResource]]
-
-        var defaultStyle = {
+        var newStyle = {
             weight: 1,
             opacity: 1,
             color: 'rgb(10, 10, 4)',
-            fillOpacity: 0.5,
+            fillOpacity: .5,
             dashCapacity: 3,
-            fillColor: 'rgb(137, 37, 213)'
+            fillColor: scale(this.interpolate(yearly_min, yearly_max, this_building_value))
+        };
+        return newStyle;
+    }
+
+    featureStyle(feature) {
+
+        var defaultStyle = {
+            weight: 0,
+            opacity: 0,
+            color: 'rgb(10, 10, 4)',
+            fillOpacity: 0,
+            dashCapacity: 3,
+            fillColor: 'rgb(182, 174, 187)'
         };
 
-        return defaultStyle;
+        var buildingNumber = feature.properties.building_number;
+        var buildingType = feature.properties.building_type;
 
+        if (!(this.props.buildingMapApi.loaded) || this.props.buildingMapData.campus[buildingNumber] == undefined) { return defaultStyle; }
+
+        var selectedResource = this.props.filterState.selectedResource;
+        var selectedUnits = this.props.filterState.selectedUnits;
+        var selectedBuildingType = this.props.filterState.selectedBuildingType;
+
+        var includeBuildingBool = true;
+        if (!(selectedBuildingType == 'all')) { var includeBuildingBool = buildingType == selectedBuildingType ? true : false; }
+        if (!(includeBuildingBool)) { return defaultStyle }
+
+        var unit_alt_name = {'kwh' : 'measured_kwh_norm', 'co2' : 'measured_c02_norm',}
+
+        var buildingDataEntireYear = this.props.buildingMapData.campus[buildingNumber].building_summary[unit_alt_name[selectedUnits]][selectedResource].year_total;
+        var metricsForBuildingType = this.props.buildingMapData.campus_summary[buildingType][unit_alt_name[selectedUnits]][selectedResource];
+        var EUI = this.props.buildingMapData.campus[buildingNumber].building_metadata.building_eui;
+
+        var buildingStyle = this.getBuildingStyle(buildingDataEntireYear, metricsForBuildingType, EUI, selectedBuildingType);
+        return buildingStyle;
     }
 
     render() {

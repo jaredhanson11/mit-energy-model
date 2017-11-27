@@ -75,13 +75,12 @@ var buildingMapDataReducer = function(state={}, action){
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();
             newState.campus = reformatBackendData(action.payload.content.campus);
-            newState.campus_summary = getCampusSummary(newState.campus);
             for (var building in newState.campus) {
                 newState.campus[building].building_summary = summarizeMonthlyEnergyData(newState.campus[building]['building_data']);
             }
+            newState.campus_summary = getCampusSummary(newState.campus);
             return newState;
         default:
-        //there is a problem here
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();
             return newState;
