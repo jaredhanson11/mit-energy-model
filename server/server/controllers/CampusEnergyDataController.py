@@ -51,16 +51,20 @@ class MonthlyEnergyDataController(Resource):
             for i, building in enumerate(headers):
                 if i < 3:
                     continue
+                building = CampusEnergyData.name_translations(building)
                 if building not in values_by_building:
-                    values_by_building[building] = []
+                    values_by_building[building] = [0 for i in range(12)]
 
             monthly_data = cursor.fetchall()
             for row in monthly_data:
                 for j, value in enumerate(row):
                     if j < 3:
+                        if j == 1:
+                            month_index = int(value) - 1
                         continue
-                    building_number = headers[j]
-                    values_by_building[building_number].append(value)
+                    building_number = CampusEnergyData.name_translations(headers[j])
+                    kwh_used = CampusEnergyData.to_kwh(float(value), table)
+                    values_by_building[building_number][month_index] = kwh_used
 
             for building in values_by_building:
                 if building not in meu_by_building:
