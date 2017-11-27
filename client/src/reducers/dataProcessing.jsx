@@ -1,12 +1,7 @@
-var c02_factors = {
-    'elec' : 0.193411,
-    'stm' : 0.272202,
-    'chw' : 0.205706
-}
 
 export function reformatBackendData(campusData) {
+    var c02_factors = {'elec' : 0.193411, 'stm' : 0.272202, 'chw' : 0.205706};
     var campus_final = {};
-
     for (var building in campusData) {
         var building_metadata = {
             'building_type' : campusData[building]['metadata']['building_type'],
@@ -55,17 +50,14 @@ export function summarizeMonthlyEnergyData(building_data) {
     var today = new Date();
     var monthIndex = today.getMonth();
     var building_summary = {};
-
-    //how to handle incomplete data
+    //how to handle incomplete data?
     for (var measuredType in building_data) {
         var measured_summary = {};
         for (var energyType in building_data[measuredType]) {
             measured_summary[energyType] = {};
-
             var tot_ = 0.0;
             var min = 9999999999999999.0;
             var max = 0.0;
-
             for (var i = 0; i < building_data[measuredType][energyType].length; i++) {
                 var value = building_data[measuredType][energyType][i];
                 tot_ += value;
@@ -77,7 +69,6 @@ export function summarizeMonthlyEnergyData(building_data) {
                     max = value;
                 }
             }
-
             measured_summary[energyType].year_total = tot_;
             measured_summary[energyType].monthly_avg = tot_/12.0;
             measured_summary[energyType].min = min;
@@ -90,9 +81,7 @@ export function summarizeMonthlyEnergyData(building_data) {
 }
 
 export function getCampusSummary(buildingData) {
-
     var yearly_figures = {};
-
     var types = ['academic', 'services', 'residential', 'laboratory'];
     var measured = ['measured_c02_norm', 'measured_kwh_norm'];
     for (var type in types) {
@@ -122,7 +111,6 @@ export function getCampusSummary(buildingData) {
     for (var building in buildingData) {
         for (var measuredType in buildingData[building].building_summary) {
             if (measuredType == 'measured_c02_norm' || measuredType == 'measured_kwh_norm') {
-                console.log(building);
                 var buildingType = buildingData[building].building_metadata.building_type;
                 for (var resource in buildingData[building].building_summary[measuredType]) {
                     //for buildingTypes
@@ -142,7 +130,6 @@ export function getCampusSummary(buildingData) {
             }
         }
     }
-
     return yearly_figures;
 }
 
