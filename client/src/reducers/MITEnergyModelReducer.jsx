@@ -76,11 +76,8 @@ var buildingMapDataReducer = function(state={}, action){
             newState = newState.toJS();
             newState.campus = reformatBackendData(action.payload.content.campus);
             newState.campus_summary = getCampusSummary(newState.campus);
-
-            //need to edit this, do we even need it?
             for (var building in newState.campus) {
-                const data_summary = summarizeMonthlyEnergyData(newState.campus[building]);
-                newState.campus[building].measured_summary = data_summary;
+                newState.campus[building].building_summary = summarizeMonthlyEnergyData(newState.campus[building]['building_data']);
             }
             return newState;
         default:
