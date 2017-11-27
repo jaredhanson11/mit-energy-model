@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import Immutable from 'immutable';
 import { actionTypes } from '../actions';
 
-import { summarizeMonthlyEnergyData } from './dataProcessing.jsx';
+import { getCampusSummary, reformatBackendData, summarizeMonthlyEnergyData } from './dataProcessing.jsx';
 
 var filterStateReducer = function(state={}, action){
     switch (action.type) {
@@ -72,14 +72,13 @@ var buildingMapApiReducer = function(state={}, action){
 var buildingMapDataReducer = function(state={}, action){
     switch (action.type) {
         case actionTypes.GET_BUILDING_DATA_SUCCESS:
-            var newState = {selected: 'total'};
-            newState.campus = action.payload.content.campus;
-            newState.campus_summary = {};
-
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            newState.campus = reformatBackendData(action.payload.content.campus);
             for (var building in newState.campus) {
-                const data_summary = summarizeMonthlyEnergyData(newState.campus[building]);
-                newState.campus[building].measured_summary = data_summary;
+                newState.campus[building].building_summary = summarizeMonthlyEnergyData(newState.campus[building]['building_data']);
             }
+            newState.campus_summary = getCampusSummary(newState.campus);
             return newState;
         default:
             var newState = Immutable.fromJS(state);

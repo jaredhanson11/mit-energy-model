@@ -10,17 +10,20 @@ import { connect } from 'react-redux';
 import _style from '../styles/MITMapStyle.js';
 import MITMapFilter from './MITMapFilter.jsx';
 
+import chroma from 'chroma-js';
+import DefaultBuildingStyle from '../styles/DefaultBuildingStyle.jsx';
+
 class MITMap extends React.Component {
 
     constructor(props) {
         super(props);
         this.featureStyle = this.featureStyle.bind(this);
+        this.getBuildingStyle = this.getBuildingStyle.bind(this);
+        this.interpolate = this.interpolate.bind(this);
     }
 
     onEachFeature() {
-
         var that = this;
-
         function _onEachFeature(feature, layer) {
             layer.on('click', function(e) {
                 if (feature.properties && feature.properties.building_number) {
@@ -32,48 +35,67 @@ class MITMap extends React.Component {
         return _onEachFeature;
     }
 
-    featureStyle(feature) {
+    interpolate(min, max, val) {
+        return (val-min)/ (max-min)
+    }
 
-        var defaultStyle = {
+    getBuildingStyle(buildingDataEntireYear, metricsForBuildingType, EUI, buildingType) {
+        var yearly_min = metricsForBuildingType.year_min;
+        var yearly_max = metricsForBuildingType.year_max;
+        var scales = {
+            'all' : chroma.scale(['#7d8180', '#d91111']),
+            'services' : chroma.scale(['#7d8180', '#06089c']),
+            'residential' : chroma.scale(['#7d8180', 'rgb(62, 242, 8)']),
+            'academic' : chroma.scale(['#7d8180', 'rgb(250, 0, 235)']),
+            'laboratory' : chroma.scale(['#7d8180', 'rgb(228, 147, 9)'])
+        }
+        var scale = scales[buildingType];
+        var newStyle = {
             weight: 1,
             opacity: 1,
             color: 'rgb(10, 10, 4)',
-            fillOpacity: 0.5,
+            fillOpacity: .5,
             dashCapacity: 3,
-            fillColor: 'rgb(54, 230, 77)'
+            fillColor: scale(this.interpolate(yearly_min, yearly_max, buildingDataEntireYear))
         };
+        return newStyle;
+    }
 
-        var building_number = feature.properties.building_number;
-        var energy_type = this.props.buildingMapData.selected;
-        if (building_number && this.props.buildingMapData.campus) {
-            var building = this.props.buildingMapData.campus[building_number];
-            if (building && building.measured_summary) {
-                if (building.measured_summary[energy_type].month_total > building.measured_summary[energy_type].monthly_avg){
-                var newStyle = Object.assign({}, defaultStyle);
-                newStyle.fillColor = 'rgb(200, 50, 85)';
-                return newStyle;
-                }
-            }
-        }
+    featureStyle(feature) {
+        var buildingNumber = feature.properties.building_number;
+        var buildingType = feature.properties.building_type;
+        var selectedResource = this.props.filterState.selectedResource;
+        var selectedUnits = this.props.filterState.selectedUnits;
+        var selectedBuildingType = this.props.filterState.selectedBuildingType;
+        var includeBuildingBool = true;
 
-        return defaultStyle;
+        if (!(this.props.buildingMapApi.loaded) || this.props.buildingMapData.campus[buildingNumber] == undefined) { return DefaultBuildingStyle; }
+        if (!(selectedBuildingType == 'all')) { var includeBuildingBool = buildingType == selectedBuildingType ? true : false; }
+        if (!(includeBuildingBool)) { return DefaultBuildingStyle }
 
+        var unit_alt_name = {'kwh' : 'measured_kwh_norm', 'co2' : 'measured_c02_norm',}
+        var buildingDataEntireYear = this.props.buildingMapData.campus[buildingNumber].building_summary[unit_alt_name[selectedUnits]][selectedResource].year_total;
+        var metricsForBuildingType = this.props.buildingMapData.campus_summary[buildingType][unit_alt_name[selectedUnits]][selectedResource];
+        var EUI = this.props.buildingMapData.campus[buildingNumber].building_metadata.building_eui;
+
+        var buildingStyle = this.getBuildingStyle(buildingDataEntireYear, metricsForBuildingType, EUI, selectedBuildingType);
+        return buildingStyle;
     }
 
     render() {
         return (
             <Map style={_style.map}
-            minZoom={_style.zoomSettings.minZoom}
-            center={_style.zoomSettings.center}
-            zoom={_style.zoomSettings.zoom}
-            maxBounds={_style.zoomSettings.maxBounds}
-            zoomControl={false}
-            >
+                minZoom={_style.zoomSettings.minZoom}
+                center={_style.zoomSettings.center}
+                zoom={_style.zoomSettings.zoom}
+                maxBounds={_style.zoomSettings.maxBounds}
+                zoomControl={false}
+                >
                 <ZoomControl position={_style.zoomControl.position} />
                 <TileLayer
-                attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
-                url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png'
-                />
+                    attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+                    url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png'
+                    />
                 <GeoJSON style={this.featureStyle}
                     data={this.props.geojsonData}
                     key={Math.random()}
@@ -83,20 +105,19 @@ class MITMap extends React.Component {
         )}
     }
 
-
-const mapStateToProps = (state) => {
-    return {
-        filterState: state.filterState,
-        buildingMapApi: state.buildingMapApi,
-        buildingMapData: state.buildingMapData,
-        geojsonData : state.geojsonData
+    const mapStateToProps = (state) => {
+        return {
+            filterState: state.filterState,
+            buildingMapApi: state.buildingMapApi,
+            buildingMapData: state.buildingMapData,
+            geojsonData : state.geojsonData
+        }
     }
-}
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        selectBuilding: (buildingNumber) => dispatch(actionCreators.selectBuilding(buildingNumber))
+    const mapDispatchToProps = (dispatch) => {
+        return {
+            selectBuilding: (buildingNumber) => dispatch(actionCreators.selectBuilding(buildingNumber))
+        }
     }
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(MITMap);
+    export default connect(mapStateToProps, mapDispatchToProps)(MITMap);
