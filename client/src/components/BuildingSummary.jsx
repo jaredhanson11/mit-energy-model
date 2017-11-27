@@ -53,7 +53,7 @@ export default class BuildingSummary extends React.Component {
         var BuildingSummaryElement;
         var TotalEnergyEle;
         if (this.props.buildingData && this.props.buildingData.campus[selectedBuilding] && this.props.buildingData.campus[selectedBuilding]){
-            var resourceBreakdown = this.props.buildingData.campus[selectedBuilding].measured;
+            var resourceBreakdown = this.props.buildingData.campus[selectedBuilding].building_data.measured_kwh;
 
 
             var pieData = [];
@@ -62,14 +62,12 @@ export default class BuildingSummary extends React.Component {
             var COLORS = ['#FF3333', '#FFBB28', '#0088FE']
             for (var i = 0; i < resources.length; i++) {
                 const resource = resources[i];
-
                 var entry = {}
                 entry.name = resourceNames[resource];
                 entry.value = resourceBreakdown[resource][thisMonth];
                 pieData.push(entry);
             }
-            console.log(pieData);
-            TotalEnergyEle = (<div style={{marginTop: '10px'}} >Total Energy Output: {this.props.buildingData.campus[selectedBuilding].measured.total[thisMonth]}</div>);
+            TotalEnergyEle = (<div style={{marginTop: '10px'}} >Total Energy Output: {this.props.buildingData.campus[selectedBuilding].building_data.measured_kwh.total[thisMonth]}</div>);
 
             BuildingSummaryElement = (
                 <PieChart width={350} height={200}>
