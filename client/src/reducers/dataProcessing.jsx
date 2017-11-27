@@ -1,6 +1,3 @@
-// in C02e kg/kWH
-// so kgs of c02 emissions per kWH of resource
-// //TODO make sure all units are in kWH
 var c02_factors = {
     'elec' : 0.193411,
     'stm' : 0.272202,
