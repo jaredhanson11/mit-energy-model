@@ -13,7 +13,6 @@ var style = {
 
     map: {
         height: '100%',
-        width: '70%',
         display: 'absolute'
     }
 };

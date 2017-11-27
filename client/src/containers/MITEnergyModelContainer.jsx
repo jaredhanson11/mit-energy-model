@@ -24,8 +24,10 @@ class MITEnergyModelContainer extends React.Component {
     render() {
         return (
             <div style={_style.fullScreenContainer} >
-                <MITMap />
+                <MITMap
+                    width={_style.MITMap.width} />
                 <SideBar
+                    width={_style.Sidebar.width}
                     filterState={this.props.filterState}
                     buildingData={this.props.buildingMapData} />
             </div>

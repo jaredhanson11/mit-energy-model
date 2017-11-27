@@ -1,4 +1,4 @@
- var style = {
+var style = {
     fullScreenContainer: Object.assign({
         width: '100vw',
         height: '100wh',
@@ -9,7 +9,14 @@
         alignItems: 'center',
         alignContent: 'center',
         justifyContent: 'center'
+    }),
+    MITMap: Object.assign({
+        width: '70%'
+    }),
+    Sidebar: Object.assign({
+        width: '30%'
     })
+
 }
 
 export default style;

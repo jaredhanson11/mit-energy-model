@@ -83,14 +83,16 @@ class MITMap extends React.Component {
     }
 
     render() {
+        const mapStyle = Object.assign({}, _style.map, {
+            width: this.props.width
+        });
         return (
-            <Map style={_style.map}
-                minZoom={_style.zoomSettings.minZoom}
-                center={_style.zoomSettings.center}
-                zoom={_style.zoomSettings.zoom}
-                maxBounds={_style.zoomSettings.maxBounds}
-                zoomControl={false}
-                >
+            <Map style={mapStyle}
+            minZoom={_style.zoomSettings.minZoom}
+            center={_style.zoomSettings.center}
+            zoom={_style.zoomSettings.zoom}
+            maxBounds={_style.zoomSettings.maxBounds}
+            zoomControl={false} >
                 <ZoomControl position={_style.zoomControl.position} />
                 <TileLayer
                     attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
