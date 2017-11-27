@@ -12,6 +12,9 @@ import _style from '../styles/SideBarStyle.js';
 import BuildingSummary from './BuildingSummary.jsx';
 import EnergyChart from './EnergyChart.jsx';
 
+import SelectedBuilding from './SelectedBuilding.jsx';
+import SelectedBuildingStyle from '../styles/SelectedBuildingStyle.jsx';
+
 class SideBar extends React.Component {
 
     constructor(props) {
@@ -32,7 +35,11 @@ class SideBar extends React.Component {
     renderSelectedBuilding() {
         return (
             <div style={_style.container}>
-                {this.props.filterState.selectedBuilding}
+                <SelectedBuilding
+                    buildingSelected={this.props.filterState.selectedBuilding}
+                    deselectBuildingAction={this.props.deselectBuilding}
+                    buildingData={this.props.buildingData[this.props.filterState.selectedBuilding]}
+                    />
             </div>
         );
     }
@@ -53,9 +60,12 @@ var mapStateToProps = function(state) {
     return newState;
 }
 
-var mapDispatchToProps = function(dispatch) {
-    return {};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        selectBuilding: (buildingNumber) => dispatch(actionCreators.selectBuilding(buildingNumber)),
+        deselectBuilding: () => dispatch(actionCreators.selectBuilding(''))
+
+    }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SideBar);
-
