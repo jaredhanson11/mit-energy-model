@@ -1,0 +1,66 @@
+
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+/*For selectedBuilding.jsx*/
+
+.topLine {
+    margin-top: 2%;
+    display: flex;
+    width: 100%;
+}
+
+.cancel {
+    margin: auto;
+    font-size: 15pt;
+}
+
+.buildingName {
+    margin: auto;
+    font-size: 20pt;
+}
+
+.info {
+    margin: auto;
+    font-size: 15pt;
+}
+
+/*.cancel {
+    font-size: 30;
+    border-radius: 5px;
+}
+
+.cancel:focus {
+    outline: none;
+}
+
+.cancelButton {
+    display: inline-block;
+    float: left;
+    margin-left: 2%;
+    margin-top: 2%;
+}
+
+.title {
+    display: table;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.info {
+    font-size: 30;
+    border-radius: 5px;
+}
+
+.infoButton {
+    display: inline-block;
+    float: right;
+}
+
+.info:focus {
+    outline: none;
+}*/
