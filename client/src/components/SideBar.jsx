@@ -13,7 +13,6 @@ import BuildingSummary from './BuildingSummary.jsx';
 import EnergyChart from './EnergyChart.jsx';
 
 import SelectedBuilding from './SelectedBuilding.jsx';
-import SelectedBuildingStyle from '../styles/SelectedBuildingStyle.jsx';
 
 class SideBar extends React.Component {
 

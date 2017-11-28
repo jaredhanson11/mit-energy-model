@@ -34,6 +34,9 @@ var filterStateReducer = function(state={}, action){
         default:
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();
+            //
+            newState.selectedBuilding = '32';
+            //
             return newState;
     }
 }
