@@ -37,7 +37,7 @@ class SideBar extends React.Component {
                 <SelectedBuilding
                     buildingSelected={this.props.filterState.selectedBuilding}
                     deselectBuildingAction={this.props.deselectBuilding}
-                    buildingData={this.props.buildingData[this.props.filterState.selectedBuilding]}
+                    buildingData={this.props.buildingData.campus[this.props.filterState.selectedBuilding]}
                     />
             </div>
         );

@@ -16,6 +16,11 @@ export default class SelectedBuilding extends React.Component {
                         <h1 className='buildingName'>Building {this.props.buildingSelected}</h1>
                         <button className='info'><MdInfoOutline/></button>
                 </div>
+                <div className='body'>
+                    <p>Area ft_2: {this.props.buildingData.building_metadata.area_ft2}</p>
+                    <p>EUI: {this.props.buildingData.building_metadata.building_eui}</p>
+                    <p>Type: {this.props.buildingData.building_metadata.building_type}</p>
+                </div>
             </div>
         )
     }
