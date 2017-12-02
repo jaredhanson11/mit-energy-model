@@ -27,12 +27,13 @@ var FILTER_CONFIG = {
     },
     unitsType: {
         filterStateKey: 'selectedUnits',
-        keys: ['kwh', 'kwh_normalized', 'co2', 'co2_normalized'],
+        //keys: ['kwh', 'kwh_normalized', 'co2', 'co2_normalized'],
+        keys: ['kwh', 'co2'],
         translations: {
             kwh: 'Kilowatt Hours',
-            kwh_normalized: 'Kilowatt Hours / Building Square Footage',
+            //kwh_normalized: 'Kilowatt Hours / Building Square Footage',
             co2: 'Carbon Dioxide',
-            co2_normalized: 'Carbon Dioxide / Building Square Footage'
+            //co2_normalized: 'Carbon Dioxide / Building Square Footage'
         },
         icons: {
             kwh: './imgs/kwh-icon.png',

@@ -23,6 +23,7 @@ class SideBar extends React.Component {
     renderCampusOverview() {
         return (
             <div style={_style.container} >
+                <EnergyChart height={'50%'} width={'100%'} />
                 <BuildingSummary
                     buildingData={this.props.buildingMapData}
                     selectedBuilding={this.props.filterState.selectedBuilding}

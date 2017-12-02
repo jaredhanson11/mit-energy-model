@@ -9,6 +9,18 @@ export default class SelectedBuilding extends React.Component {
     }
 
     render() {
+
+        var sumList = function(l) {
+            var tot = 0;
+            console.log(l);
+            for (var i=0; i < l.length; i++){
+                tot += parseFloat(l[i]);
+            }
+            return tot;
+        };
+        console.log(this.props.buildingData);
+        var energyTotal = sumList(this.props.buildingData.building_data['measured_kwh']['total']);
+        var normalizedEnergyTotal = parseInt(sumList(this.props.buildingData.building_data['measured_kwh']['total']) / parseFloat(this.props.buildingData.building_metadata.area_m2));
         return (
             <div className='container'>
                 <div className='topLine'>
@@ -17,9 +29,11 @@ export default class SelectedBuilding extends React.Component {
                         <button className='info'><MdInfoOutline/></button>
                 </div>
                 <div className='body'>
-                    <p>Area ft_2: {this.props.buildingData.building_metadata.area_ft2}</p>
+                    <p>Area m_2: {this.props.buildingData.building_metadata.area_m2}</p>
                     <p>EUI: {this.props.buildingData.building_metadata.building_eui}</p>
                     <p>Type: {this.props.buildingData.building_metadata.building_type}</p>
+                    <p>Past Year Energy Output (kwh): {energyTotal}</p>
+                    <p>Past Year Normalized Energy Output (kwh/m2): {normalizedEnergyTotal}</p>
                 </div>
             </div>
         )

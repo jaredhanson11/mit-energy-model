@@ -1,14 +1,34 @@
-function generateStyle(props) {
+function chartStyle(props) {
+    return {
+        container: {
+            height: props.height,
+            width: props.width,
+            padding: '10px',
+
+            display: 'flex',
+            flexDirection: 'row-reverse',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-end',
+            overflowX: 'scroll'
+
+        },
+    };
+
+}
+
+function barStyle(props) {
     var Bar = {
         container: {
-            height: '100%',
-            width: props.width,
+            height: props.height,
+            minWidth: props.width,
             display: 'flex',
             flexDirection: 'column-reverse',
             justifyContent: 'flex-start',
             alignContent: 'flex-start',
             justifyItems: 'center',
-            padding: '0'
+            border: 'solid thin blue',
+            padding: '0',
+            margin: '0 5px 0 5px'
         },
 
         stackedLayer: (value, max) => {
@@ -22,11 +42,10 @@ function generateStyle(props) {
         }
     }
 
-    return {
-        Bar
-    };
+    return Bar;
 }
 
 export default {
-    generateStyle
+    barStyle,
+    chartStyle
 };
