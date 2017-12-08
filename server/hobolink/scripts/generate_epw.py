@@ -8,7 +8,7 @@ import csv
 
 hobolink_parser_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
 sys.path.append(hobolink_parser_path)
-from HobolinkParser import HobolinkParser
+import HobolinkToEPW
 
 
 
@@ -24,7 +24,7 @@ args = arg_parser.parse_args()
 
 
 def populate(output_path):
-    hobolink_parser = HobolinkParser.HobolinkParser()
+    hobolink_parser = HobolinkToEPW.HobolinkToEPW()
     hobolink_parser.generate_epw(output_path)
 
 populate(args.output)

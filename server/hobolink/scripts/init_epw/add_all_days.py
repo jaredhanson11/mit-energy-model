@@ -22,7 +22,7 @@ args = arg_parser.parse_args()
 
 def main(args):
     def add_day(ele):
-        if ele.endswith('_weather.csv'):
+        if ele.startswith('Weather_File'):
             return True
     days_to_add = filter(add_day, os.listdir(args.input_dir))
 
@@ -30,7 +30,7 @@ def main(args):
         print 'Adding %s' % (file_name)
         print 'Day %d of %d' % (i, len(days_to_add))
         input_path = os.path.join(args.input_dir, file_name)
-        add_day_args = ['python', os.path.join(os.path.dirname(os.path.realpath(__file__)), '../add_weather.py'), '-i', input_path]
+        add_day_args = ['/usr/local/bin/python2.7', os.path.join(os.path.dirname(os.path.realpath(__file__)), '../add_weather.py'), '-i', input_path]
         subprocess.call(add_day_args)
 
 

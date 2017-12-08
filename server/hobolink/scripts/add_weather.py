@@ -8,7 +8,7 @@ import argparse
 
 hobolink_parser_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
 sys.path.append(hobolink_parser_path)
-from HobolinkParser import HobolinkParser
+from HobolinkToEPW import HobolinkToEPW
 
 
 arg_parser = argparse.ArgumentParser(description=desc)
@@ -22,7 +22,7 @@ arg_parser.add_argument('-i', '--input', type=_is_valid_file, required=True)
 args = arg_parser.parse_args()
 
 def main(args):
-    hobolink_parser = HobolinkParser.HobolinkParser()
-    hobolink_parser.update_master(args.input)
+    hobolink_parser = HobolinkToEPW()
+    hobolink_parser.hobolink_to_epw(args.input)
 
 main(args)
