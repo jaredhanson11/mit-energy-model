@@ -8,7 +8,6 @@ import { actionCreators } from '../actions';
 import { connect } from 'react-redux';
 
 import _style from '../styles/MITMapStyle.js';
-import MITMapFilter from './MITMapFilter.jsx';
 
 import chroma from 'chroma-js';
 import DefaultBuildingStyle from '../styles/DefaultBuildingStyle.jsx';
@@ -84,7 +83,8 @@ class MITMap extends React.Component {
 
     render() {
         const mapStyle = Object.assign({}, _style.map, {
-            width: this.props.width
+            width: this.props.width,
+            borderRadius: '10px'
         });
         return (
             <Map style={mapStyle}
@@ -102,7 +102,6 @@ class MITMap extends React.Component {
                     data={this.props.geojsonData}
                     key={Math.random()}
                     onEachFeature={this.onEachFeature()} />
-                <MITMapFilter />
             </Map>
         )}
     }

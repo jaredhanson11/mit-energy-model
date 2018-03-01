@@ -33,6 +33,20 @@ function selectBuilding(selectedBuilding) {
     }
 }
 
+function selectUnitsNormalizedType(unitsNormalized) {
+    return {
+        type: actionTypes.SELECT_UNITS_NORMALIZED,
+        selectedUnitsNormalized: unitsNormalized
+    }
+}
+
+function selectDataSource(dataSourceSelected) {
+    return {
+        type: actionTypes.SELECT_DATA_SOURCE,
+        selectedDataSource: dataSourceSelected
+    }
+}
+
 function toggleFilter(expandFilter) {
     return {
         type: actionTypes.TOGGLE_FILTER,
@@ -64,6 +78,8 @@ export default {
     selectResourceType,
     selectBuildingType,
     selectUnits,
+    selectUnitsNormalizedType,
     selectBuilding,
+    selectDataSource,
     toggleFilter
 }

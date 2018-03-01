@@ -26,6 +26,16 @@ var filterStateReducer = function(state={}, action){
             newState = newState.toJS();
             newState.selectedBuilding = action.selectedBuilding;
             return newState;
+        case actionTypes.SELECT_DATA_SOURCE:
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            newState.selectedDataSource = action.selectedDataSource;
+            return newState;
+        case actionTypes.SELECT_UNITS_NORMALIZED:
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            newState.selectedUnitsNormalized = action.selectedUnitsNormalized;
+            return newState;
         case actionTypes.TOGGLE_FILTER:
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();

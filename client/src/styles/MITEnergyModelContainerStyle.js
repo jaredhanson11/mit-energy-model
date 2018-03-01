@@ -11,7 +11,7 @@ var style = {
         justifyContent: 'center'
     }),
     MITMap: Object.assign({
-        width: '70%'
+        width: '100%'
     }),
     Sidebar: Object.assign({
         width: '30%'

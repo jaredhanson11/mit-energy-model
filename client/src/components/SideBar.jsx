@@ -6,7 +6,7 @@ import store from '../stores/MITEnergyModelStore.jsx';
 import { Provider, connect } from 'react-redux';
 import Immutable from 'immutable';
 
-import _style from '../styles/SideBarStyle.js';
+import _style from '../styles/SidebarStyle.js';
 
 
 import BuildingSummary from './BuildingSummary.jsx';
@@ -23,7 +23,6 @@ class SideBar extends React.Component {
     renderCampusOverview() {
         return (
             <div style={_style.container} >
-                <EnergyChart height={'50%'} width={'100%'} />
                 <BuildingSummary
                     buildingData={this.props.buildingMapData}
                     selectedBuilding={this.props.filterState.selectedBuilding}

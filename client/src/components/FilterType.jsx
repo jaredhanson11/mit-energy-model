@@ -2,12 +2,12 @@ import React from 'react';
 import { actionCreators } from '../actions';
 
 import _style from '../styles/FilterTypeStyle.jsx';
-import { getFilterConfig } from '../config.jsx';
+import { getSelectFilterConfig } from '../config.jsx';
 
 export default class FilterType extends React.Component {
     constructor(props) {
         super(props);
-        this._config = getFilterConfig(this.props.filterKey);
+        this._config = getSelectFilterConfig(this.props.filterKey);
         this.state = {hover: false};
         this.toggleHover = this.toggleHover.bind(this);
         this._selectFilter = this._selectFilter.bind(this);

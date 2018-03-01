@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { actionCreators } from '../actions';
 
-import _style from '../styles/MITMapFilterStyle.js';
-import config from '../config.jsx';
+import { FilterContainer } from '../styles/MITMapFilterStyle.js';
 
 import FilterType from './FilterType.jsx';
 
@@ -15,7 +14,7 @@ class MITMapFilter extends React.Component {
 
     render() {
         return (
-            <div style={_style.container}>
+            <FilterContainer>
                 <FilterType filterKey={'resourceType'}
                     filterState={this.props.filterState}
                     selectFilter={this.props.selectResourceType}
@@ -28,7 +27,7 @@ class MITMapFilter extends React.Component {
                     filterState={this.props.filterState}
                     selectFilter={this.props.selectBuildingType}
                 />
-            </div>
+            </FilterContainer>
         );
     }
 }
@@ -41,7 +40,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        selectBuildingType: (filterKey) => {dispatch(actionCreators.selectBuildingType(filterKey))},
+        selectFilter: (filterKey) => {dispatch(actionCreators.selectBuildingType(filterKey))},
         selectResourceType: (filterKey) => dispatch(actionCreators.selectResourceType(filterKey)),
         selectUnitsType: (filterKey) => dispatch(actionCreators.selectUnits(filterKey))
     }

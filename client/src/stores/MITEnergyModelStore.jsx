@@ -9,7 +9,8 @@ var MITEnergyModelState = {
         selectedBuildingType: 'all',
         selectedBuilding: '',
         selectedUnits: 'kwh',
-        filterExpanded: false
+        selectedUnitsNormalized: 'per_year',
+        selectedDataSource: 'metered'
     },
 
     buildingMapApi: {

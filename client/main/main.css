@@ -6,6 +6,10 @@ body {
     font-family: 'Ubuntu', sans-serif;
 }
 
+* {
+    box-sizing: border-box
+}
+
 /*For selectedBuilding.jsx*/
 
 .topLine {
