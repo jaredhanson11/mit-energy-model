@@ -67,11 +67,10 @@ class ToggleFilter extends React.Component {
     }
 
     componentDidMount() {
-        this.setDimenstions();
+        this.setDimensions();
     }
 
-    setDimenstions() {
-        console.log(this.divElement);
+    setDimensions() {
         const height = this.divElement.clientHeight;
         const width = this.divElement.clientWidth;
         this.setState({ height: height, width: width});
@@ -117,12 +116,10 @@ class ToggleFilter extends React.Component {
     render() {
         var height = this.state.height ? this.state.height - 4 : 20;
         var width = this.state.width? this.state.width / 3 : 40;
-        console.log(this.state);
-        console.log(height);
 
         return(
         <SwitchContainer
-            ref={(divElement) => this.divElement = divElement}
+            innerRef={(divElement) => this.divElement = divElement}
         >
             <FilterLabel selected={!this.state.checked}
                 dangerouslySetInnerHTML={{__html: this.getName(true)}}></FilterLabel>

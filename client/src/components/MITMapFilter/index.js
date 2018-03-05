@@ -13,19 +13,6 @@ class MITMapFilter extends React.Component {
         super(props);
     }
 
-    later() {
-        return (<div><ToggleFilter
-                        filterKey={'unitsType'}
-                        filterState={this.props.filterState}
-                        changeFilter={this.props.changeFilter}
-                    />
-                    <ToggleFilter
-                        filterKey={'unitsNormalized'}
-                        filterState={this.props.filterState}
-                        changeFilter={this.props.changeFilter}
-                    /></div>
-                );
-    }
     render() {
         return (
             <FilterContainer>
