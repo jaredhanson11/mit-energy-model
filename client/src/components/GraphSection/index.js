@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-
 import { Bar } from 'react-chartjs-2';
 
+import dataProcessing from './dataProcessing.js';
+
 var GraphSectionContainer = styled.div`
-    height: 70%;
+    height: 100%;
     width: 100%;
 
     padding: 5px;
@@ -40,11 +41,12 @@ class Graph extends React.Component {
             datasets: [{
                 label: 'Measured',
                 type: 'bar',
-                data: [2000, 2060, 1970, 2200, 1840, 1800, 1760, 1890, null, 2000, null, 2050, null, 2900],
+                data: [2000, 2060, 1970, 2200, 1840, 1800, 1760, 1890, null, null, null, null, null, null],
                 fill: false
             },{
                 label: 'Modeled',
                 type: 'line',
+                borderDash: [5],
                 data: [2000, 2060, 1970, 2200, 1840, 1800, 1760, 1890, null, 2000, null, 2050, null, 2900],
                 spanGaps: true,
                 fill: false
@@ -58,7 +60,7 @@ class Graph extends React.Component {
                 yAxes: [{
                     type: 'linear',
                     display: true,
-                    gridLines: {display: true},
+                    gridLines: {display: false},
                 }],
                 xAxes: [{
                     type: 'category',

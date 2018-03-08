@@ -29,13 +29,13 @@ class MITMapFilter extends React.Component {
                     />
                 </FilterColumn>
                 <FilterColumn width={'24%'}>
-                    <ToggleFilter
-                        filterKeys={['unitsType', 'unitsNormalized']}
+                    <SelectFilter
+                        filterKey={'dataSource'}
                         filterState={this.props.filterState}
                         changeFilter={this.props.changeFilter}
                     />
-                    <SelectFilter
-                        filterKey={'dataSource'}
+                    <ToggleFilter
+                        filterKeys={['unitsType', 'unitsNormalized']}
                         filterState={this.props.filterState}
                         changeFilter={this.props.changeFilter}
                     />

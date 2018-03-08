@@ -3,14 +3,14 @@ import styled from 'styled-components';
 
 var SiteTitleContainer = styled.div`
     width: 100%;
-    max-height: 20%;
+    height: 60px;
     padding-left: 5px;
+    padding-top: 10px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-items: center;
     align-content: center;
     align-items: flex-start;
-    flex-grow: 1;
 `
 
 var SiteTitle = styled.div`

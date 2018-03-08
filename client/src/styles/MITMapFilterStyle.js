@@ -3,12 +3,12 @@ import styled from 'styled-components';
 export var FilterContainer = styled.div`
 
     width: 100%;
-    height: 80%;
+    height: 100%;
 
     display: flex;
     flex-direction: row;
     align-content: center;
-    align-items: center;
+    align-items: space-around;
     justify-content: flex-start;
 
     padding: 5px;
