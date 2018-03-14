@@ -35,54 +35,9 @@ class Graph extends React.Component {
         super(props);
     }
 
-    createGraph() {
-        var title = 'Sample Graph Title';
-        var data = {
-            datasets: [{
-                label: 'Measured',
-                type: 'bar',
-                data: [2000, 2060, 1970, 2200, 1840, 1800, 1760, 1890, null, null, null, null, null, null],
-                fill: false
-            },{
-                label: 'Modeled',
-                type: 'line',
-                borderDash: [5],
-                data: [2000, 2060, 1970, 2200, 1840, 1800, 1760, 1890, null, 2000, null, 2050, null, 2900],
-                spanGaps: true,
-                fill: false
-            }]
-        };
-
-        var options = {
-            maintainAspectRatio: false,
-            legend: {display: false},
-            scales: {
-                yAxes: [{
-                    type: 'linear',
-                    display: true,
-                    gridLines: {display: false},
-                }],
-                xAxes: [{
-                    type: 'category',
-                    display: true,
-                    gridLines: {display: false},
-                    labels: ['2011', '2012', '2013', '2014', '2015', '2016', '2017', 'YTD',
-                        '', '2030', '', '2050', '','2080']
-                }]
-            }
-        };
-
-        var graph = {};
-        graph.title = title;
-        graph.data = data;
-        graph.options = options;
-
-        return graph;
-    }
-
 
     render() {
-        var graph = this.createGraph();
+        var graph = this.props.graph;
 
         return(
                 <GraphContainer>
@@ -101,17 +56,66 @@ class GraphSection extends React.Component {
         this.state = {};
     }
 
-    getTitle(filterState) {
-        return "Sample Title"
+    getGraph(filterState, historicalBuildingData, currentBuildingData) {
+        var title = 'Energy Usage';
+        var data = {
+            datasets: [{
+                label: 'Measured',
+                type: 'bar',
+                data: [2000, 2060, 1970, 2200, 1840, 1800, 1760, 1890, null, null, null, null, null, null],
+                fill: false
+            },{
+                label: 'Modeled',
+                type: 'line',
+                borderDash: [5],
+                data: [2000, 2060, 1970, 2200, 1840, 1800, 1760, 1890, null, 2000, null, 2050, null, 2900],
+                spanGaps: true,
+                fill: false
+            }]
+        };
+
+        data = {
+            datasets: [dataProcessing.getMeasuredData(this.props.filterState, this.props.buildingData, this.props.historicalBuildingData)]
+        }
+
+        var options = {
+            maintainAspectRatio: false,
+            legend: {display: false},
+            scales: {
+                yAxes: [{
+                    type: 'linear',
+                    display: true,
+                    gridLines: {display: false},
+                }],
+                xAxes: [{
+                    type: 'category',
+                    display: true,
+                    gridLines: {display: false},
+                    labels: ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', 'YTD',
+                        '', '2030', '', '2050', '','2080']
+                }]
+            }
+        };
+
+        var graph = {};
+        graph.title = title;
+        graph.data = data;
+        graph.options = options;
+
+        return graph;
     }
 
     render() {
+        if (this.props.buildingData.campus) {
+        var graph = this.getGraph();
+            console.log(this.props.buildingData);
+console.log(dataProcessing.getMeasuredData(this.props.filterState, this.props.buildingData, this.props.historicalBuildingData));
+        } else{ return (<GraphSectionContainer />)};
         return(
             <GraphSectionContainer>
-                <GraphSectionHeader>{this.getTitle()}</GraphSectionHeader>
+                <GraphSectionHeader>{graph.title}</GraphSectionHeader>
                 <Graph
-                    filterState={this.props.filterState}
-                    buildingData={this.props.BuildingData}
+                    graph={graph}
                 />
             </GraphSectionContainer>
         );

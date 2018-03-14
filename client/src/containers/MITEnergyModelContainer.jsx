@@ -68,6 +68,7 @@ class MITEnergyModelContainer extends React.Component {
     componentWillMount() {
       this.props.dispatch(actionCreators.getBuildingData());
       this.props.dispatch(actionCreators.loadGeojsonData());
+      this.props.dispatch(actionCreators.loadHistoricalData());
     }
 
     render() {
@@ -96,6 +97,7 @@ class MITEnergyModelContainer extends React.Component {
                             <GraphSection
                                 filterState={this.props.filterState}
                                 buildingData={this.props.buildingMapData}
+                                historicalBuildingData={this.props.historicalBuildingData}
                             />
                         </MainColumnSection>
                         <MainColumnSection height={'calc(20% - 2.5px)'} padding={'10px'}>

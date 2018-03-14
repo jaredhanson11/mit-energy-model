@@ -118,11 +118,24 @@ var geojsonDataReducer = function (state={}, action) {
     }
 }
 
+var historicalBuildingDataReducer = function(state={}, action) {
+    switch(action.type) {
+        case actionTypes.LOAD_HISTORICAL_DATA:
+            var newState = action.historicalData;
+            return newState;
+        default:
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            return newState;
+    }
+}
+
 var MITEnergyModelReducer = combineReducers({
     filterState: filterStateReducer,
     buildingMapApi: buildingMapApiReducer,
     buildingMapData: buildingMapDataReducer,
-    geojsonData: geojsonDataReducer
+    geojsonData: geojsonDataReducer,
+    historicalBuildingData: historicalBuildingDataReducer
 })
 
 export default MITEnergyModelReducer;

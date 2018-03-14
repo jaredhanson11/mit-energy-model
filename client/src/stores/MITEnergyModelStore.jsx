@@ -21,10 +21,11 @@ var MITEnergyModelState = {
     },
 
     buildingMapData: {
-          selected: 'total'
     },
 
-    geojsonData: {}
+    geojsonData: {},
+
+    historicalBuildingData: {}
 }
 
 var configuredStore = configureStore(MITEnergyModelReducer, MITEnergyModelState);

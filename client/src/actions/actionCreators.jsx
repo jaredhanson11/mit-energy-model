@@ -2,7 +2,8 @@ import { CALL_API } from 'redux-api-middleware';
 import { API_CONFIG } from '../config.jsx';
 import actionTypes from './actionTypes.jsx';
 
-import campus from '../data.json';
+import campus from '../data/geojson/campus.json';
+import { historical_data } from '../data/energy/historic';
 
 // UI State
 function selectResourceType(resourceType) {
@@ -72,9 +73,17 @@ function loadGeojsonData() {
     }
 }
 
+function loadHistoricalData() {
+    return {
+        type: actionTypes.LOAD_HISTORICAL_DATA,
+        historicalData: historical_data
+    }
+}
+
 export default {
     getBuildingData,
     loadGeojsonData,
+    loadHistoricalData,
     selectResourceType,
     selectBuildingType,
     selectUnits,

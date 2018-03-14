@@ -2,7 +2,6 @@ import React from 'react';
 import { Map, TileLayer, GeoJSON, Marker, Popup, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 const GJV = require("geojson-validation");
-import campus from '../data.json';
 import { actionCreators } from '../actions';
 
 import { connect } from 'react-redux';
