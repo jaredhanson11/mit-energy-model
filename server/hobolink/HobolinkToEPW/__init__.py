@@ -24,8 +24,8 @@ class HobolinkToEPW:
     ### Privates ###
 
     def _get_epw_records(self):
-        today = datetime.now()
-        last_year = today - timedelta(days=365)
+        yesterday = datetime.now() - timedelta(days=1)
+        last_year = yesterday - timedelta(days=365)
 
         records = EPWModel.select().where(EPWModel.datetime >= last_year).\
                 order_by(EPWModel.day_of_year.asc()).execute()
@@ -35,7 +35,7 @@ class HobolinkToEPW:
     def _validate_epw_records(self, epw_records):
         dt_to_index = {}
         for i, rec in enumerate(epw_records):
-            dt = datetime(rec[0], rec[1], rec[2], rec[3], rec[4])
+            dt = datetime(rec[0], rec[1], rec[2], rec[3] - 1, rec[4]) # Subrtract 1 from hour for index 0
             dt_to_index[dt.strftime('%m-%d:%H:%M')] = i
 
         validated_records = []
@@ -49,19 +49,31 @@ class HobolinkToEPW:
 
         while current <= dec_31:
             if current.strftime('%m-%d:%H:%M') not in dt_to_index:
-                missing_row = [current.year, current.month, current.day, current.hour, current.minute]
-                for header in EPWConfig.get_epw_headers()[5:]: # Num EPW inputs - datetime inputs
-                    missing_row.append('n/a')
-                validated_records.append(missing_row)
+                backfill_data = self._backfill_missing_data(current)
+                if backfill_data:
+                    validated_records.append(backfill_data.get_epw_row())
+                else:
+                    print 'Missing data for %s, replacing with data from %s' % (current.strftime('%m-%d:%H:%M'), (current - hour).strftime('%m-%d:%H:%M'))
+                    missing_row = [current.year, current.month, current.day, current.hour + 1, current.minute]
+
+                    for val in validated_records[-1][5:]: # Num EPW inputs - datetime inputs
+                        missing_row.append(val)
+                    validated_records.append(missing_row)
             else:
                 index = dt_to_index[current.strftime('%m-%d:%H:%M')]
                 validated_records.append(epw_records[index])
             current += hour
         return validated_records
 
+    def _backfill_missing_data(self, dt_obj):
+        record = EPWModel.select().where((EPWModel.month == dt_obj.month)
+                & (EPWModel.day == dt_obj.day) & (EPWModel.hour == dt_obj.hour)).order_by(EPWModel.year.desc()).first()
+        return record
+
     def _write_epw(self, epw_records, output_path):
-        csv_writer = csv.writer(open(output_path, 'w'))
-        csv_writer.writerow(EPWConfig.get_epw_headers())
+        output_file = open(output_path, 'w')
+        output_file.writelines(open(EPWConfig.epw_file_header()))
+        csv_writer = csv.writer(output_file)
         csv_writer.writerows(epw_records)
 
 

@@ -1,3 +1,5 @@
+import os
+
 from EPWDatetimeConverter import EPWDatetimeConverter
 from EPWWindDirectionConverter import EPWWindDirectionConverter
 from EPWSolarRadiationConverter import EPWSolarRadiationConverter
@@ -57,6 +59,8 @@ EPW_HEADERS = [
 def get_epw_headers():
     return [header for header in EPW_HEADERS]
 
+def epw_file_header():
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), 'EPWHeaders.epw'))
 
 EPW_NULL_INPUTS = {
     'dry_bulb_temperature': 99.9,

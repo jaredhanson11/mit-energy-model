@@ -5,3 +5,6 @@ venv
 *.DS_Store
 */node_modules/*
 *server/hobolink/data/*
+*HobolinkParser/*
+*RadiationSplit/gen_reindl_files*
+*.db

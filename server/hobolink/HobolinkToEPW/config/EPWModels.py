@@ -96,6 +96,8 @@ class EPWModel(peewee.Model):
         epw_headers = EPWConfig.get_epw_headers()
         for header in epw_headers:
             epw_value = getattr(self, header)
+            if header == 'hour': ## EPW uses index 1 for hour, but python datetime uses index 0
+                epw_value += 1
             if epw_value == None:
                 epw_value = EPWConfig.get_epw_null_value(header)
             epw_row.append(epw_value)

@@ -1,0 +1,10 @@
+LOCATION,Boston,MA,USA,TMY--94701,725090,42.35,-71.07,-5.0,6.0
+DESIGN CONDITIONS,1,Climate Design Data 2009 ASHRAE Handbook,,Heating,1,-13.6,-10.9,-24.4,0.4,-12,-21.7,0.5,-9.3,14.1,2.1,12.6,-0.3,7.2,320,Cooling,7,8.4,32.7,22.9,30.9,22.2,29.1,21.4,24.6,30.2,23.7,28.6,22.8,27.1,6.3,270,22.8,17.6,27.3,22,16.7,26.2,21.2,15.9,25.5,74.1,30.6,70.4,28.5,67,27.2,765,Extremes,12,10.8,9.3,27,-16.5,35.3,2.5,1.6,-18.3,36.5,-19.7,37.4,-21.1,38.4,-22.9,39.5
+TYPICAL/EXTREME PERIODS,6,Summer - Week Nearest Max Temperature For Period,Extreme,8/10,8/16,Summer - Week Nearest Average Temperature For Period,Typical,8/17,8/23,Winter - Week Nearest Min Temperature For Period,Extreme,1/27,2/ 2,Winter - Week Nearest Average Temperature For Period,Typical,2/10,2/16,Autumn - Week Nearest Average Temperature For Period,Typical,11/ 3,11/ 9,Spring - Week Nearest Average Temperature For Period,Typical,4/19,4/25
+GROUND TEMPERATURES,3,.5,,,,0.47,-0.51,1.23,3.94,11.03,16.51,20.20,21.32,19.41,15.16,9.48,4.21,2,,,,4.07,2.32,2.68,4.12,8.87,13.16,16.59,18.43,18.04,15.63,11.72,7.57,4,,,,7.04,5.26,4.87,5.41,8.09,10.98,13.64,15.48,15.91,14.87,12.57,9.76
+HOLIDAYS/DAYLIGHT SAVINGS,No,0,0,0
+COMMENTS 1, -- weather data pulled from Building 1, 8km from Boston Logan Intl Airport
+COMMENTS 2, -- this EPW use Boston Logan's Location, Design Comditions, Typical/Extreme Periods, and Ground Temperatures headers
+COMMENTS 3,TMY-94701 -- WMO#725090
+COMMENTS 4, -- Ground temps produced with a standard soil diffusivity of 2.3225760E-03 {m**2/day}
+DATA PERIODS,1,1,Data,Sunday, 1/ 1,12/31

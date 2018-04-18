@@ -1,11 +1,13 @@
 from flask import request
 from flask_restful import Resource
 
+import sys
 import psycopg2
 from psycopg2 import sql
 
 from .. import app, CampusEnergyData
 from ..utils import responses
+from ..models.CampusSimulationDataModel import CampusSimulationDataModel
 
 class CampusEnergyDataController(Resource):
     def get(self):
@@ -21,9 +23,11 @@ class MonthlyEnergyDataController(Resource):
         for building in CampusEnergyData.whitelisted_buildings():
             if building not in meu:
                 continue
+            simulations = CampusSimulationDataModel.get_building_simulation(building.lower(), default_measured=meu[building])
             campus[building] = {
                     'measured': meu[building],
-                    'metadata': building_metadata[building]
+                    'metadata': building_metadata[building],
+                    'simulations': simulations
             }
 
         return responses.success({'campus': campus})
