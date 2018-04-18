@@ -5,8 +5,8 @@ from RadiationSplit import RadiationSplit
 
 class SolarRadiationConverter(HoboLinkConverter):
 
-    LATITUDE = 0
-    LONGITUDE = 0
+    LATITUDE = 42.359221
+    LONGITUDE = -71.093003
 
     def convert(self):
         splits = {}
@@ -14,13 +14,9 @@ class SolarRadiationConverter(HoboLinkConverter):
             splits[d_type] = []
 
         for i in range(len(self.input_values)):
-            #splitter = RadiationSplit(self.datetime_values[i], self.input_values[i], self.LATITUDE, self.LONGITUDE)
-            #split = splitter.split_radiation()
-            # TODO fix when gen_reindl is ready
-            split = {
-                'dir_norm_irrad': self.input_values[i] / 2.,
-                'dif_hor_irrad': self.input_values[i] / 2.
-            }
+            splitter = RadiationSplit(self.datetime_values[i], self.input_values[i], self.LATITUDE, self.LONGITUDE)
+            split = splitter.split_radiation()
+            print split, ' split -ad'
             for _s in split:
                 splits[_s].append(split[_s])
 

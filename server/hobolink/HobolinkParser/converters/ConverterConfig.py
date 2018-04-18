@@ -11,7 +11,7 @@ DATATYPE_TO_CONVERTER = {
     'dew_point_temperature': HourlyConverter,
     'wind_speed': HourlyConverter,
     'date': DateTimeConverter,
-    'direct_normal_radiation': SolarRadiationConverter,
+    'solar_radiation': SolarRadiationConverter,
     'wind_direction': WindDirectionConverter
 }
 
@@ -33,9 +33,9 @@ DATATYPE_TO_EPW_COLUMN = {
     'day': 'day',
     'hour': 'hour',
     'minute': 'minute',
-    'direct_normal_radiation': ['dir_norm_irrad', 'dif_hor_irrad'],
-    'dir_norm_irrad': 'dir_norm_irrad',
-    'dif_hor_irrad': 'dif_hor_irrad'
+    'solar_radiation': ['direct_normal_radiation', 'diffuse_horizontal_radiation'],
+    'direct_normal_radiation': 'direct_normal_radiation',
+    'diffuse_horizontal_radiation': 'diffuse_horizontal_radiation'
 }
 
 
@@ -104,8 +104,39 @@ INPUT_HEADER_COLUMNS = {
     'Wind Direction (S-WDA 10290124:10260440-1), *, Building 1 roof': ['Wind Direction (S-WDA 10290124:10260440-1), *, Building 1 roof', 'Wind Speed (S-WSB 10290124:20214879-1), m/s, Building 1 roof']
 }
 
-def inputs(header):
-    return INPUT_HEADER_COLUMNS.get(header, [header])
+def is_wind_direction(header):
+    return header == 'Wind Direction (S-WDA 10290124:10260440-1), *, Building 1 roof'
 
-def is_multiple_inputs(header):
-    return len(inputs(header)) > 1
+def get_wind_direction_inputs(input_csv, dt_vals):
+    dts = [dt for dt in dt_vals]
+    wind_direction = list(input_csv['Wind Direction (S-WDA 10290124:10260440-1), *, Building 1 roof'].values)
+    ws_1 = list(input_csv['Wind Speed (S-WSB 10290124:20214879-1), m/s, Building 1 roof'])
+    ws_2 = list(input_csv['Wind Speed (S-WSA 10290124:10260479-1), m/s, Building 1 roof'])
+    def all_null(vals):
+        vals = list(vals)
+        to_remove = []
+        for i, _i in enumerate(list(vals)):
+            if _i != _i or _i == -888.88:
+                to_remove.append(i)
+        if len(vals) == len(to_remove):
+            return True, to_remove
+        else:
+            return False, to_remove
+
+    null_1, rem_1 = all_null(input_csv['Wind Speed (S-WSB 10290124:20214879-1), m/s, Building 1 roof'])
+    null_2, rem_2 = all_null(input_csv['Wind Speed (S-WSA 10290124:10260479-1), m/s, Building 1 roof'])
+    if not null_1:
+        for r in reversed(rem_1):
+            dts.remove(r)
+            wind_direction.remove(r)
+            ws_1.remove(r)
+        return {'input_values': [wind_direction, ws_1], 'datetime_values': dts}
+
+    elif not null_2:
+        for r in reversed(rem_2):
+            dts.remove(r)
+            wind_direction.remove(r)
+            ws_2.remove(r)
+        return {'input_values': [wind_direction, ws_2], 'datetime_values': dts}
+    else:
+        return {'input_values': [], 'datetime_values': []}

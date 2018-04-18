@@ -23,7 +23,7 @@ class RadiationSplit:
 
     '''
 
-    GEN_REINDL_DIRECTORY = os.path.join(os.getcwd(), 'gen_reindl_files/')
+    GEN_REINDL_DIRECTORY = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'gen_reindl_files/')
 
     def __init__(self, dt, solar_radiation, latitude, longitude):
         '''
@@ -49,11 +49,12 @@ class RadiationSplit:
 
             {dir_norm_irrad: float, dif_hor_irrad: float}
         '''
+        print self.dt, 'dt_split'
         self._write_input_file()
         self._run_gen_reindl()
         output = self._read_output_file()
         self._clean_up()
-        ret = {'dir_norm_irrad': output[0], 'dif_hor_irrad': output[1]}
+        ret = {'direct_normal_radiation': output[0], 'diffuse_horizontal_radiation': output[1]}
         return ret
 
     def _write_input_file(self):
@@ -64,24 +65,29 @@ class RadiationSplit:
         day = self.dt.day
         minutes_decimal = self.dt.minute / 60.
         hour = self.dt.hour + minutes_decimal
-        solar_radiation = self.solar_radiation
+        solar_radiation = int(str(self.solar_radiation).replace(',', ''))
 
         input_template = "%s %s %s %s" # month day hour solar_radiation
         input_file_contents = input_template % (month, day, hour, solar_radiation)
         input_file = open(self._get_file_path(True), 'w')
         input_file.write(input_file_contents)
+        print input_file_contents, ' input'
         input_file.close()
 
     def _run_gen_reindl(self):
         args_list = ['gen_reindl', '-i', self._get_file_path(True),
                 '-o', self._get_file_path(False), '-m', '75',
                 '-a', str(self.latitude), '-l', str(self.longitude)]
-        print args_list
-        subprocess.Popen(args_list)
+        print args_list, ' args'
+        subprocess.call(args_list)
 
     def _read_output_file(self):
         output_file = open(self._get_file_path(False), 'r')
-        dir_norm_irrad, dif_hor_irrad = output_file.next().strip().split(' ')[-2:]
+        contents = output_file.next()
+        dir_norm_irrad, dif_hor_irrad = contents.strip().split(' ')[-2:]
+        print contents, ' output'
+        print '=============='
+        output_file.close()
         return tuple([float(dir_norm_irrad), float(dif_hor_irrad)])
 
     def _clean_up(self):

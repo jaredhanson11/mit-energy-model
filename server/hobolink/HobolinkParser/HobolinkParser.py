@@ -10,7 +10,7 @@ from peewee import IntegrityError
 
 from converters import ConverterConfig
 
-from EPWModels import EPW_Record
+from EPWModels import EPWModel
 
 class HobolinkParser:
     '''Handles downloading and saving hobolink daily data.
@@ -21,7 +21,7 @@ class HobolinkParser:
 
     HOBOLINK_HEADERS_MAPPING = {
         'Date': 'date',
-        #'Solar Radiation (S-LIB 10290124:2375831-1), W/m^2, Building 1 roof': 'direct_normal_radiation',
+        'Solar Radiation (S-LIB 10290124:2375831-1), W/m^2, Building 1 roof': 'solar_radiation',
         'Pressure (S-BPB 10290124:10236707-1), mbar, Building 1 roof': 'atmospheric_station_pressure',
         'Wind Direction (S-WDA 10290124:10260440-1), *, Building 1 roof': 'wind_direction',
         'Temperature (S-THB 10290124:10268927-1), *C, Building 1 roof': 'dry_bulb_temperature',
@@ -51,8 +51,8 @@ class HobolinkParser:
         today = datetime.now()
         last_year = today - timedelta(days=365)
 
-        records = EPW_Record.select().where(EPW_Record.datetime >= last_year).\
-                order_by(EPW_Record.day_of_year.asc()).execute()
+        records = EPWModel.select().where(EPWModel.datetime >= last_year).\
+                order_by(EPWModel.day_of_year.asc()).execute()
         return map(lambda rec: rec.get_epw_row(), list(records))
 
     def _validate_epw_records(self, epw_records):
@@ -72,15 +72,27 @@ class HobolinkParser:
 
         while current <= dec_31:
             if current.strftime('%m-%d:%H:%M') not in dt_to_index:
-                missing_row = [current.year, current.month, current.day, current.hour, current.minute]
-                for header in self.epw_headers[5:]: # Num EPW inputs - datetime inputs
-                    missing_row.append('n/a')
-                validated_records.append(missing_row)
+                backfill = self._backfill_missing_data(current)
+                if not backfill:
+                    missing_row = [current.year, current.month, current.day, current.hour, current.minute]
+                    for header in self.epw_headers[5:]: # Num EPW inputs - datetime inputs
+                        missing_row.append('n/a')
+                    validated_records.append(missing_row)
+                else:
+                    print backfill
+                    print current
+                    print backfill.get_epw_row()
+                    validated_records.append(backfill.get_epw_row())
             else:
                 index = dt_to_index[current.strftime('%m-%d:%H:%M')]
                 validated_records.append(epw_records[index])
             current += hour
         return validated_records
+
+    def _backfill_missing_data(self, dt_obj):
+        record = EPWModel.select().where((EPWModel.month == dt_obj.month)
+                & (EPWModel.day == dt_obj.day) & (EPWModel.hour == dt_obj.hour)).order_by(EPWModel.year.desc()).first()
+        return record
 
     def _write_epw(self, epw_records):
         csv_writer = csv.writer(open(self.output_path, 'w'))
@@ -99,24 +111,26 @@ class HobolinkParser:
             datetime_values = map(lambda dt: datetime.strptime(dt, '%m/%d/%y %H:%M'), list(input_csv['Date'].values))
         headers = list(input_csv)
         for header in headers:
-            print header
             if header not in self.HOBOLINK_HEADERS_MAPPING:
-                print False
                 continue
+            data_type = self.HOBOLINK_HEADERS_MAPPING[header]
 
-            if ConverterConfig.is_multiple_inputs(header):
-                input_values = []
-                input_cols = ConverterConfig.inputs(header)
-                for col in input_cols:
-                    input_values.append(list(input_csv[col].values))
+            if ConverterConfig.is_wind_direction(data_type):
+                w_speed = ConverterConfig.get_wind_speed_inputs(input_csv)
+                w_direction = ConverterConfig.get_input_values(list(input_csv[header].values))
+                input_vals = [w_direction, w_speed]
+                converted_values = self._convert_input(data_type, input_vals, katetime_values)
+            elif ConverterConfig.is_wind_speed(data_type):
+                w_speed = ConverterConfig.get_wind_speed_inputs(input_csv)
+                converted_values = self._convert_input(data_type, w_speed, datetime_values)
             else:
                 input_values = list(input_csv[header].values)
-            data_type = self.HOBOLINK_HEADERS_MAPPING[header]
-            converted_values = self._convert_input(data_type, input_values, datetime_values)
+                input_values = ConverterConfig.get_input_values(input_values)
+                converted_values = self._convert_input(data_type, input_values, datetime_values)
 
             for epw_header in converted_values:
-                print epw_header
-                assert(epw_header not in epw_values)
+                if epw_header not in epw_values:
+                    assert(epw_header not in epw_values)
                 if len(converted_values[epw_header]) != 24:
                     print '%s did not contain 24 hours of data' % (self.input_path)
                 epw_values[epw_header] = converted_values[epw_header]
@@ -137,7 +151,7 @@ class HobolinkParser:
                 if np.isnan(converted_value):
                     continue
                 kwargs[header] = converted_value
-            new_epw_record = EPW_Record.init_record(**kwargs)
+            new_epw_record = EPWModel.init_record(**kwargs)
             try:
                 new_epw_record.save()
             except IntegrityError, e:

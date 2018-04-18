@@ -31,8 +31,8 @@ class WindDirectionConverter(HoboLinkConverter):
             if hours_dictionary[hour]:
                 u_sum = sum(hours_dictionary[hour]['u'])
                 v_sum = sum(hours_dictionary[hour]['v'])
-                average = math.atan2(u_sum, v_sum)
+                average = math.atan2(v_sum, u_sum)
                 degrees = math.degrees(average)
+                degress = (degrees + 360) % 360
                 ret.append(degrees)
-
         return {self.get_epw_column(): ret}

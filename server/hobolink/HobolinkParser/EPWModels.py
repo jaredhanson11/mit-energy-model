@@ -11,7 +11,7 @@ path_to_db = os.path.join(
 
 db = peewee.SqliteDatabase(path_to_db)
 
-class EPW_Record(peewee.Model):
+class EPWModel(peewee.Model):
 
     datetime = peewee.DateTimeField(unique=True)
     day_of_year = peewee.FloatField()

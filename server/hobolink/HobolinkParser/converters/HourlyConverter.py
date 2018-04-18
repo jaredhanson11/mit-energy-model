@@ -22,6 +22,9 @@ class HourlyConverter(HoboLinkConverter):
             if hour_dt not in hour_order:
                 hour_order.append(hour_dt)
                 hours_dictionary[hour_dt] = []
+            val = self.input_values[i]
+            if val == None:
+                continue
             hours_dictionary[hour_dt].append(float(self.input_values[i])) #TODO check
 
         ret = []
