@@ -43,12 +43,13 @@ class EnergyPlusEngine:
 
         print
         print "Update Complete"
-        do_del = str(raw_input('Delete update folder? y/(n) ')).lower() == 'y'
+        #do_del = str(raw_input('Delete update folder? y/(n) ')).lower() == 'y'
+        do_del = 'y'
         if do_del:
             [os.remove(os.path.join(updater_folder, f)) for f in os.listdir(updater_folder)]
         return
 
-    def run_simulation(self, idf_file, epw_file, building_number, simulation_name=None, simulation_year=None, save=False):
+    def run_simulation(self, idf_file, epw_file, building_number, simulation_name=None, simulation_year=None, save=False, extra_years=[]):
         ENERGYPLUS_CMD = '/usr/local/bin/EnergyPlus'
         idf_file_path = os.path.abspath(idf_file)
         epw_file_path = os.path.abspath(epw_file)
@@ -66,7 +67,7 @@ class EnergyPlusEngine:
 
         results = self._translate_simulation(eplusout_csv_file, building_number)
         if save == True:
-            self._save_results(simulation_name, simulation_year, building_number, results)
+            self._save_results(simulation_name, simulation_year, building_number, results, extra_years=extra_years)
         self._write_results(results, eplusout_csv_file)
 
     def _translate_simulation(self, eplusout_csv_file, building_number):
@@ -100,7 +101,7 @@ class EnergyPlusEngine:
                 return J_to_KWH(tot)
             return _convert_cols
 
-        elec_cols = ['Zone Lights Electric Energy', 'Zone Equipment Electric Energy']
+        elec_cols = ['Zone Lights Electric Energy', 'Zone Electric Equipment']
         stm_cols = ['Water Use Equipment Heating Energy', 'Zone Ideal Loads Supply Air Total Heating Energy']
         chw_cols = ['Zone Ideal Loads Supply Air Total Cooling Energy']
 
@@ -111,15 +112,36 @@ class EnergyPlusEngine:
             'chw': map(convert_cols(chw_cols), eplusout_csv.iterrows()),
             'elec': map(convert_cols(elec_cols), eplusout_csv.iterrows())
         }
+
+        NO_CHW_BLDGS = ['nw86', 'w51c', 'w61', 'w53', 'w91', 'w51', 'w98', '57', '50',
+                'w11', 'w7', 'w5', 'w2', 'w84', 'w85', 'w89', 'e55', 'nw61', 'w31', 'w33',
+                'w32', 'e34', 'e38', 'n10', 'n9', 'n4', 'ww15', '17', 'w59', 'n52', 'w92',
+                'w45', '44', 'nw22', 'w71', 'w70', 'nw10', 'n57', 'n51']
+        NO_CHW_BLDGS = map(lambda x: x.lower(), ['17', '44', '50', '68', 'E33', 'E55', 'N10', 'N4', 'N51', 'N52',
+            'N57', 'N9','NW10', 'NW22','NW61', 'NW86','W11','W1','W2','W31',
+            'W32','W33','W45','W5','W51','W51C','W53','W61','W7', 'W70','W71','W84','W85','W89','W91','W92','W98','WW15'])
+
+        if (building_number.lower() in NO_CHW_BLDGS):
+            print 'Building %s uses electricity as cooling. Calculating now...' % building_number
+            elec_cooling_from_chw = map(lambda chw_val: float(chw_val) / 6, ret['chw'])
+            ret['chw'] = [0 for i in range(12)]
+            elec = []
+            for i in range(len(ret['elec'])):
+                elec.append(ret['elec'][i] + elec_cooling_from_chw[i])
+            ret['elec'] = elec
+
         print "Sum(stm) = %s" % str(sum(ret['stm']))
         print "Sum(chw) = %s" % str(sum(ret['chw']))
         print "Sum(elec) = %s" % str(sum(ret['elec']))
         print "Sum(total) = %s" % str(sum(ret['stm']) + sum(ret['elec']) + sum(ret['chw']))
         return ret
 
-    def _save_results(self, simulation_name, sim_year, building_number, results):
+    def _save_results(self, simulation_name, sim_year, building_number, results, extra_years=[]): # TODO DELETE THE EXTRA YEARS PARAMETER ONLY FOR STATA CENTER PRESENTATION
         if BuildingSimulationModel.add_simulation(simulation_name, sim_year, building_number, results):
             print "SUCCESS: Results for simulation: %s, number: %s were saved" % (simulation_name, building_number)
+            for year in extra_years:
+                if BuildingSimulationModel.add_simulation(simulation_name, year, building_number, results):
+                    print "SUCCESS: Results for simulation: %s, number: %s were saved" % (simulation_name, building_number)
         else:
             print "ERROR: Results for simulation: %s, number: %s were NOT saved" % (simulation_name, building_number)
 

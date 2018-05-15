@@ -21,6 +21,7 @@ class ZoneMultiplierModel(peewee.Model):
 
     @staticmethod
     def exists(building_num, zone):
+        building_num = building_num.lower()
         record = ZoneMultiplierModel.select().where(ZoneMultiplierModel.zone == zone
                 & ZoneMultiplierModel.building_number==building_num)
         return record
@@ -28,6 +29,7 @@ class ZoneMultiplierModel(peewee.Model):
 
     @staticmethod
     def add_multiplier(building_num, zone, multiplier):
+        building_num = building_num.lower()
         existing_multiplier = ZoneMultiplierModel.exists(building_num, zone)
         if existing_multiplier:
             existing_multiplier.change_multiplier(multiplier)
@@ -43,6 +45,7 @@ class ZoneMultiplierModel(peewee.Model):
 
     @staticmethod
     def get_building_multipliers(building_num):
+        building_num = building_num.lower()
         multipliers = ZoneMultiplierModel.select().where(
                 ZoneMultiplierModel.building_number == building_num)
         zone_multipliers = {}

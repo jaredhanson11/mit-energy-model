@@ -139,7 +139,7 @@ class BuildingSimulationModel(BaseModel):
             year_by_month = []
             for i in range(1, 13):
                 attr_name = resource_type + '_' + str(i)
-                year_by_month.append(getattr(self, attr_name))
+                year_by_month.append(int(getattr(self, attr_name)))
             results[resource_type] = year_by_month
         ret = {self.simulation_year: results}
         return ret
