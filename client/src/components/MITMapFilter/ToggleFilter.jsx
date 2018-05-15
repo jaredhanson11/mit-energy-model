@@ -3,29 +3,8 @@ import ToggleButton from 'react-toggle-button';
 import styled from 'styled-components';
 
 import { getToggleFilterConfig } from '../../config.jsx';
-
-var FilterContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    align-content: center;
-    justify-content: center;
-    width: 100%;
-    height: 48%;
-`;
-
-var TitleContainer = styled.div`
-    width: 100%;
-    font-size: 1.2em;
-    font-color: lightblue;
-    font-weight: light;
-
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    align-content: flex-start;
-    justify-content: flex-start;
-`;
+import {TitleContainer} from './SelectFilter.jsx';
+import {FilterContainer} from './SelectFilter.jsx';
 
 var FiltersContainer = styled.div`
     width: 100%;
@@ -58,10 +37,11 @@ var FilterLabel = styled.div`
     align-items: center;
 `;
 
-class ToggleFilter extends React.Component {
+export class ToggleFilter extends React.Component {
     constructor(props) {
         super(props);
         this._config = getToggleFilterConfig(this.props.filterKey);
+        console.log(this._config)
         this.state = {checked: this.isChecked()};
         this.handleToggle = this.handleToggle.bind(this);
     }
@@ -100,9 +80,11 @@ class ToggleFilter extends React.Component {
     }
 
     handleToggle(checked) {
-        var selectedKey = this.getKey(!checked);
-        this.props.changeFilter(this.props.filterKey, selectedKey);
-        this.setState({checked: !checked});
+        if (!this.props.noToggle) {
+            var selectedKey = this.getKey(checked);
+            this.props.changeFilter(this.props.filterKey, selectedKey);
+            this.setState({checked: !checked});
+        }
     }
 
     getName(checked) {
@@ -113,9 +95,14 @@ class ToggleFilter extends React.Component {
         }
     }
 
+    refreshState() {
+        this.state.checked = this.isChecked();
+    }
+
     render() {
         var height = this.state.height ? this.state.height - 4 : 20;
         var width = this.state.width? this.state.width / 3 : 40;
+        this.refreshState();
 
         return(
         <SwitchContainer
@@ -132,13 +119,13 @@ class ToggleFilter extends React.Component {
                 inactiveLabel={''}
                 colors={{
                     activeThumb: {
-                        base: 'rgb(173,216,230)'
+                        base: 'rgb(0,0,0)'
                     },
                     inactiveThumb: {
-                        base: 'rgb(173,216,230)'
+                        base: 'rgb(0,0,0)'
                     },
                     active: {
-                        base: 'rgb(240,240,240)'
+                        base: 'rgb(220,220,220)'
                     },
                     inactive: {
                         base: 'rgb(220,220,220)'
@@ -171,7 +158,7 @@ export default class ToggleFilterSection extends React.Component {
         })
         return (
             <FilterContainer>
-                <TitleContainer>Display Units</TitleContainer>
+                <TitleContainer>DISPLAY UNITS</TitleContainer>
                 <FiltersContainer>
                     {filters}
                 </FiltersContainer>

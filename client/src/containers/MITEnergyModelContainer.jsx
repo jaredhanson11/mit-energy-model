@@ -9,6 +9,7 @@ import MITMap from '../components/MITMap.jsx';
 import MITMapFilter from '../components/MITMapFilter';
 import SiteTitle from '../components/SiteTitle.jsx';
 import GraphSection from '../components/GraphSection';
+import SubGraphSection from '../components/SubGraphSection';
 import OverviewSection from '../components/OverviewSection';
 
 import _style from '../styles/MITEnergyModelContainerStyle.js';
@@ -68,13 +69,12 @@ class MITEnergyModelContainer extends React.Component {
     componentWillMount() {
       this.props.dispatch(actionCreators.getBuildingData());
       this.props.dispatch(actionCreators.loadGeojsonData());
-      this.props.dispatch(actionCreators.loadHistoricalData());
     }
 
     render() {
         return (
             <FullScreenContainer>
-                <SiteTitle title="MIT GHG Emissions Management" />
+                <SiteTitle title="MIT GHG EMISSIONS MANAGEMENT" />
                 <ColumnsContainer>
                     <MainColumn width={'70%'}>
                         <MainColumnSection height={'calc(30% - 2.5px)'} padding={'10px'}
@@ -97,10 +97,14 @@ class MITEnergyModelContainer extends React.Component {
                             <GraphSection
                                 filterState={this.props.filterState}
                                 buildingData={this.props.buildingMapData}
-                                historicalBuildingData={this.props.historicalBuildingData}
+                                dispatch={this.props.dispatch}
                             />
                         </MainColumnSection>
                         <MainColumnSection height={'calc(20% - 2.5px)'} padding={'10px'}>
+                            <SubGraphSection
+                                filterState={this.props.filterState}
+                                buildingData={this.props.buildingMapData}
+                            />
                         </MainColumnSection>
                     </MainColumn>
                 </ColumnsContainer>

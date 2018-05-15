@@ -5,12 +5,14 @@ import  MITEnergyModelReducer  from '../reducers/MITEnergyModelReducer.jsx';
 var MITEnergyModelState = {
 
     filterState: {
-        selectedResource: 'total',
-        selectedBuildingType: 'all',
+        selectedResource: ['chw', 'stm', 'elec'],
+        selectedBuildingType: ['laboratory', 'academic', 'residential', 'services'],
         selectedBuilding: '',
         selectedUnits: 'kwh',
         selectedUnitsNormalized: 'per_year',
-        selectedDataSource: 'metered'
+        selectedDataSource: 'metered',
+        selectedYear: '2018',
+        selectedGraphToggle: 'overview'
     },
 
     buildingMapApi: {
@@ -23,9 +25,7 @@ var MITEnergyModelState = {
     buildingMapData: {
     },
 
-    geojsonData: {},
-
-    historicalBuildingData: {}
+    geojsonData: {}
 }
 
 var configuredStore = configureStore(MITEnergyModelReducer, MITEnergyModelState);

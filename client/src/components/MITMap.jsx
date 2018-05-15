@@ -7,6 +7,7 @@ import { actionCreators } from '../actions';
 import { connect } from 'react-redux';
 
 import _style from '../styles/MITMapStyle.js';
+import MITMapDataProcessor from '../utils/dataProcessing/MITMapDataProcessor.jsx';
 
 import chroma from 'chroma-js';
 import DefaultBuildingStyle from '../styles/DefaultBuildingStyle.jsx';
@@ -16,6 +17,7 @@ class MITMap extends React.Component {
     constructor(props) {
         super(props);
         this.featureStyle = this.featureStyle.bind(this);
+        this.filterFeatures = this.filterFeatures.bind(this);
         this.getBuildingStyle = this.getBuildingStyle.bind(this);
         this.interpolate = this.interpolate.bind(this);
     }
@@ -23,84 +25,86 @@ class MITMap extends React.Component {
     onEachFeature() {
         var that = this;
         function _onEachFeature(feature, layer) {
+            layer.bindPopup('<h3>Building ' + feature.properties.building_number.toUpperCase() + '</h3>');
             layer.on('click', function(e) {
                 if (feature.properties && feature.properties.building_number) {
                     const building_number = feature.properties.building_number;
                     that.props.selectBuilding(building_number);
+                    this.closePopup();
                 }
             });
+            layer.on('mouseover', function() {this.openPopup()})
+            layer.on('mouseout', function() {this.closePopup()})
         }
         return _onEachFeature;
+    }
+
+    filterFeatures(feature) {
+        return this.dataProcessing.containsBuilding(feature.properties.building_number);
     }
 
     interpolate(min, max, val) {
         return (val-min)/ (max-min)
     }
 
-    getBuildingStyle(buildingDataEntireYear, metricsForBuildingType, EUI, buildingType) {
-        var yearly_min = metricsForBuildingType.year_min;
-        var yearly_max = metricsForBuildingType.year_max;
-        var scales = {
-            'all' : chroma.scale(['#7d8180', '#d91111']),
-            'services' : chroma.scale(['#7d8180', '#06089c']),
-            'residential' : chroma.scale(['#7d8180', 'rgb(62, 242, 8)']),
-            'academic' : chroma.scale(['#7d8180', 'rgb(250, 0, 235)']),
-            'laboratory' : chroma.scale(['#7d8180', 'rgb(228, 147, 9)'])
-        }
-        var scale = scales[buildingType];
+    getBuildingStyle(campus_min, campus_max, buildingEnergyData, selected) {
+        var scale = chroma.scale(['#7d8180', '#d91111']).domain([campus_min, campus_max]);
         var newStyle = {
             weight: 1,
             opacity: 1,
             color: 'rgb(10, 10, 4)',
             fillOpacity: .5,
             dashCapacity: 3,
-            fillColor: scale(this.interpolate(yearly_min, yearly_max, buildingDataEntireYear))
+            fillColor: scale(buildingEnergyData)
         };
+        if (selected) {
+            newStyle.color = 'black';
+            newStyle.weight = 3;
+        }
         return newStyle;
     }
 
     featureStyle(feature) {
-        var buildingNumber = feature.properties.building_number;
-        var buildingType = feature.properties.building_type;
-        var selectedResource = this.props.filterState.selectedResource;
-        var selectedUnits = this.props.filterState.selectedUnits;
-        var selectedBuildingType = this.props.filterState.selectedBuildingType;
-        var includeBuildingBool = true;
+        var buildingNumber = feature.properties.building_number.toLowerCase();
 
-        if (!(this.props.buildingMapApi.loaded) || this.props.buildingMapData.campus[buildingNumber] == undefined) { return DefaultBuildingStyle; }
-        if (!(selectedBuildingType == 'all')) { var includeBuildingBool = buildingType == selectedBuildingType ? true : false; }
-        if (!(includeBuildingBool)) { return DefaultBuildingStyle }
+        if (!(this.dataProcessing.containsBuilding(buildingNumber))) {
+            return DefaultBuildingStyle;
+        }
 
-        var unit_alt_name = {'kwh' : 'measured_kwh_norm', 'co2' : 'measured_c02_norm',}
-        var buildingDataEntireYear = this.props.buildingMapData.campus[buildingNumber].building_summary[unit_alt_name[selectedUnits]][selectedResource].year_total;
-        var metricsForBuildingType = this.props.buildingMapData.campus_summary[buildingType][unit_alt_name[selectedUnits]][selectedResource];
-        var EUI = this.props.buildingMapData.campus[buildingNumber].building_metadata.building_eui;
-
-        var buildingStyle = this.getBuildingStyle(buildingDataEntireYear, metricsForBuildingType, EUI, selectedBuildingType);
+        var buildingEnergyData = this.dataProcessing.getBuildingEnergyUsage(buildingNumber);
+        var campusMax = this.dataProcessing.getCampusMax();
+        var campusMin = this.dataProcessing.getCampusMin();
+        var selected = (buildingNumber == this.props.filterState.selectedBuilding.toLowerCase());
+        var buildingStyle = this.getBuildingStyle(campusMin, campusMax, buildingEnergyData, selected);
         return buildingStyle;
     }
 
     render() {
+        this.dataProcessing = new MITMapDataProcessor(this.props.buildingMapData, this.props.filterState);
         const mapStyle = Object.assign({}, _style.map, {
             width: this.props.width,
-            borderRadius: '10px'
+            borderRadius: '10px',
+            marginTop: '10px'
         });
         return (
             <Map style={mapStyle}
-            minZoom={_style.zoomSettings.minZoom}
-            center={_style.zoomSettings.center}
-            zoom={_style.zoomSettings.zoom}
-            maxBounds={_style.zoomSettings.maxBounds}
-            zoomControl={false} >
+                minZoom={_style.zoomSettings.minZoom}
+                center={_style.zoomSettings.center}
+                zoom={_style.zoomSettings.zoom}
+                maxBounds={_style.zoomSettings.maxBounds}
+                zoomControl={false}
+            >
                 <ZoomControl position={_style.zoomControl.position} />
                 <TileLayer
                     attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
                     url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png'
-                    />
+                />
                 <GeoJSON style={this.featureStyle}
                     data={this.props.geojsonData}
                     key={Math.random()}
-                    onEachFeature={this.onEachFeature()} />
+                    onEachFeature={this.onEachFeature()}
+                    filter={this.filterFeatures}
+                />
             </Map>
         )}
     }

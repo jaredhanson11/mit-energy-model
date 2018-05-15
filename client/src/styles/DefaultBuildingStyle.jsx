@@ -4,7 +4,8 @@ var DefaultBuildingStyle = {
     color: 'rgb(10, 10, 4)',
     fillOpacity: 0,
     dashCapacity: 3,
-    fillColor: 'rgb(182, 174, 187)'
+    fillColor: 'rgb(182, 174, 187)',
+    interactive: false
 };
 
 export default DefaultBuildingStyle;

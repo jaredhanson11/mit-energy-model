@@ -3,9 +3,12 @@ import { connect } from 'react-redux';
 import { actionCreators } from '../../actions';
 
 import { FilterContainer, FilterColumn } from '../../styles/MITMapFilterStyle.js';
+import OverviewDataProcessor from '../../utils/dataProcessing/OverviewDataProcessor.jsx';
 
 import SelectFilter from './SelectFilter.jsx';
 import ToggleFilter from './ToggleFilter.jsx';
+import MapGradientLegend from './MapGradientLegend.jsx';
+import MapTimelineFilter from './MapTimelineFilter.jsx';
 
 class MITMapFilter extends React.Component {
 
@@ -14,6 +17,7 @@ class MITMapFilter extends React.Component {
     }
 
     render() {
+        var dataProcessor = new OverviewDataProcessor(this.props.buildingData, this.props.filterState);
         return (
             <FilterContainer>
                 <FilterColumn width={'24%'}>
@@ -40,6 +44,15 @@ class MITMapFilter extends React.Component {
                         changeFilter={this.props.changeFilter}
                     />
                 </FilterColumn>
+                <FilterColumn width={'48%'}>
+                    <MapTimelineFilter
+                        changeYear={this.props.changeYear}
+                        filterState={this.props.filterState} />
+                    <MapGradientLegend
+                        dataProcessor={dataProcessor}
+                        selectedBuilding={this.props.filterState.selectedBuilding}
+                    />
+                </FilterColumn>
             </FilterContainer>
         );
     }
@@ -47,7 +60,8 @@ class MITMapFilter extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        filterState: state.filterState
+        filterState: state.filterState,
+        buildingData: state.buildingMapData
     }
 }
 
@@ -58,10 +72,12 @@ const mapDispatchToProps = (dispatch) => {
         resourceType: actionCreators.selectResourceType,
         unitsType: actionCreators.selectUnits,
         buildingType: actionCreators.selectBuildingType,
-        dataSource: actionCreators.selectDataSource
+        dataSource: actionCreators.selectDataSource,
+
     };
     return {
-        changeFilter: (filterTypeKey, filterKey) => dispatch(functionMap[filterTypeKey](filterKey))
+        changeFilter: (filterTypeKey, filterKey) => dispatch(functionMap[filterTypeKey](filterKey)),
+        changeYear: (value) => dispatch(actionCreators.selectTimelineYear(value))
     }
 }
 

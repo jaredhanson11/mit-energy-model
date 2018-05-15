@@ -48,6 +48,20 @@ function selectDataSource(dataSourceSelected) {
     }
 }
 
+function selectTimelineYear(year) {
+    return {
+        type: actionTypes.SELECT_YEAR,
+        selectedYear: year
+    }
+}
+
+function selectGraphToggle(selectedGraphToggle) {
+    return {
+        type: actionTypes.SELECT_GRAPH_TOGGLE,
+        selectedGraph: selectedGraphToggle
+    }
+}
+
 function toggleFilter(expandFilter) {
     return {
         type: actionTypes.TOGGLE_FILTER,
@@ -90,5 +104,7 @@ export default {
     selectUnitsNormalizedType,
     selectBuilding,
     selectDataSource,
+    selectTimelineYear,
+    selectGraphToggle,
     toggleFilter
 }

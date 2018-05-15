@@ -91,15 +91,15 @@ class PerformanceMeter extends React.Component {
 var performanceItems = [{
         key: 'envelope_constructions',
         name: 'Envelope Constructions',
-        imgSrc: '/imgs/envelope-constructions-icon.png'
+        imgSrc: './imgs/envelope-constructions-icon.png'
     }, {
         key: 'internal_load',
         name: 'Internal Load Parameters',
-        imgSrc: '/imgs/load-parameters-icon.png'
+        imgSrc: './imgs/load-parameters-icon.png'
     },{
         key: 'ventilation',
         name: 'Ventilation Strategies',
-        imgSrc: '/imgs/ventilation-icon.png'
+        imgSrc: './imgs/ventilation-icon.png'
     }
 ];
 

@@ -1,14 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Bar } from 'react-chartjs-2';
+import actionCreators from '../../actions/actionCreators.jsx';
 
-import dataProcessing from './dataProcessing.js';
+import { mainGraphOptions } from './graphConfig.jsx';
+import MITGraphDataProcessor from '../../utils/dataProcessing/MITGraphDataProcessor.jsx';
+import { ToggleFilter } from '../MITMapFilter/ToggleFilter.jsx';
+
 
 var GraphSectionContainer = styled.div`
     height: 100%;
     width: 100%;
 
     padding: 5px;
+    padding-top: 0;
 
     display: flex;
     flex-direction: column;
@@ -19,16 +24,40 @@ var GraphSectionContainer = styled.div`
 `;
 
 var GraphSectionHeader = styled.div`
-    font-size: 1.2em;
-    font-weight: 500;
     width: 100%;
-    height: 10%;
+    height: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    align-content: center;
+    margin-bottom: 10px;
+`;
+
+var GraphTitle = styled.div`
+    width: 30%;
+    > :nth-child(2) {
+        margin-left: 10px;
+    }
+`
+var Title = styled.div`
+    font-size: 1.3em;
+    font-weight: bold;
+`;
+
+var ToggleContainer = styled.div`
+    width: 30%;
+    margin-left: 10px;
 `;
 
 var GraphContainer = styled.div`
     width: 100%;
     height: 90%;
 `;
+
+const GraphLegend = styled.img`
+    height: 70%;
+    margin-right: 10px;
+`
 
 class Graph extends React.Component {
     constructor(props) {
@@ -53,67 +82,50 @@ class Graph extends React.Component {
 class GraphSection extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.toggleFilter = this.toggleFilter.bind(this);
     }
 
-    getGraph(filterState, historicalBuildingData, currentBuildingData) {
-        var title = 'Energy Usage';
+    getGraph() {
+        var graphOptions = mainGraphOptions(this.dataProcessor);
+        var measuredDataset = graphOptions.createBarDataset('Measured', this.dataProcessor.getYearlyMeasuredData(graphOptions.labels));
+        var simulatedDatasets = this.dataProcessor.getYearlySimulatedData(graphOptions.labels).map((sim) => {
+            return graphOptions.createLineDataset(sim.label.toUpperCase(), sim.data);
+        })
+        var datasets = [];
+        simulatedDatasets.map(function(obj){ datasets.push(obj) })
         var data = {
-            datasets: [{
-                label: 'Measured',
-                type: 'bar',
-                data: [2000, 2060, 1970, 2200, 1840, 1800, 1760, 1890, null, null, null, null, null, null],
-                fill: false
-            },{
-                label: 'Modeled',
-                type: 'line',
-                borderDash: [5],
-                data: [2000, 2060, 1970, 2200, 1840, 1800, 1760, 1890, null, 2000, null, 2050, null, 2900],
-                spanGaps: true,
-                fill: false
-            }]
-        };
-
-        data = {
-            datasets: [dataProcessing.getMeasuredData(this.props.filterState, this.props.buildingData, this.props.historicalBuildingData)]
+            datasets: datasets
         }
-
-        var options = {
-            maintainAspectRatio: false,
-            legend: {display: false},
-            scales: {
-                yAxes: [{
-                    type: 'linear',
-                    display: true,
-                    gridLines: {display: false},
-                }],
-                xAxes: [{
-                    type: 'category',
-                    display: true,
-                    gridLines: {display: false},
-                    labels: ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', 'YTD',
-                        '', '2030', '', '2050', '','2080']
-                }]
-            }
-        };
+        datasets.push(measuredDataset);
 
         var graph = {};
-        graph.title = title;
+        graph.title = graphOptions.title;
         graph.data = data;
-        graph.options = options;
+        graph.options = graphOptions.options;
 
         return graph;
     }
 
+    toggleFilter(toggleKey, val) {
+        this.props.dispatch(actionCreators.selectGraphToggle(val))
+    }
+
     render() {
-        if (this.props.buildingData.campus) {
+        this.dataProcessor = new MITGraphDataProcessor(this.props.buildingData, this.props.filterState);
         var graph = this.getGraph();
-            console.log(this.props.buildingData);
-console.log(dataProcessing.getMeasuredData(this.props.filterState, this.props.buildingData, this.props.historicalBuildingData));
-        } else{ return (<GraphSectionContainer />)};
+        var noToggle = (this.props.filterState.selectedBuilding == "");
         return(
             <GraphSectionContainer>
-                <GraphSectionHeader>{graph.title}</GraphSectionHeader>
+                <GraphSectionHeader>
+                    <GraphTitle><Title>{graph.title}</Title>
+                    <ToggleFilter
+                        noToggle={noToggle}
+                        filterKey={'graphToggle'}
+                        filterState={this.props.filterState}
+                        changeFilter={this.toggleFilter} />
+                    </GraphTitle>
+                    <GraphLegend src='./imgs/graph-legend.png' />
+                </GraphSectionHeader>
                 <Graph
                     graph={graph}
                 />

@@ -3,13 +3,20 @@ import Immutable from 'immutable';
 import { actionTypes } from '../actions';
 
 import { getCampusSummary, reformatBackendData, summarizeMonthlyEnergyData } from './dataProcessing.jsx';
+import { historical_data } from '../data/energy/historic';
 
 var filterStateReducer = function(state={}, action){
     switch (action.type) {
         case actionTypes.SELECT_RESOURCE_TYPE:
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();
-            newState.selectedResource = action.selectedResource;
+            var currentlySelected = newState.selectedResource;
+            var indexOfSelected = currentlySelected.indexOf(action.selectedResource.toLowerCase());
+            if (indexOfSelected > -1) {
+                currentlySelected.splice(indexOfSelected, 1);
+            } else {
+                currentlySelected.push(action.selectedResource.toLowerCase());
+            }
             return newState;
         case actionTypes.SELECT_UNIT_TYPE:
             var newState = Immutable.fromJS(state);
@@ -19,12 +26,19 @@ var filterStateReducer = function(state={}, action){
         case actionTypes.SELECT_BUILDING_TYPE:
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();
-            newState.selectedBuildingType = action.selectedBuildingType;
+            var currentlySelected = newState.selectedBuildingType;
+            var indexOfSelectedBuilding = currentlySelected.indexOf(action.selectedBuildingType.toLowerCase());
+            if (indexOfSelectedBuilding > -1) {
+                currentlySelected.splice(indexOfSelectedBuilding, 1);
+            } else {
+                currentlySelected.push(action.selectedBuildingType.toLowerCase());
+            }
             return newState;
         case actionTypes.SELECT_BUILDING:
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();
             newState.selectedBuilding = action.selectedBuilding;
+            newState.selectedGraphToggle = 'building';
             return newState;
         case actionTypes.SELECT_DATA_SOURCE:
             var newState = Immutable.fromJS(state);
@@ -35,6 +49,16 @@ var filterStateReducer = function(state={}, action){
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();
             newState.selectedUnitsNormalized = action.selectedUnitsNormalized;
+            return newState;
+        case actionTypes.SELECT_YEAR:
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            newState.selectedYear = action.selectedYear;
+            return newState;
+        case actionTypes.SELECT_GRAPH_TOGGLE:
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            newState.selectedGraphToggle = action.selectedGraph;
             return newState;
         case actionTypes.TOGGLE_FILTER:
             var newState = Immutable.fromJS(state);
@@ -84,11 +108,7 @@ var buildingMapDataReducer = function(state={}, action){
         case actionTypes.GET_BUILDING_DATA_SUCCESS:
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();
-            newState.campus = reformatBackendData(action.payload.content.campus);
-            for (var building in newState.campus) {
-                newState.campus[building].building_summary = summarizeMonthlyEnergyData(newState.campus[building]['building_data']);
-            }
-            newState.campus_summary = getCampusSummary(newState.campus);
+            newState = reformatBackendData(action.payload.content.campus, historical_data);
             return newState;
         default:
             var newState = Immutable.fromJS(state);
@@ -118,24 +138,11 @@ var geojsonDataReducer = function (state={}, action) {
     }
 }
 
-var historicalBuildingDataReducer = function(state={}, action) {
-    switch(action.type) {
-        case actionTypes.LOAD_HISTORICAL_DATA:
-            var newState = action.historicalData;
-            return newState;
-        default:
-            var newState = Immutable.fromJS(state);
-            newState = newState.toJS();
-            return newState;
-    }
-}
-
 var MITEnergyModelReducer = combineReducers({
     filterState: filterStateReducer,
     buildingMapApi: buildingMapApiReducer,
     buildingMapData: buildingMapDataReducer,
     geojsonData: geojsonDataReducer,
-    historicalBuildingData: historicalBuildingDataReducer
 })
 
 export default MITEnergyModelReducer;

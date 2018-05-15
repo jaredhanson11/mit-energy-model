@@ -1,5 +1,5 @@
 
-export function reformatBackendData(campusData) {
+export function reformatBackendData(campusData, historicalData) {
     var c02_factors = {'elec' : 0.193411, 'stm' : 0.272202, 'chw' : 0.205706};
     var campus_final = {};
     for (var building in campusData) {
@@ -7,41 +7,28 @@ export function reformatBackendData(campusData) {
             'building_type' : campusData[building]['metadata']['building_type'],
             'area_ft2' : campusData[building]['metadata']['area_ft2'],
             'area_m2' : campusData[building]['metadata']['area_m2'],
-            'building_eui' : campusData[building]['metadata']['building_eui'],
         }
         campus_final[building] = {};
-        campus_final[building]['building_metadata'] = building_metadata;
-        campus_final[building]['building_data'] = {}
-        campus_final[building]['building_data']['measured_kwh'] = {};
-        campus_final[building]['building_data']['measured_c02'] = {};
-        campus_final[building]['building_data']['measured_kwh_norm'] = {};
-        campus_final[building]['building_data']['measured_c02_norm'] = {};
+        campus_final[building]['metadata'] = building_metadata;
+        var measured_data = {}
+        for (var year in historicalData) {
+            if (historicalData[year][building]) {
+                measured_data[year.toString()] = historicalData[year][building];
+            } else {
+            }
+        }
+        campus_final[building]['measured_data'] = measured_data;
 
+        var this_year = new Date().getFullYear().toString();
+        campus_final[building]['measured_data'][this_year] = {};
         for (var energy_type in campusData[building]['measured']) {
             if (!(energy_type == 'total')) {
-                var energy_c02 = campusData[building]['measured'][energy_type].map(function(x) {return x * c02_factors[energy_type]});
-                var energy_c02_norm = energy_c02.map(function(x) {return x / building_metadata['area_m2']});
-                var unit_norm = campusData[building]['measured'][energy_type].map(function(x) {return x / building_metadata['area_m2']});
-                var unit = campusData[building]['measured'][energy_type];
+                var measured_kwh = campusData[building]['measured'][energy_type];
+                campus_final[building]['measured_data'][this_year][energy_type] = measured_kwh;
+            }
+        }
 
-                campus_final[building]['building_data']['measured_kwh'][energy_type] = unit;
-                campus_final[building]['building_data']['measured_c02'][energy_type] = energy_c02;
-                campus_final[building]['building_data']['measured_kwh_norm'][energy_type] = unit_norm;
-                campus_final[building]['building_data']['measured_c02_norm'][energy_type] = energy_c02_norm;
-            }
-        }
-    }
-    for (var building in campus_final) {
-        for (var measured_type in campus_final[building]['building_data']) {
-            for (var energy_type in campus_final[building]['building_data'][measured_type]) {
-                var tot = [];
-                for (var i = 0; i < campus_final[building]['building_data'][measured_type]['elec'].length; i++) {
-                    var individual_total = campus_final[building]['building_data'][measured_type]['elec'][i] + campus_final[building]['building_data'][measured_type]['chw'][i] + campus_final[building]['building_data'][measured_type]['stm'][i];
-                    tot.push(individual_total);
-                }
-                campus_final[building]['building_data'][measured_type]['total'] = tot;
-            }
-        }
+        campus_final[building]['simulation_data'] = campusData[building]['simulations']
     }
     return campus_final;
 }

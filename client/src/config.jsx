@@ -1,4 +1,4 @@
-const BASE_URL = 'https://jared-hanson.com/urop/api';
+const BASE_URL = 'http://52.11.126.32/CampusEnergyModel/api';
 const BUILDING_DATA_RESOURCE = '/campus_meu/';
 export var API_CONFIG = {
     base_url: BASE_URL,
@@ -9,14 +9,26 @@ export var API_CONFIG = {
 }
 
 var FILTER_CONFIG = {
+    graphToggle: {
+        filterStateKey: 'selectedGraphToggle',
+        keys: ['overview', 'building'],
+        translations: {
+            overview: 'Overview',
+            building: 'Building'
+        },
+        names: {
+            overview: 'Overview',
+            building: 'Building'
+        }
+    },
     dataSource: {
         filterStateKey: 'selectedDataSource',
         title: 'Data Source',
         keys: ['metered', 'modeled', 'warning'],
-        translation: {
+        translations: {
             metered: 'Metered',
             modeled: 'Modeled',
-            warning: 'Warning Mode'
+            warning: 'Warning'
         },
         icons: {
             metered: './imgs/metered-data-icon.png',
@@ -27,19 +39,19 @@ var FILTER_CONFIG = {
     resourceType: {
         filterStateKey: 'selectedResource',
         title: 'Energy Type',
-        keys: ['total', 'elec', 'stm', 'chw'],
+        keys: ['elec', 'stm', 'chw'],
         translations: {
-            total: 'Total',
             elec: 'Electricity',
             stm: 'Steam',
             chw: 'Chilled Water'
         },
         icons: {
-            total: './imgs/total-icon.png',
+            all: './imgs/total-icon.png',
             elec: './imgs/electricity-icon.png',
             stm: './imgs/steam-icon.png',
             chw: './imgs/chilled-water-icon.png'
-        }
+        },
+        selectAll: true
     },
     unitsType: {
         filterStateKey: 'selectedUnits',
@@ -51,7 +63,7 @@ var FILTER_CONFIG = {
         },
         names: {
             kwh: 'kWh',
-            co2: 'CO&#8322;',
+            co2: 'kg CO&#8322;e',
         }
     },
     unitsNormalized: {
@@ -69,16 +81,14 @@ var FILTER_CONFIG = {
     buildingType: {
         filterStateKey: 'selectedBuildingType',
         title: 'Building Type',
-        keys: ['all', 'academic', 'laboratory', 'residential', 'services'],
+        keys: ['academic', 'laboratory', 'residential', 'services'],
         translations: {
-            all: 'All Building Types',
             academic: 'Academic',
-            laboratory: 'Laboratory',
+            laboratory: 'Lab',
             residential: 'Residential',
-            services: 'Services'
+            services: 'Ancillary'
         },
         icons: {
-            all: './imgs/all-buildings-icon.png',
             academic: './imgs/academic-icon.png',
             laboratory: './imgs/laboratory-icon.png',
             residential: './imgs/residential-icon.png',
@@ -94,7 +104,7 @@ export function getSelectFilterConfig(filterKey) {
     }
 }
 
-const TOGGLE_FILTERS = ['unitsType', 'unitsNormalized'];
+const TOGGLE_FILTERS = ['unitsType', 'unitsNormalized', 'graphToggle'];
 export function getToggleFilterConfig(filterKey) {
     if (TOGGLE_FILTERS.includes(filterKey)) {
         return FILTER_CONFIG[filterKey];

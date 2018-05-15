@@ -2,15 +2,24 @@ import React from 'react';
 import styled from 'styled-components';
 
 import ModeledPerformance from './ModeledPerformance.jsx';
+import chroma from 'chroma-js';
+import { TypeLabel, AreaLabel, EUILabel } from './FactLabels.jsx';
 
 
-var Container = styled.div`
-    width: 100%;
+export var Container = styled.div`
+    border: solid medium lightgrey;
+    width: 47%;
     height: 100%;
 
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    align-content: center;
+
+    > * {
+        padding: 10px
+    }
 `;
 
 export var Column = styled.div`
@@ -32,11 +41,8 @@ export default class BuildingFacts extends React.Component {
             <Container>
                 <BuildingOverview
                     width={'39%'}
-                    buildingData={this.props.buildingData}
-                />
-                <ModeledPerformance
-                    width={'59%'}
-                    buildingData={this.props.buildingData}
+                    selectedBuilding={this.props.selectedBuilding}
+                    dataProcessor={this.props.dataProcessor}
                 />
             </Container>
         );
@@ -47,10 +53,16 @@ export default class BuildingFacts extends React.Component {
 export const SubSectionTitle = styled.div`
     width: 100%;
     font-size: 1.2em;
-    font-weight: 400;
+    font-weight: bold;
+    padding-bottom: 5px;
 `;
 
-const items = [{
+const EmptyBuilding = styled.div`
+    padding-left: 5px;
+    font-size: .75em;
+`;
+
+export const items = [{
     name: 'Type',
     key: 'building_type',
     imgUrl: (val) => {
@@ -79,15 +91,30 @@ class BuildingOverview extends React.Component {
     }
 
     render() {
-        var that = this;
-        console.log(this.props);
-        var Items = items.map(function(item) {
-            var value = that.props.buildingData.building_metadata[item.key];
-            return (<OverviewItem key={item.name} name={item.name} value={value} units={item.units}/>);
-        });
+        var selectedBuilding = this.props.selectedBuilding;
+
+        if (selectedBuilding) {
+            var that = this;
+            var dataProcessor = this.props.dataProcessor;
+
+            var type = (<TypeLabel key={1} selectedBuildingTypes={dataProcessor.getBuildingType(selectedBuilding)} />)
+
+            var area = (<AreaLabel key={2} area={dataProcessor.printBuildingArea(selectedBuilding)} />);
+
+            var campus_min = dataProcessor.getCampusMin();
+            var campus_max = dataProcessor.getCampusMax();
+            var energy_use = dataProcessor.getBuildingEnergyUsage(selectedBuilding);
+            var color = chroma.scale(['#7d8180', '#d91111']).domain([campus_min, campus_max])(energy_use);
+            var eui = (<EUILabel key={3} eui={dataProcessor.printBuildingEnergyUsage(selectedBuilding)} unitsHTML={dataProcessor.printEnergyUnitsHTML()} color={color}/>);
+
+            var Items = [type, area, eui];
+        } else {
+            var Items = (<EmptyBuilding>Click a building on the map.</EmptyBuilding>);
+        }
+        var title = ("building " + this.props.selectedBuilding).toUpperCase();
         return (
-                <Column width={this.props.width} >
-                <SubSectionTitle>Overview</SubSectionTitle>
+                <Column width={'100%'} >
+                <SubSectionTitle>{title}</SubSectionTitle>
                 <Column width={'100%'} style={{justifyContent: 'space-around'}}>
                     {Items}
                 </Column>
@@ -127,7 +154,7 @@ const Item = styled.div`
     }
 `;
 
-class OverviewItem extends React.Component {
+export class OverviewItem extends React.Component {
     constructor(props) {
         super(props);
     }
