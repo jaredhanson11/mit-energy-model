@@ -128,9 +128,9 @@ def _get_json_updates(idf_vals, idf):
     # Core QA Flowrate: INP_OA_PER_C
     INP_OA_PER_C = ('Outdoor Air Flow per Person', idf_vals['INP_OA_PER_C'])
     # Perimeter QA Schedule: INP_DCV_SCH_P
-    INP_DCV_SCH_P = ('Outdoor Air Flow Rate Fraction Schedule Name', idf_vals['INP_DCV_SCH_P'])
+    INP_DCV_SCH_P = ('Outdoor Air Schedule Name', idf_vals['INP_DCV_SCH_P'])
     # Core QA Schedule: INP_DCV_SCH_C
-    INP_DCV_SCH_C = ('Outdoor Air Flow Rate Fraction Schedule Name', idf_vals['INP_DCV_SCH_C'])
+    INP_DCV_SCH_C = ('Outdoor Air Schedule Name', idf_vals['INP_DCV_SCH_C'])
 
     for air in idf.idfobjects['DESIGNSPECIFICATION:OUTDOORAIR']:
         name = air['Name']
