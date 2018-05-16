@@ -1,53 +1,52 @@
 import subprocess
 import os
 import pandas as pd
+import csv
 import json
 import sys
+import shutil
+from eppy.runner import run_functions
 
 from zone_multipliers import ZoneMultiplierInterface
+from idf_builder import IDFBuilder
 
-models_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../server/models/'))
+models_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../server/server/models/'))
 sys.path.append(models_path)
 from CampusSimulationDataModel import BuildingSimulationModel
 
 updater_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), 'idf_updates/'))
 simulation_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), 'eplus_simulations/'))
 IDF_VERSION_UPDATER_FOLDER = '/usr/local/EnergyPlus-8-8-0/PreProcess/IDFVersionUpdater/'
+EPWS_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../server/EPW/'))
 
 class EnergyPlusEngine:
 
-    ENERGYPLUS_FOLDER = '/usr/local/EnergyPlus-8-8-0/'
+    ### EPPY CONSTANTS
+    RUN_ARGS = {'weather': None, 'output_directory': None, 'output_prefix': None, 'expandobjects': True, 'readvars': True}
 
-    def update_idf_file(self, input_file, current_version):
-        update_command_names = {
-            '8.4': IDF_VERSION_UPDATER_FOLDER + 'Transition-V8-4-0-to-V8-5-0',
-            '8.5': IDF_VERSION_UPDATER_FOLDER + 'Transition-V8-5-0-to-V8-6-0',
-            '8.6': IDF_VERSION_UPDATER_FOLDER + 'Transition-V8-6-0-to-V8-7-0',
-            '8.7': IDF_VERSION_UPDATER_FOLDER + 'Transition-V8-7-0-to-V8-8-0'
-        }
-        if current_version not in update_command_names:
-            print "Invalid version number"
-            return
+    def simulate(self, idf_template_path, idf_vals_csv, building_number, simulation_name, save=False):
+        idf_simulation_runs = []
 
-        subprocess.call(['cp', input_file, updater_folder])
-        input_filename = os.path.basename(input_file)
-        updating_filepath = os.path.join(updater_folder, input_filename)
-        subprocess.call(['cp', input_file, input_file + '.old'])
-
-        while current_version != '8.8':
-            p = subprocess.Popen([update_command_names[current_version], updating_filepath], cwd=IDF_VERSION_UPDATER_FOLDER)
-            p.wait()
-            current_version = current_version[:2] + str(int(current_version[2]) + 1)
-
-        subprocess.call(['cp', updating_filepath, input_file])
-
-        print
-        print "Update Complete"
-        #do_del = str(raw_input('Delete update folder? y/(n) ')).lower() == 'y'
-        do_del = 'y'
-        if do_del:
-            [os.remove(os.path.join(updater_folder, f)) for f in os.listdir(updater_folder)]
-        return
+        simulation_dir = self._make_simulation_dir(building_number, simulation_name)
+        epws_by_year = self._get_epws()
+        if type(idf_vals_csv) == str:
+            idf_vals = self._get_vals_list(idf_vals_csv)
+        else:
+            idf_vals = idf_vals_csv
+        idfs = self._get_idfs(idf_template_path, idf_vals)
+        for year in epws_by_year:
+            output_dir = os.path.join(simulation_dir, str(year) + '/')
+            weather_file = epws_by_year[year]
+            for i, idf in enumerate(idfs):
+                output_prefix = 'sim' + str(i).zfill(3)
+                args = self.RUN_ARGS.copy()
+                args['weather'] = weather_file
+                args['output_directory'] = output_dir
+                args['output_prefix'] = output_prefix
+                simulation_run = [idf, args]
+                idf_simulation_runs.append(simulation_run)
+            break # TODO REMOVE TRYING WITH JUST ONE YEAR HERE
+        run_functions.runIDFs(idf_simulation_runs, processes=0)
 
     def run_simulation(self, idf_file, epw_file, building_number, simulation_name=None, simulation_year=None, save=False, extra_years=[]):
         ENERGYPLUS_CMD = '/usr/local/bin/EnergyPlus'
@@ -69,6 +68,42 @@ class EnergyPlusEngine:
         if save == True:
             self._save_results(simulation_name, simulation_year, building_number, results, extra_years=extra_years)
         self._write_results(results, eplusout_csv_file)
+
+    def _get_vals_list(self, idf_vals_csv):
+        csv_file = open(idf_vals_csv, 'r')
+        csv_reader = csv.reader(csv_file)
+        rows = []
+        for row in csv_reader:
+            rows.append(row)
+        csv_file.close()
+        return rows
+
+    def _get_idfs(self, idf_template, vals_csv):
+        return IDFBuilder.idfs(idf_template, vals_csv)
+
+    def _get_epws(self):
+        ret = {
+            '2018': os.path.join(EPWS_FOLDER, './MIT_Building1_Weather.epw'),
+            '2020': os.path.join(EPWS_FOLDER, './BostonLoganWeather2020.epw'),
+            '2050': os.path.join(EPWS_FOLDER, './BostonLoganWeather2050.epw'),
+            '2080': os.path.join(EPWS_FOLDER, './BostonLoganWeather2080.epw')
+        }
+        return ret
+
+    def _make_simulation_dir(self, bldg_num, sim_name):
+        simulation_dirname = ''.join([str(bldg_num.lower()), '_', str(sim_name), '/'])
+        simulation_dir = os.path.join(simulation_folder, simulation_dirname)
+        if os.path.exists(simulation_dir):
+            self._rm_simulation_dir(bldg_num, sim_name)
+            #raise Exception("Directory " + simulation_dir + ' already exists')
+        os.mkdir(simulation_dir)
+        return simulation_dir
+
+    def _rm_simulation_dir(self, bldg_num, sim_name):
+        simulation_dirname = ''.join([str(bldg_num.lower()), '_', str(sim_name), '/'])
+        simulation_dir = os.path.join(simulation_folder, simulation_dirname)
+        if os.path.exists(simulation_dir):
+            shutil.rmtree(simulation_dir)
 
     def _translate_simulation(self, eplusout_csv_file, building_number):
         eplusout_csv = pd.read_csv(eplusout_csv_file)
@@ -152,4 +187,33 @@ class EnergyPlusEngine:
         results_file = open(results_fn, 'w')
         json.dump(results, results_file)
 
+    def update_idf_file(self, input_file, current_version):
+        update_command_names = {
+            '8.4': IDF_VERSION_UPDATER_FOLDER + 'Transition-V8-4-0-to-V8-5-0',
+            '8.5': IDF_VERSION_UPDATER_FOLDER + 'Transition-V8-5-0-to-V8-6-0',
+            '8.6': IDF_VERSION_UPDATER_FOLDER + 'Transition-V8-6-0-to-V8-7-0',
+            '8.7': IDF_VERSION_UPDATER_FOLDER + 'Transition-V8-7-0-to-V8-8-0'
+        }
+        if current_version not in update_command_names:
+            print "Invalid version number"
+            return
 
+        subprocess.call(['cp', input_file, updater_folder])
+        input_filename = os.path.basename(input_file)
+        updating_filepath = os.path.join(updater_folder, input_filename)
+        subprocess.call(['cp', input_file, input_file + '.old'])
+
+        while current_version != '8.8':
+            p = subprocess.Popen([update_command_names[current_version], updating_filepath], cwd=IDF_VERSION_UPDATER_FOLDER)
+            p.wait()
+            current_version = current_version[:2] + str(int(current_version[2]) + 1)
+
+        subprocess.call(['cp', updating_filepath, input_file])
+
+        print
+        print "Update Complete"
+        #do_del = str(raw_input('Delete update folder? y/(n) ')).lower() == 'y'
+        do_del = 'y'
+        if do_del:
+            [os.remove(os.path.join(updater_folder, f)) for f in os.listdir(updater_folder)]
+        return

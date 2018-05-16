@@ -1,0 +1,6 @@
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+Weatherization,Window Operation,Daylight Response,Thermostat Setpoint,Occupancy Schedule,Equipment Usage,Lighting Usage,DHW Flowrates,Perimeter Occupant Density,Core Occupant Density,Perimeter OA Flowrate,Core OA Flowrate,Perimeter Equipment Power,Perimeter  Lighting Power,Core Equipment Power,Core Lighting Power,Perimeter OA Schedule,Core OA Schedule,Energy Recovery,Economizer Cycle
+INP_INF_ACH,INP_NV_SCH,INP_DL_TYPE,INP_THERM_STPT,INP_OCC_SCH,INP_EQP_SCH,INP_LTG_SCH,INP_DHW_FLOW,INP_OCC_DENS_P,INP_OCC_DENS_C,INP_OA_PER_P,INP_OA_PER_C,INP_EQP_PWR_P,INP_LTG_PWR_P,INP_EQP_PWR_C,INP_LTG_PWR_C,INP_DCV_SCH_P,INP_DCV_SCH_C,INP_ERV_TYPE,INP_ECON_TYPE
+0.05,AllOn,2,22,30HrWk,30HrWk,30HrWk,0.001,0.05,0.05,0.0005,0.0005,15,10,15,10,30HrWk,30HrWk,None,NoEconomizer
+0.5,60HrWk,1,24,60HrWk,60HrWk,60HrWk,0.002,0.25,0.25,0.001,0.001,25,15,25,15,60HrWk,60HrWk,Sensible,DifferentialDryBulb
+2,AllOff,0,26,AllOn,AllOn,AllOn,0.003,0.5,0.5,0.002,0.002,35,20,35,20,AllOn,AllOn,Enthalpy,DifferentialEnthalpy
