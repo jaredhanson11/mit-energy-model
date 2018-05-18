@@ -5,7 +5,6 @@ import csv
 import json
 import sys
 import shutil
-from eppy.runner import run_functions
 
 from zone_multipliers import ZoneMultiplierInterface
 from idf_builder import IDFBuilder
@@ -21,11 +20,13 @@ EPWS_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../
 
 class EnergyPlusEngine:
 
-    ### EPPY CONSTANTS
-    RUN_ARGS = {'weather': None, 'output_directory': None, 'output_prefix': None, 'expandobjects': True, 'readvars': True}
+    RUN_ARGS = {'weather': None, 'output_directory': None, 'simulation_year': None, 'building_number': None, 'simulation_name': None}
 
     def simulate(self, idf_template_path, idf_vals_csv, building_number, simulation_name, save=False):
         idf_simulation_runs = []
+        args = self.RUN_ARGS.copy()
+        args['building_number'] = building_number
+        args['simulation_name'] = simulation_name
 
         simulation_dir = self._make_simulation_dir(building_number, simulation_name)
         epws_by_year = self._get_epws()
@@ -33,33 +34,57 @@ class EnergyPlusEngine:
             idf_vals = self._get_vals_list(idf_vals_csv)
         else:
             idf_vals = idf_vals_csv
-        idfs = self._get_idfs(idf_template_path, idf_vals)
+        idfs = self._get_idfs(idf_template_path, idf_vals, simulation_dir)
         for year in epws_by_year:
-            output_dir = os.path.join(simulation_dir, str(year) + '/')
+            year_dir = os.path.join(simulation_dir, str(year) + '/')
+            os.mkdir(year_dir)
+            args = args.copy()
+            args['simulation_year'] = str(year)
             weather_file = epws_by_year[year]
+            args['weather'] = weather_file
             for i, idf in enumerate(idfs):
-                output_prefix = 'sim' + str(i).zfill(3)
-                args = self.RUN_ARGS.copy()
-                args['weather'] = weather_file
-                args['output_directory'] = output_dir
-                args['output_prefix'] = output_prefix
+                args = args.copy()
+                sim_i_dir = os.path.join(year_dir, 'sim' + str(i).zfill(3))
+                os.mkdir(sim_i_dir)
+                args['output_directory'] = sim_i_dir
                 simulation_run = [idf, args]
                 idf_simulation_runs.append(simulation_run)
             break # TODO REMOVE TRYING WITH JUST ONE YEAR HERE
-        run_functions.runIDFs(idf_simulation_runs, processes=0)
+        self.parallelize_simulations(idf_simulation_runs, processes=1)
 
-    def run_simulation(self, idf_file, epw_file, building_number, simulation_name=None, simulation_year=None, save=False, extra_years=[]):
+    def parallelize_simulations(self, idfs, processes=1):
+        pool = Pool(processes=processes)
+        print "Starting simulations with %s cores" % str(processes)
+        pool.map(self._parallelized_run, idfs)
+        print "Finished simulations"
+        return
+
+
+    def _parallelized_run(self, simulation):
+        idf_file = simulation[0]
+        args = simulation[1]
+        epw_file = args['weather']
+        building_number = args['building_number']
+        simulation_name = args['simulation_name']
+        simulation_year = args['simulation_year']
+        simulation_dir = args['ouput_dir']
+        return self.run_simulation(idf_file, epw_file, building_number, simulation_dir, simulation_name, simulation_year)
+
+
+    def run_simulation(self, idf_file, epw_file, building_number, simulation_dir=None, simulation_name=None, simulation_year=None, save=False, extra_years=[]):
         ENERGYPLUS_CMD = '/usr/local/bin/EnergyPlus'
         idf_file_path = os.path.abspath(idf_file)
         epw_file_path = os.path.abspath(epw_file)
+        if simulation_dir == None:
+            simulation_dir = simulation_folder
         if (not simulation_name or not simulation_year) and save:
             raise Exception('Need simulation name and year to save results')
         command = [ENERGYPLUS_CMD, '-w', epw_file_path, '-x', '-r', idf_file_path]
         print command
-        p = subprocess.Popen(command, cwd=simulation_folder)
+        p = subprocess.Popen(command, cwd=simulation_dir)
         p.wait()
 
-        eplusout_csv_file = os.path.abspath(os.path.join(simulation_folder, 'eplusout.csv'))
+        eplusout_csv_file = os.path.abspath(os.path.join(simulation_dir, 'eplusout.csv'))
         if not os.path.exists(eplusout_csv_file):
             print "Energy Plus simulation error."
             return
@@ -78,8 +103,8 @@ class EnergyPlusEngine:
         csv_file.close()
         return rows
 
-    def _get_idfs(self, idf_template, vals_csv):
-        return IDFBuilder.idfs(idf_template, vals_csv)
+    def _get_idfs(self, idf_template, vals_csv, simulation_dir):
+        return IDFBuilder.idfs(idf_template, vals_csv, simulation_dir)
 
     def _get_epws(self):
         ret = {

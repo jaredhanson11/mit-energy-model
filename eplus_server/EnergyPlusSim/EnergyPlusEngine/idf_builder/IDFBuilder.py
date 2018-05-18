@@ -169,14 +169,16 @@ def _get_json_updates(idf_vals, idf):
 
     return json_updates
 
-def idfs(idf_template_path, idf_vals):
+def idfs(idf_template_path, idf_vals, simulation_dir):
     idfs = []
-    for idf_ver in idf_vals:
+    for i, idf_ver in enumerate(idf_vals):
         idf_vals = _get_idf_vals(idf_ver)
         idf = IDF(idf_template_path)
         json_updates = _get_json_updates(idf_vals, idf)
         json_functions.updateidf(idf, json_updates)
-        idfs.append(idf)
+        idf_file_path = os.path.join(simulation_dir, 'sim' + str(i).zfill(3) + '.idf')
+        idf.saveas(idf_file_path)
+        idfs.append(idf_file_path)
     return idfs
 
 
