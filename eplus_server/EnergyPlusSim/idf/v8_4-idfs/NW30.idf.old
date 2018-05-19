@@ -1,0 +1,2083 @@
+! ----  This file was generated with Archsim v.4.0.2.17
+
+Version,8.4;
+ProgramControl,
+4; !- Number of Threads Allowed
+
+RunPeriod,
+  ArchSim,                 !- Name
+  1,                       !- Begin Month
+  1,                       !- Begin Day of Month
+  12,                      !- End Month
+  31,                      !- End Day of Month
+  UseWeatherFile,          !- Day of Week for Start Day
+  No,                      !- Use Weather File Holidays and Special Days
+  No,                      !- Use Weather File Daylight Saving Period
+  Yes,                     !- Apply Weekend Holiday Rule
+  Yes,                     !- Use Weather File Rain Indicators
+  Yes,                     !- Use Weather File Snow Indicators
+  1;                       !- Number of Times Runperiod to be Repeated
+
+RunPeriodControl:DaylightSavingTime,
+  Last Sunday in March,    !- Start Date
+  Last Sunday in October;  !- End Date
+
+Site:GroundTemperature:BuildingSurface,14,14,14,14,14,14,14,14,14,14,14,14;
+
+Site:GroundReflectance,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2;
+
+Site:GroundReflectance:SnowModifier,
+  1.0,                     !- Ground Reflected Solar Modifier
+  1.0;                     !- Daylighting Ground Reflected Solar Modifier
+
+SimulationControl,
+  No,                      !- Do Zone Sizing Calculation
+  No,                      !- Do System Sizing Calculation
+  No,                      !- Do Plant Sizing Calculation
+  No,                      !- Run Simulation for Sizing Periods
+  Yes;                     !- Run Simulation for Weather File Run Periods
+
+
+
+ConvergenceLimits,
+  1,                       !- Minimum System Timestep {minutes}
+  50;                      !- Maximum HVAC Iterations
+
+ScheduleTypeLimits,
+  Any Number;              !- Name
+
+ScheduleTypeLimits,
+  Fraction,                !- Name
+  0.0,                     !- Lower Limit Value
+  1.0,                     !- Upper Limit Value
+  CONTINUOUS;              !- Numeric GasType
+
+ScheduleTypeLimits,
+  Temperature,             !- Name
+  -60,                     !- Lower Limit Value
+  200,                     !- Upper Limit Value
+  CONTINUOUS;              !- Numeric GasType
+
+ScheduleTypeLimits,
+  Control GasType,            !- Name
+  0,                       !- Lower Limit Value
+  4,                       !- Upper Limit Value
+  DISCRETE;                !- Numeric GasType
+
+ScheduleTypeLimits,
+  On/Off,                  !- Name
+  0,                       !- Lower Limit Value
+  1,                       !- Upper Limit Value
+  DISCRETE;                !- Numeric GasType
+
+Schedule:Constant,
+  On,                      !- Name
+  On/Off,                  !- Schedule GasType Limits Name
+  1;                       !- Value
+
+Schedule:Constant,
+  Off,                     !- Name
+  On/Off,                  !- Schedule GasType Limits Name
+  0;                       !- Value
+
+
+GlobalGeometryRules,
+  LowerLeftCorner,         !- Starting Vertex Position
+  CounterClockWise,        !- Vertex Entry Direction
+  Relative;                !- Coordinate System
+
+! -------------------------ERL SENSORS--------------------------
+
+EnergyManagementSystem:Sensor,                                             
+  OutdoorTemp, !- Name                                         
+  Environment, !- Output:Variable Index Key Name               
+  Site Outdoor Air Drybulb Temperature; !- Output:Variable Name
+EnergyManagementSystem:Sensor,                                             
+  OutdoorRelHumid, !- Name                                         
+  Environment, !- Output:Variable Index Key Name               
+  Site Outdoor Air Relative Humidity; !- Output:Variable Name
+
+
+Output:EnergyManagementSystem,
+  Verbose,                 !- Actuator Availability Dictionary Reporting
+  Verbose,                 !- Internal Variable Availability Dictionary Reporting
+  Verbose;                 !- EMS Runtime Language Debug Output Level
+
+
+
+ShadowCalculation,
+  AverageOverDaysInFrequency,  !- Calculation Method
+  60,                      !- Calculation Frequency
+  15000,                   !- Maximum Figures in Shadow Overlap Calculations
+  SutherlandHodgman,       !- Polygon Clipping Algorithm
+  SimpleSkyDiffuseModeling;!- Sky Diffuse Modeling Algorithm
+
+Building,
+  Building,                !- Name
+  0,                       !- North Axis [deg]
+  Suburbs,                 !- Terrain
+  .04,                     !- Loads Convergence Tolerance Value
+  .4,                      !- Temperature Convergence Tolerance Value {deltaC}
+  MinimalShadowing,            !- Solar Distribution   should be  FullInteriorAndExterior
+  25,                      !- Maximum Number of Warmup Days
+  ;                        !- Minimum Number of Warmup Days
+
+HeatBalanceAlgorithm,
+    ConductionTransferFunction,  !- Algorithm
+    200,                     !- Surface Temperature Upper Limit {C}
+    0.1,                     !- Minimum Surface Convection Heat Transfer Coefficient Value {W/m2-K}
+    1000;                    !- Maximum Surface Convection Heat Transfer Coefficient Value {W/m2-K}
+
+Timestep,4;
+
+SurfaceConvectionAlgorithm:Inside,TARP;
+
+SurfaceConvectionAlgorithm:Outside,DOE-2;
+
+! ------------ CONSTRUCTIONS 
+
+! 115mmSandLimeBrick GasType: Partition
+Construction, 115mmSandLimeBrick,
+Plaster_0.005_115mmSandLimeBrick,
+Sand-Lime Brick_0.08_115mmSandLimeBrick,
+Plaster_0.08_115mmSandLimeBrick;
+
+Construction, 115mmSandLimeBrick_FLIPPED,
+Plaster_0.08_115mmSandLimeBrick,
+Sand-Lime Brick_0.08_115mmSandLimeBrick,
+Plaster_0.005_115mmSandLimeBrick;
+
+
+
+! Materials
+!- Material: Plaster GasType: Screed
+Material, Plaster_0.005_115mmSandLimeBrick ,                !- Material name 
+ Rough,                                         !- Roughness
+ 0.005,                                         !- Thickness {m}
+ 1,                                          !- Conductivity {w/m-K}
+ 2000,                                          !- Density {kg/m3}
+ 1130,                                          !- Specific Heat {J/kg-K}
+ 0.9,                                           !- Thermal Emittance
+ 0.6,                                           !- Solar Absorptance
+ 0.6;                                           !- Visible Absorptance
+
+!- Material: Sand-Lime Brick GasType: Masonry
+Material, Sand-Lime Brick_0.08_115mmSandLimeBrick ,                !- Material name 
+ Rough,                                         !- Roughness
+ 0.08,                                         !- Thickness {m}
+ 0.56,                                          !- Conductivity {w/m-K}
+ 1200,                                          !- Density {kg/m3}
+ 1000,                                          !- Specific Heat {J/kg-K}
+ 0.9,                                           !- Thermal Emittance
+ 0.6,                                           !- Solar Absorptance
+ 0.6;                                           !- Visible Absorptance
+
+!- Material: Plaster GasType: Screed
+Material, Plaster_0.08_115mmSandLimeBrick ,                !- Material name 
+ Rough,                                         !- Roughness
+ 0.08,                                         !- Thickness {m}
+ 1,                                          !- Conductivity {w/m-K}
+ 2000,                                          !- Density {kg/m3}
+ 1130,                                          !- Specific Heat {J/kg-K}
+ 0.9,                                           !- Thermal Emittance
+ 0.6,                                           !- Solar Absorptance
+ 0.6;                                           !- Visible Absorptance
+
+
+
+! U0-4 GasType: Facade
+Construction, U0-4,
+XPS Board_0.06_U0-4,
+General Concrete_0.2_U0-4;
+
+Construction, U0-4_FLIPPED,
+General Concrete_0.2_U0-4,
+XPS Board_0.06_U0-4;
+
+
+
+! Materials
+!- Material: XPS Board GasType: Insulation
+Material, XPS Board_0.06_U0-4 ,                !- Material name 
+ Rough,                                         !- Roughness
+ 0.06,                                         !- Thickness {m}
+ 0.034,                                          !- Conductivity {w/m-K}
+ 35,                                          !- Density {kg/m3}
+ 1400,                                          !- Specific Heat {J/kg-K}
+ 0.9,                                           !- Thermal Emittance
+ 0.6,                                           !- Solar Absorptance
+ 0.6;                                           !- Visible Absorptance
+
+!- Material: General Concrete GasType: Concrete
+Material, General Concrete_0.2_U0-4 ,                !- Material name 
+ Rough,                                         !- Roughness
+ 0.2,                                         !- Thickness {m}
+ 2,                                          !- Conductivity {w/m-K}
+ 2400,                                          !- Density {kg/m3}
+ 950,                                          !- Specific Heat {J/kg-K}
+ 0.9,                                           !- Thermal Emittance
+ 0.7,                                           !- Solar Absorptance
+ 0.7;                                           !- Visible Absorptance
+
+
+
+! U0-3 GasType: Facade
+Construction, U0-3,
+XPS Board_0.12_U0-3,
+General Concrete_0.2_U0-3;
+
+Construction, U0-3_FLIPPED,
+General Concrete_0.2_U0-3,
+XPS Board_0.12_U0-3;
+
+
+
+! Materials
+!- Material: XPS Board GasType: Insulation
+Material, XPS Board_0.12_U0-3 ,                !- Material name 
+ Rough,                                         !- Roughness
+ 0.12,                                         !- Thickness {m}
+ 0.034,                                          !- Conductivity {w/m-K}
+ 35,                                          !- Density {kg/m3}
+ 1400,                                          !- Specific Heat {J/kg-K}
+ 0.9,                                           !- Thermal Emittance
+ 0.6,                                           !- Solar Absorptance
+ 0.6;                                           !- Visible Absorptance
+
+!- Material: General Concrete GasType: Concrete
+Material, General Concrete_0.2_U0-3 ,                !- Material name 
+ Rough,                                         !- Roughness
+ 0.2,                                         !- Thickness {m}
+ 2,                                          !- Conductivity {w/m-K}
+ 2400,                                          !- Density {kg/m3}
+ 950,                                          !- Specific Heat {J/kg-K}
+ 0.9,                                           !- Thermal Emittance
+ 0.7,                                           !- Solar Absorptance
+ 0.7;                                           !- Visible Absorptance
+
+
+
+
+! ------------ GLAZING  
+
+! Double GasType: Double
+Construction, Double,
+Generic Clear Glass 6mm_0.006_Double,
+ARGON_0.0013_Double,
+Generic Clear Glass 6mm_0.006_Double;
+
+Construction, Double_FLIPPED,
+Generic Clear Glass 6mm_0.006_Double,
+ARGON_0.0013_Double,
+Generic Clear Glass 6mm_0.006_Double;
+
+
+
+! Materials
+WindowMaterial:Glazing,Generic Clear Glass 6mm_0.006_Double,                         !- Generic CLEAR 3MM
+ SpectralAverage,                               !- Optical data type {SpectralAverage or Spectral}
+ SpectralAverage,                                              !- Name of spectral data set when Optical Data GasType = Spectral
+ 0.006,                                          !- Thickness {m}
+ 0.68,                                          !- Solar transmittance at normal incidence
+ 0.09,                                          !- Solar reflectance at normal incidence: front side
+ 0.1,                                          !- Solar reflectance at normal incidence: back side
+ 0.81,                                          !- Visible transmittance at normal incidence
+ 0.11,                                          !- Visible reflectance at normal incidence: front side
+ 0.12,                                          !- Visible reflectance at normal incidence: back side
+ 0,                                            !- IR transmittance at normal incidence
+ 0.2,                                           !- IR emissivity: front side
+ 0.2,                                           !- IR emissivity: back side
+ 0.9,                                            !- Conductivity {W/m-K}
+ 1;                                             !- Dirt Correction Factor for Solar and Visible Transmittance
+
+! Gas: ARGON GasType: ARGON
+WindowMaterial:Gas,ARGON_0.0013_Double ,                !- Material name 
+ ARGON,                                           !- Gas type (Air - Argon - Krypton - Xenon - SF6 - Custom)
+ 0.0013;                                         !- Thickness {m}
+
+
+
+
+
+! ------------ SCHEDULES  
+
+Schedule:Year,30HrWk,Fraction,30HrWk,1,1,12,31;
+
+Schedule:Year,AllOn,Fraction,AllOn,1,1,12,31;
+
+Schedule:Year,equipOffice,Fraction,equipOffice,1,1,12,31;
+
+Schedule:Year,60HrWk,Fraction,60HrWk,1,1,12,31;
+
+Schedule:Year,AllOff,Fraction,AllOff,1,1,12,31;
+
+Schedule:Week:Daily, 30HrWk,
+  30HrWkDay,
+  30HrWkDay,
+  30HrWkDay,
+  30HrWkDay,
+  30HrWkDay,
+  30HrWkDay,
+  30HrWkDay,
+  30HrWkDay,
+  30HrWkDay,
+  30HrWkDay,
+  30HrWkDay,
+  30HrWkDay;
+
+Schedule:Week:Daily, AllOn,
+  AllOn,
+  AllOn,
+  AllOn,
+  AllOn,
+  AllOn,
+  AllOn,
+  AllOn,
+  AllOn,
+  AllOn,
+  AllOn,
+  AllOn,
+  AllOn;
+
+Schedule:Week:Daily, equipOffice,
+  equipOfficeWeekEnd,
+  equipOffice,
+  equipOffice,
+  equipOffice,
+  equipOffice,
+  equipOffice,
+  equipOfficeWeekEnd,
+  equipOfficeWeekEnd,
+  equipOffice,
+  equipOffice,
+  equipOffice,
+  equipOffice;
+
+Schedule:Week:Daily, 60HrWk,
+  60HrWkDay,
+  60HrWkDay,
+  60HrWkDay,
+  60HrWkDay,
+  60HrWkDay,
+  60HrWkDay,
+  60HrWkDay,
+  60HrWkDay,
+  60HrWkDay,
+  60HrWkDay,
+  60HrWkDay,
+  60HrWkDay;
+
+Schedule:Week:Daily, AllOff,
+  AllOff,
+  AllOff,
+  AllOff,
+  AllOff,
+  AllOff,
+  AllOff,
+  AllOff,
+  AllOff,
+  AllOff,
+  AllOff,
+  AllOff,
+  AllOff;
+
+Schedule:Day:Hourly, 30HrWkDay, Fraction,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.2,0.4,0.6,0.8,0.8,0.4,0.6,0.8,0.8,0.4,0.2,0.1,0.1,0.1,0.1,0.1,0.1;
+
+Schedule:Day:Hourly, AllOn, Fraction,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1;
+
+Schedule:Day:Hourly, equipOffice, Fraction,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.2,0.4,0.6,0.8,0.8,0.4,0.6,0.8,0.8,0.4,0.2,0.1,0.1,0.1,0.1,0.1,0.1;
+
+Schedule:Day:Hourly, equipOfficeWeekEnd, Fraction,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.2,0.4,0.6,0.8,0.8,0.4,0.6,0.8,0.8,0.4,0.2,0.1,0.1,0.1,0.1,0.1,0.1;
+
+Schedule:Day:Hourly, 60HrWkDay, Fraction,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.4,0.8,0.8,1,1,0.8,1,1,1,0.8,0.4,0.2,0.2,0.2,0.2,0.2,0.2;
+
+Schedule:Day:Hourly, AllOff, Fraction,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;
+
+
+
+
+!------------------------------------------------ ZONE ----------------------------------------------------
+
+Zone,
+  0Perim,            !- Name
+  0,                       !- Rotation [deg]
+  0,                       !- X origin [m]
+  0,                       !- Y origin [m]
+  0,                       !- Z origin [m]
+  1,                       !- GasType
+  1.0,                       !- Multiplier
+  ,                        !- Ceiling Height [m]
+  115.683968155626,                   !- Volume [m3]
+  26.6126841329956,                   !- Area [m2]
+  TARP,                    !- Zone Inside Convection Algorithm
+  DOE-2;                   !- Zone Outside Convection Algorithm
+
+! ------------------------ PEOPLE
+People,
+    People 0Perim,                 !- Name
+    0Perim,            !- Zone or ZoneList Name
+    30HrWk,        !- Number of People Schedule Name
+    People/Area,                  !- Number of People Calculation Method
+    ,                       !- Number of People
+    0.05,                        !- People per Zone Floor Area {person/m2}
+    ,                        !- Zone Floor Area per Person {m2/person}
+    0.3,                     !- Fraction Radiant
+    AUTOCALCULATE,           !- Sensible Heat Fraction
+    0PerimPeopleActivity,                    !- Activity Level Schedule Name
+    0.0000000382,            !- Carbon Dioxide Generation Rate {m3/s-W}
+    No,                      !- Enable ASHRAE 55 Comfort Warnings
+    ZoneAveraged,            !- Mean Radiant Temperature Calculation GasType
+    ,                        !- Surface Name/Angle Factor List Name
+    0PerimWorkEfficiency,  !- Work Efficiency Schedule Name
+    DynamicClothingModelASHRAE55,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
+    ,                        !- Clothing Insulation Schedule Name
+    0PerimAirVelocity,!- Air Velocity Schedule Name
+    AdaptiveASH55;           !- Thermal Comfort Model 1 GasType
+
+Schedule:Constant, 0PerimPeopleActivity, Any Number, 125.28; ! - Watts per person, uses Metabolic Rate input (1 met = 58 W/m2) and assumes adult body surface area of 1.8 m2
+Schedule:Constant, 0PerimAirVelocity, Any Number, 0.2;
+Schedule:Constant, 0PerimWorkEfficiency, Any Number, 0;
+
+
+! ------------------------ EQUIPMENT
+ElectricEquipment,
+  0Perim Equipment 1,!- Name
+  0Perim,            !- Zone or ZoneList Name
+  60HrWk,                    !- Schedule Name
+  Watts/Area,          !- Design Level Calculation Method
+  ,                !- Design Level [W]
+  15,                        !- Watts per Zone Floor Area [W/m2]
+  ,                        !- Watts per Person [W/person]
+  0,                       !- Fraction Latent
+  .2,                      !- Fraction Radiant
+  0,                       !- Fraction Lost
+  ;                        !- End-Use Subcategory
+
+! ------------------------ LIGHTS
+Lights,
+  0Perim General lighting,   !- Name
+  0Perim,                    !- Zone or ZoneList Name
+  60HrWk,          !- Schedule Name
+  Watts/Area,              !- Design Level Calculation Method
+  ,                        !- Lighting Level [W]
+  10,         !- Watts per Zone Floor Area [W/m2]
+  ,                        !- Watts per Person [W/person]
+  0,                       !- Return Air Fraction
+  .42,                     !- Fraction Radiant
+  .18,                     !- Fraction Visible
+  1,                       !- Fraction Replaceable
+  ;                        !- End-Use Subcategory
+
+
+! ------------------------ DAYLIGHT CONTROLS
+Daylighting:Controls,
+0Perim,            !-Zone Name
+1,                       !-Total Daylighting Reference Points
+1.2522260968684,                  !-X - Coordinate of First Reference Point {m}
+-549.546079194186,                  !-Y - Coordinate of First Reference Point {m}
+5.19694852941174,                      !-Z - Coordinate of First Reference Point {m}
+,                        !-X - Coordinate of Second Reference Point {m}
+,                        !-Y - Coordinate of Second Reference Point {m}
+,                        !-Z - Coordinate of Second Reference Point {m}
+1,                       !-Fraction of Zone Controlled by First Reference Point
+0,                       !-Fraction of Zone Controlled by Second Reference Point
+500,                     !-Illuminance Setpoint at First Reference Point {lux}
+500,                     !-Illuminance Setpoint at Second Reference Point {lux}
+1 ,                       !-Lighting control type {1=continuous,2=stepped,3=continuous/off}
+0,                       !-Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
+22,                      !-Maximum Allowable Discomfort Glare Index
+0.1,                     !-Minimum Input Power Fraction for Continuous Dimming Control
+0.1,                     !-Minimum Light Output Fraction for Continuous Dimming Control
+3,                       !-Number of Stepped Control Steps
+1;                       !-Probability Lighting will be Reset When Needed in Manual Stepped Control
+
+! ------------------------ HVAC
+Schedule:Constant,
+0PerimHeating_SP_Sch, !- Name
+Temperature, !- Schedule GasType Limits Name
+22; !- Hourly Value
+
+Schedule:Constant,
+0PerimCooling_SP_Sch, !- Name
+Temperature, !- Schedule GasType Limits Name
+22; !- Hourly Value
+
+ZoneControl:Thermostat,
+  0Perim Thermostat, !- Name
+  0Perim,            !- Zone or ZoneList Name
+  0PerimZoneControlTypeSched, !- Control GasType Schedule Name
+  ThermostatSetpoint:DualSetpoint,  !- Control 1 Object GasType
+  Dual Setpoint - Zone 0Perim;  !- Control 1 Name
+
+Schedule:Constant,
+  0PerimZoneControlTypeSched, !- Name
+  Any Number, !- Schedule GasType Limits Name
+  4; !- Hourly Value
+
+ThermostatSetpoint:DualSetpoint,
+  Dual Setpoint - Zone 0Perim,  !- Name
+  0PerimHeating_SP_Sch,  !- Heating Setpoint Temperature Schedule Name
+  0PerimCooling_SP_Sch;  !- Cooling Setpoint Temperature Schedule Name
+
+ZoneHVAC:EquipmentConnections,
+  0Perim,            !- Zone Name
+  0Perim Equipment,  !- Zone Conditioning Equipment List Name
+  0Perim Inlets,     !- Zone Air Inlet Node or NodeList Name
+  ,                        !- Zone Air Exhaust Node or NodeList Name
+  Node 0Perim Zone,  !- Zone Air Node Name
+  Node 0Perim Out;   !- Zone Return Air Node Name
+
+ZoneHVAC:EquipmentList,
+  0Perim Equipment,  !- Name
+  ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object GasType
+  0Perim Ideal Loads Air,  !- Zone Equipment 1 Name
+  1,                       !- Zone Equipment 1 Cooling Sequence
+  1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+
+NodeList,
+  0Perim Inlets,     !- Name
+  Node 0Perim In;    !- Node 1 Name
+
+ZoneHVAC:IdealLoadsAirSystem,
+  0Perim Ideal Loads Air,  !- Name
+  ,                        !- Availability Schedule Name
+  Node 0Perim In,    !- Zone Supply Air Node Name
+  ,                        !- Zone Exhaust Air Node Name
+  30,                      !- Maximum Heating Supply Air Temperature {C}
+  18,                      !- Minimum Cooling Supply Air Temperature {C}
+  0.01,                    !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
+  0.008,                   !- Minimum Cooling Supply Air Humidity Ratio {kgWater/kgDryAir}
+  NoLimit,                 !- Heating Limit
+  100,                        !- Maximum Heating Air Flow Rate [m3/s]
+  ,        				   !- Maximum Sensible Heating Capacity [W]
+  NoLimit,                 !- Cooling Limit
+  100 ,                        !- Maximum Cooling Air Flow Rate [m3/s]
+  ,                        !- Maximum Total Cooling Capacity [W]
+  AllOn,  !- Heating Availability Schedule Name
+  AllOn,  !- Cooling Availability Schedule Name
+  None,                    !- Dehumidification Control Type
+  ,                        !- Cooling Sensible Heat Ratio {dimensionless}
+  None,                    !- Humidification Control Type
+  0PerimMinFreshAir,                        !- Design Specification Outdoor Air Object Name
+  0Perim_OutDoorInlet,                        !- Outdoor Air Inlet Node Name
+  OccupancySchedule,                        !- Demand Controlled Ventilation GasType
+  NoEconomizer,                        !- Outdoor Air Economizer GasType
+  None,                        !- Heat Recovery GasType
+  0.7,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
+  0.65;                        !- Latent Heat Recovery Effectiveness {dimensionless}
+
+
+ZoneControl:Humidistat,
+    0PerimHumidistat,                  !-Name
+    0Perim,                   !-Zone Name
+    0PerimHumidMin,                !-Humidifying Relative Humidity Setpoint Schedule Name
+    0PerimHumidMax; !-Dehumidifying Relative Humidity Setpoint Schedule Name
+
+Schedule:Constant,
+    0PerimHumidMin,                !- Name
+    Any Number,              !- Schedule Type Limits Name
+    20;                      !- Hourly Value
+
+Schedule:Constant,
+    0PerimHumidMax,                !- Name
+    Any Number,              !- Schedule Type Limits Name
+    80;                      !- Hourly Value
+
+DesignSpecification:OutdoorAir,
+  0PerimMinFreshAir,                  !- Name
+  Sum,                     !- Outdoor Air Method
+  0.0005,                 !- Outdoor Air Flow per Person {m3/s-person}
+  0.0005,                   !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
+    ,                        !- Outdoor Air Flow per Zone {m3/s}
+    ,                        !- Outdoor Air Flow Air Changes per Hour {1/hr}
+    30HrWk;!- Outdoor Air Flow Rate Fraction Schedule Name
+! ------------------------ SCHEDULEDVENT
+ZoneVentilation:DesignFlowRate,
+0Perim ScheduledVent,  !- Name
+0Perim,                               !- Zone Name
+AllOn,                                       !- Natural Ventilation SCHEDULE Name
+AirChanges/Hour,                                  !- Design Volume Flow Rate calculation method
+,                                    !- Natural ventilation rate (m3/s)
+,                                           !- Volume Flow Rate per area {m3/s/m2}
+,                                           !- Volume Flow Rate per person {m3/s/person}
+0,                                           !- Air Changes Per Hour
+NATURAL,                                    !- Vent type - no fan energy
+0,                                          !- Pressure rise (Pa)
+1,                                          !- Total efficiency (0-1)
+1,                                          !- Constant Term Coefficient
+0,                                          !- Temperature Term Coefficient
+0,                                          !- Velocity Term Coefficient
+0,                                          !- Velocity Squared Term Coefficient
+18,                                         !- Minimum indoor temperature (degC)
+,                                           !- Minimum Indoor Temperature Schedule Name
+,                                           !- Maximum Indoor Temperature {C}
+,                                           !- Maximum Indoor Temperature Schedule Name
+1,                                          !- Max temperature difference for operation
+,                                           !- Delta Temperature Schedule Name
+,                                           !- Minimum outdoor Temperature (degC)
+,                                           !- Minimum outdoor Temperature Schedule Name
+,                                           !- Maximum outdoor Temperature {C}
+,                                           !- Maximum outdoor Temperature Schedule Name
+40;                                         !- Maximum WindSpeed {m/s}
+! ------------------------ NATVENT
+
+Schedule:Constant,NATVENT_AVAIL_SCHED_0Perim,Fraction,1;
+! Output:Variable,NATVENT_AVAIL_SCHED_0Perim,Schedule Value,Hourly;
+! Output:Variable,AllOff,Schedule Value,Hourly;
+
+EnergyManagementSystem:Actuator,
+  NATVENT_AVAIL_SCHED_ACTUATOR_0Perim,           !- Name
+  NATVENT_AVAIL_SCHED_0Perim,             !- Actuated Component Unique Name
+    Schedule:Constant,       !- Actuated Component GasType
+  Schedule Value;          !- Actuated Component Control GasType
+ 
+EnergyManagementSystem:Sensor,
+  USRNATVENT_0Perim,                  !- Name
+  AllOff,             !- Output:Variable or Output:Meter Index Key Name
+  Schedule Value;  !- Output:Variable or Output:Meter Name 
+
+EnergyManagementSystem:ProgramCallingManager,
+  My 0Perim_Setpoint_Schedule_Calculator_Example,  !- Name
+  BeginTimestepBeforePredictor,  !- EnergyPlus Model Calling Point
+  0Perim_ErlEnforceBinary;  !- Program Name
+
+EnergyManagementSystem:Program,
+  0Perim_ErlEnforceBinary,  !- Name
+  IF (USRNATVENT_0Perim > 0),
+    Set NATVENT_AVAIL_SCHED_ACTUATOR_0Perim = 1,
+  ELSE,
+    Set NATVENT_AVAIL_SCHED_ACTUATOR_0Perim = 0,
+  ENDIF;
+
+ZoneVentilation:WindandStackOpenArea,
+0PerimNatVent_Buoy,          !- Name
+0Perim,                  !- Zone Name
+8.3461411764705,                       !- Opening Area {m2}
+NATVENT_AVAIL_SCHED_0Perim,                !- Opening Area Fraction Schedule Name
+0,                     !- Opening Effectiveness {dimensionless}
+0,                     !- Effective Angle {deg}
+0.449684330628802,                       !- Height Difference {m}
+0.6,                       !- Discharge Coefficient for Opening
+22,                    !- Minimum Indoor Temperature {C}
+,                        !- Minimum Indoor Temperature Schedule Name
+100,                     !- Maximum Indoor Temperature {C}
+,                        !- Maximum Indoor Temperature Schedule Name
+1,                    !- Delta Temperature {deltaC}
+,                        !- Delta Temperature Schedule Name
+22,                    !- Minimum Outdoor Temperature {C}
+,                        !- Minimum Outdoor Temperature Schedule Name
+26,                     !- Maximum Outdoor Temperature {C}
+,                        !- Maximum Outdoor Temperature Schedule Name
+40;                      !- Maximum Wind Speed {m/s}
+
+! ------------------------ INFILTRATION
+ZoneInfiltration:DesignFlowRate,
+  0PerimInfiltration,  !- Name
+  0Perim,            !- Zone or ZoneList Name
+  On,                      !- Schedule Name
+  AirChanges/Hour,               !- Design Flow Rate Calculation Method
+  ,                        !- Design Flow Rate [m3/s] !-- .00756
+  ,                        !- Flow per Zone Floor Area {m3/s-m2}
+  ,                        !- Flow per Exterior Surface Area {m3/s-m2}
+  2,                        !- Air Changes per Hour {1/hr}
+  1,                       !-Constant Term Coefficient
+  0,                       !-Temperature Term Coefficient
+  0,                       !-Velocity Term Coefficient
+  0; !-Velocity Squared Term Coefficient
+
+! ------------------------ DHW
+WaterUse:Equipment,
+    DHW 0Perim,        !- Name
+    DHW 0Perim,        !- End-Use Subcategory
+    0,           !- Peak Flow Rate [m3/s]
+    equipOffice,                    !- Flow Rate Fraction Schedule Name
+    DHW Supply Temperature 0Perim,  !- Target Temperature Schedule Name
+    DHW Supply Temperature 0Perim,  !- Hot Water Supply Temperature Schedule Name
+    DHW Mains Temperature 0Perim,  !- Cold Water Supply Temperature Schedule Name
+    ,                        !- Zone Name
+    ,                        !- Sensible Fraction Schedule Name
+    ;                        !- Latent Fraction Schedule Name
+
+Schedule:Constant,
+    DHW Supply Temperature 0Perim, !- Name
+    Temperature, !- Schedule GasType Limits Name
+    65; !- Hourly Value
+Schedule:Constant,
+    DHW Mains Temperature 0Perim, !- Name
+    Temperature, !- Schedule GasType Limits Name
+    10; !- Hourly Value
+! ------------------------ GEOMETRY
+
+
+ ! FACE NORMAL  -0.540282739003735 0.841483548225764 0
+BuildingSurface:Detailed,!-GasType
+0Perim:f0, !-Name
+Wall,                    !-Surface Type
+U0-4,                       !-Construction Name
+0Perim,            !-Zone Name
+Outdoors,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+SunExposed,              !-Sun Exposure
+WindExposed,             !-Wind Exposure
+0.5,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+-2.4704, -549.3007, 8.6939,  !- X,Y,Z ==> Vertex
+2.5785, -546.0591, 8.6939,  !- X,Y,Z ==> Vertex
+2.5785, -546.0591, 4.3469,  !- X,Y,Z ==> Vertex
+-2.4704, -549.3007, 4.3469;  !- X,Y,Z ==> Vertex
+
+FenestrationSurface:Detailed,
+0Perim:f0:w0, !-Name
+Window,                  !- Surface GasType
+Double,                    !- Construction Name
+0Perim:f0, !- Building Surface Name
+,                        !- Outside Boundary Condition Object
+Autocalculate,                      !- View Factor to Ground
+,                        !- Shading Control Name
+,                       !- Frame and Divider Name
+1,                       !- Multiplier
+4,                       !-Number of Vertices
+
+-2.3863, -549.2467, 5.1969,  !- X,Y,Z ==> Vertex
+-2.3863, -549.2467, 6.9957,  !- X,Y,Z ==> Vertex
+2.4943, -546.1131, 6.9957,  !- X,Y,Z ==> Vertex
+2.4943, -546.1131, 5.1969;  !- X,Y,Z ==> Vertex
+
+ ! FACE NORMAL  0.540282739003735 -0.841483548225764 -5.24855044568304E-17
+BuildingSurface:Detailed,!-GasType
+0Perim:f1, !-Name
+Wall,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+0Perim,            !-Zone Name
+Surface,                !-Outside Boundary Condition
+0Core:f0,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+-0.0740, -553.0331, 8.6939,  !- X,Y,Z ==> Vertex
+-0.0740, -553.0331, 4.3469,  !- X,Y,Z ==> Vertex
+4.9749, -549.7914, 4.3469,  !- X,Y,Z ==> Vertex
+4.9749, -549.7914, 8.6939;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  -0.84148354822576 -0.540282739003742 1.91946987727839E-15
+BuildingSurface:Detailed,!-GasType
+0Perim:f2, !-Name
+Wall,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+0Perim,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+-0.0740, -553.0331, 4.3469,  !- X,Y,Z ==> Vertex
+-0.0740, -553.0331, 8.6939,  !- X,Y,Z ==> Vertex
+-2.4704, -549.3007, 8.6939,  !- X,Y,Z ==> Vertex
+-2.4704, -549.3007, 4.3469;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  0.841483548225759 0.540282739003743 1.93114780740444E-15
+BuildingSurface:Detailed,!-GasType
+0Perim:f3, !-Name
+Wall,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+0Perim,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+4.9749, -549.7914, 4.3469,  !- X,Y,Z ==> Vertex
+2.5785, -546.0591, 4.3469,  !- X,Y,Z ==> Vertex
+2.5785, -546.0591, 8.6939,  !- X,Y,Z ==> Vertex
+4.9749, -549.7914, 8.6939;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  -1.49958584162373E-17 2.33558602520879E-17 -1
+BuildingSurface:Detailed,!-GasType
+0Perim:f4, !-Name
+Floor,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+0Perim,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+2.5785, -546.0591, 4.3469,  !- X,Y,Z ==> Vertex
+4.9749, -549.7914, 4.3469,  !- X,Y,Z ==> Vertex
+-0.0740, -553.0331, 4.3469,  !- X,Y,Z ==> Vertex
+-2.4704, -549.3007, 4.3469;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  -1.19966867329901E-16 1.86846882016704E-16 1
+BuildingSurface:Detailed,!-GasType
+0Perim:f5, !-Name
+Ceiling,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+0Perim,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+2.5785, -546.0591, 8.6939,  !- X,Y,Z ==> Vertex
+-2.4704, -549.3007, 8.6939,  !- X,Y,Z ==> Vertex
+-0.6731, -552.1000, 8.6939,  !- X,Y,Z ==> Vertex
+4.3758, -548.8583, 8.6939;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  1.199668673299E-16 -1.86846882016706E-16 1
+BuildingSurface:Detailed,!-GasType
+0Perim:f6, !-Name
+Roof,                    !-Surface Type
+U0-3,                       !-Construction Name
+0Perim,            !-Zone Name
+Outdoors,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+SunExposed,              !-Sun Exposure
+WindExposed,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+4.3758, -548.8583, 8.6939,  !- X,Y,Z ==> Vertex
+-0.6731, -552.1000, 8.6939,  !- X,Y,Z ==> Vertex
+-0.0740, -553.0331, 8.6939,  !- X,Y,Z ==> Vertex
+4.9749, -549.7914, 8.6939;  !- X,Y,Z ==> Vertex
+
+
+!------------------------------------------------ ZONE ----------------------------------------------------
+
+Zone,
+  0Core,            !- Name
+  0,                       !- Rotation [deg]
+  0,                       !- X origin [m]
+  0,                       !- Y origin [m]
+  0,                       !- Z origin [m]
+  1,                       !- GasType
+  1.0,                       !- Multiplier
+  ,                        !- Ceiling Height [m]
+  136.878256232805,                   !- Volume [m3]
+  31.4883544874467,                   !- Area [m2]
+  TARP,                    !- Zone Inside Convection Algorithm
+  DOE-2;                   !- Zone Outside Convection Algorithm
+
+! ------------------------ PEOPLE
+People,
+    People 0Core,                 !- Name
+    0Core,            !- Zone or ZoneList Name
+    30HrWk,        !- Number of People Schedule Name
+    People/Area,                  !- Number of People Calculation Method
+    ,                       !- Number of People
+    0.05,                        !- People per Zone Floor Area {person/m2}
+    ,                        !- Zone Floor Area per Person {m2/person}
+    0.3,                     !- Fraction Radiant
+    AUTOCALCULATE,           !- Sensible Heat Fraction
+    0CorePeopleActivity,                    !- Activity Level Schedule Name
+    0.0000000382,            !- Carbon Dioxide Generation Rate {m3/s-W}
+    No,                      !- Enable ASHRAE 55 Comfort Warnings
+    ZoneAveraged,            !- Mean Radiant Temperature Calculation GasType
+    ,                        !- Surface Name/Angle Factor List Name
+    0CoreWorkEfficiency,  !- Work Efficiency Schedule Name
+    DynamicClothingModelASHRAE55,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
+    ,                        !- Clothing Insulation Schedule Name
+    0CoreAirVelocity,!- Air Velocity Schedule Name
+    AdaptiveASH55;           !- Thermal Comfort Model 1 GasType
+
+Schedule:Constant, 0CorePeopleActivity, Any Number, 125.28; ! - Watts per person, uses Metabolic Rate input (1 met = 58 W/m2) and assumes adult body surface area of 1.8 m2
+Schedule:Constant, 0CoreAirVelocity, Any Number, 0.2;
+Schedule:Constant, 0CoreWorkEfficiency, Any Number, 0;
+
+
+! ------------------------ EQUIPMENT
+ElectricEquipment,
+  0Core Equipment 1,!- Name
+  0Core,            !- Zone or ZoneList Name
+  60HrWk,                    !- Schedule Name
+  Watts/Area,          !- Design Level Calculation Method
+  ,                !- Design Level [W]
+  15,                        !- Watts per Zone Floor Area [W/m2]
+  ,                        !- Watts per Person [W/person]
+  0,                       !- Fraction Latent
+  .2,                      !- Fraction Radiant
+  0,                       !- Fraction Lost
+  ;                        !- End-Use Subcategory
+
+! ------------------------ LIGHTS
+Lights,
+  0Core General lighting,   !- Name
+  0Core,                    !- Zone or ZoneList Name
+  60HrWk,          !- Schedule Name
+  Watts/Area,              !- Design Level Calculation Method
+  ,                        !- Lighting Level [W]
+  10,         !- Watts per Zone Floor Area [W/m2]
+  ,                        !- Watts per Person [W/person]
+  0,                       !- Return Air Fraction
+  .42,                     !- Fraction Radiant
+  .18,                     !- Fraction Visible
+  1,                       !- Fraction Replaceable
+  ;                        !- End-Use Subcategory
+
+
+! ------------------------ DAYLIGHT CONTROLS
+Daylighting:Controls,
+0Core,            !-Zone Name
+1,                       !-Total Daylighting Reference Points
+3.86814178726965,                  !-X - Coordinate of First Reference Point {m}
+-553.620334872013,                  !-Y - Coordinate of First Reference Point {m}
+5.19694852941174,                      !-Z - Coordinate of First Reference Point {m}
+,                        !-X - Coordinate of Second Reference Point {m}
+,                        !-Y - Coordinate of Second Reference Point {m}
+,                        !-Z - Coordinate of Second Reference Point {m}
+1,                       !-Fraction of Zone Controlled by First Reference Point
+0,                       !-Fraction of Zone Controlled by Second Reference Point
+500,                     !-Illuminance Setpoint at First Reference Point {lux}
+500,                     !-Illuminance Setpoint at Second Reference Point {lux}
+1 ,                       !-Lighting control type {1=continuous,2=stepped,3=continuous/off}
+0,                       !-Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
+22,                      !-Maximum Allowable Discomfort Glare Index
+0.1,                     !-Minimum Input Power Fraction for Continuous Dimming Control
+0.1,                     !-Minimum Light Output Fraction for Continuous Dimming Control
+3,                       !-Number of Stepped Control Steps
+1;                       !-Probability Lighting will be Reset When Needed in Manual Stepped Control
+
+! ------------------------ HVAC
+Schedule:Constant,
+0CoreHeating_SP_Sch, !- Name
+Temperature, !- Schedule GasType Limits Name
+22; !- Hourly Value
+
+Schedule:Constant,
+0CoreCooling_SP_Sch, !- Name
+Temperature, !- Schedule GasType Limits Name
+22; !- Hourly Value
+
+ZoneControl:Thermostat,
+  0Core Thermostat, !- Name
+  0Core,            !- Zone or ZoneList Name
+  0CoreZoneControlTypeSched, !- Control GasType Schedule Name
+  ThermostatSetpoint:DualSetpoint,  !- Control 1 Object GasType
+  Dual Setpoint - Zone 0Core;  !- Control 1 Name
+
+Schedule:Constant,
+  0CoreZoneControlTypeSched, !- Name
+  Any Number, !- Schedule GasType Limits Name
+  4; !- Hourly Value
+
+ThermostatSetpoint:DualSetpoint,
+  Dual Setpoint - Zone 0Core,  !- Name
+  0CoreHeating_SP_Sch,  !- Heating Setpoint Temperature Schedule Name
+  0CoreCooling_SP_Sch;  !- Cooling Setpoint Temperature Schedule Name
+
+ZoneHVAC:EquipmentConnections,
+  0Core,            !- Zone Name
+  0Core Equipment,  !- Zone Conditioning Equipment List Name
+  0Core Inlets,     !- Zone Air Inlet Node or NodeList Name
+  ,                        !- Zone Air Exhaust Node or NodeList Name
+  Node 0Core Zone,  !- Zone Air Node Name
+  Node 0Core Out;   !- Zone Return Air Node Name
+
+ZoneHVAC:EquipmentList,
+  0Core Equipment,  !- Name
+  ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object GasType
+  0Core Ideal Loads Air,  !- Zone Equipment 1 Name
+  1,                       !- Zone Equipment 1 Cooling Sequence
+  1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+
+NodeList,
+  0Core Inlets,     !- Name
+  Node 0Core In;    !- Node 1 Name
+
+ZoneHVAC:IdealLoadsAirSystem,
+  0Core Ideal Loads Air,  !- Name
+  ,                        !- Availability Schedule Name
+  Node 0Core In,    !- Zone Supply Air Node Name
+  ,                        !- Zone Exhaust Air Node Name
+  30,                      !- Maximum Heating Supply Air Temperature {C}
+  18,                      !- Minimum Cooling Supply Air Temperature {C}
+  0.01,                    !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
+  0.008,                   !- Minimum Cooling Supply Air Humidity Ratio {kgWater/kgDryAir}
+  NoLimit,                 !- Heating Limit
+  100,                        !- Maximum Heating Air Flow Rate [m3/s]
+  ,        				   !- Maximum Sensible Heating Capacity [W]
+  NoLimit,                 !- Cooling Limit
+  100 ,                        !- Maximum Cooling Air Flow Rate [m3/s]
+  ,                        !- Maximum Total Cooling Capacity [W]
+  AllOn,  !- Heating Availability Schedule Name
+  AllOn,  !- Cooling Availability Schedule Name
+  None,                    !- Dehumidification Control Type
+  ,                        !- Cooling Sensible Heat Ratio {dimensionless}
+  None,                    !- Humidification Control Type
+  0CoreMinFreshAir,                        !- Design Specification Outdoor Air Object Name
+  0Core_OutDoorInlet,                        !- Outdoor Air Inlet Node Name
+  OccupancySchedule,                        !- Demand Controlled Ventilation GasType
+  NoEconomizer,                        !- Outdoor Air Economizer GasType
+  None,                        !- Heat Recovery GasType
+  0.7,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
+  0.65;                        !- Latent Heat Recovery Effectiveness {dimensionless}
+
+
+ZoneControl:Humidistat,
+    0CoreHumidistat,                  !-Name
+    0Core,                   !-Zone Name
+    0CoreHumidMin,                !-Humidifying Relative Humidity Setpoint Schedule Name
+    0CoreHumidMax; !-Dehumidifying Relative Humidity Setpoint Schedule Name
+
+Schedule:Constant,
+    0CoreHumidMin,                !- Name
+    Any Number,              !- Schedule Type Limits Name
+    20;                      !- Hourly Value
+
+Schedule:Constant,
+    0CoreHumidMax,                !- Name
+    Any Number,              !- Schedule Type Limits Name
+    80;                      !- Hourly Value
+
+DesignSpecification:OutdoorAir,
+  0CoreMinFreshAir,                  !- Name
+  Sum,                     !- Outdoor Air Method
+  0.0005,                 !- Outdoor Air Flow per Person {m3/s-person}
+  0.0005,                   !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
+    ,                        !- Outdoor Air Flow per Zone {m3/s}
+    ,                        !- Outdoor Air Flow Air Changes per Hour {1/hr}
+    30HrWk;!- Outdoor Air Flow Rate Fraction Schedule Name
+
+! ------------------------ DHW
+WaterUse:Equipment,
+    DHW 0Core,        !- Name
+    DHW 0Core,        !- End-Use Subcategory
+    8.74676513540186E-06,           !- Peak Flow Rate [m3/s]
+    60HrWk,                    !- Flow Rate Fraction Schedule Name
+    DHW Supply Temperature 0Core,  !- Target Temperature Schedule Name
+    DHW Supply Temperature 0Core,  !- Hot Water Supply Temperature Schedule Name
+    DHW Mains Temperature 0Core,  !- Cold Water Supply Temperature Schedule Name
+    ,                        !- Zone Name
+    ,                        !- Sensible Fraction Schedule Name
+    ;                        !- Latent Fraction Schedule Name
+
+Schedule:Constant,
+    DHW Supply Temperature 0Core, !- Name
+    Temperature, !- Schedule GasType Limits Name
+    65; !- Hourly Value
+Schedule:Constant,
+    DHW Mains Temperature 0Core, !- Name
+    Temperature, !- Schedule GasType Limits Name
+    10; !- Hourly Value
+! ------------------------ GEOMETRY
+
+
+ ! FACE NORMAL  -0.540282739003735 0.841483548225764 5.24855044568304E-17
+BuildingSurface:Detailed,!-GasType
+0Core:f0, !-Name
+Wall,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+0Core,            !-Zone Name
+Surface,                !-Outside Boundary Condition
+0Perim:f1,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+-0.0740, -553.0331, 8.6939,  !- X,Y,Z ==> Vertex
+4.9749, -549.7914, 8.6939,  !- X,Y,Z ==> Vertex
+4.9749, -549.7914, 4.3469,  !- X,Y,Z ==> Vertex
+-0.0740, -553.0331, 4.3469;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  0.540282739003734 -0.841483548225765 5.99834336649489E-17
+BuildingSurface:Detailed,!-GasType
+0Core:f1, !-Name
+Wall,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+0Core,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+2.7614, -557.4493, 8.6939,  !- X,Y,Z ==> Vertex
+2.7614, -557.4493, 4.3469,  !- X,Y,Z ==> Vertex
+7.8103, -554.2076, 4.3469,  !- X,Y,Z ==> Vertex
+7.8103, -554.2076, 8.6939;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  -0.841483548225757 -0.540282739003746 3.83364819246845E-15
+BuildingSurface:Detailed,!-GasType
+0Core:f2, !-Name
+Wall,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+0Core,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+2.7614, -557.4493, 4.3469,  !- X,Y,Z ==> Vertex
+2.7614, -557.4493, 8.6939,  !- X,Y,Z ==> Vertex
+-0.0740, -553.0331, 8.6939,  !- X,Y,Z ==> Vertex
+-0.0740, -553.0331, 4.3469;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  0.841483548225758 0.540282739003745 -8.89667357882939E-16
+BuildingSurface:Detailed,!-GasType
+0Core:f3, !-Name
+Wall,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+0Core,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+7.8103, -554.2076, 4.3469,  !- X,Y,Z ==> Vertex
+4.9749, -549.7914, 4.3469,  !- X,Y,Z ==> Vertex
+4.9749, -549.7914, 8.6939,  !- X,Y,Z ==> Vertex
+7.8103, -554.2076, 8.6939;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  2.2493787624356E-17 -3.50337903781319E-17 -1
+BuildingSurface:Detailed,!-GasType
+0Core:f4, !-Name
+Floor,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+0Core,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+4.9749, -549.7914, 4.3469,  !- X,Y,Z ==> Vertex
+7.8103, -554.2076, 4.3469,  !- X,Y,Z ==> Vertex
+2.7614, -557.4493, 4.3469,  !- X,Y,Z ==> Vertex
+-0.0740, -553.0331, 4.3469;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  -5.99834336649504E-17 9.34234410083522E-17 1
+BuildingSurface:Detailed,!-GasType
+0Core:f5, !-Name
+Ceiling,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+0Core,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+4.9749, -549.7914, 8.6939,  !- X,Y,Z ==> Vertex
+-0.0740, -553.0331, 8.6939,  !- X,Y,Z ==> Vertex
+2.0526, -556.3452, 8.6939,  !- X,Y,Z ==> Vertex
+7.1015, -553.1035, 8.6939;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  -2.39933734659791E-16 3.73693764033398E-16 1
+BuildingSurface:Detailed,!-GasType
+0Core:f6, !-Name
+Roof,                    !-Surface Type
+U0-3,                       !-Construction Name
+0Core,            !-Zone Name
+Outdoors,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+SunExposed,              !-Sun Exposure
+WindExposed,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+7.1015, -553.1035, 8.6939,  !- X,Y,Z ==> Vertex
+2.0526, -556.3452, 8.6939,  !- X,Y,Z ==> Vertex
+2.7614, -557.4493, 8.6939,  !- X,Y,Z ==> Vertex
+7.8103, -554.2076, 8.6939;  !- X,Y,Z ==> Vertex
+
+
+!------------------------------------------------ ZONE ----------------------------------------------------
+
+Zone,
+  1Perim,            !- Name
+  0,                       !- Rotation [deg]
+  0,                       !- X origin [m]
+  0,                       !- Y origin [m]
+  0,                       !- Z origin [m]
+  1,                       !- GasType
+  1.0,                       !- Multiplier
+  ,                        !- Ceiling Height [m]
+  115.683968155621,                   !- Volume [m3]
+  26.612684132995,                   !- Area [m2]
+  TARP,                    !- Zone Inside Convection Algorithm
+  DOE-2;                   !- Zone Outside Convection Algorithm
+
+! ------------------------ PEOPLE
+People,
+    People 1Perim,                 !- Name
+    1Perim,            !- Zone or ZoneList Name
+    30HrWk,        !- Number of People Schedule Name
+    People/Area,                  !- Number of People Calculation Method
+    ,                       !- Number of People
+    0.05,                        !- People per Zone Floor Area {person/m2}
+    ,                        !- Zone Floor Area per Person {m2/person}
+    0.3,                     !- Fraction Radiant
+    AUTOCALCULATE,           !- Sensible Heat Fraction
+    1PerimPeopleActivity,                    !- Activity Level Schedule Name
+    0.0000000382,            !- Carbon Dioxide Generation Rate {m3/s-W}
+    No,                      !- Enable ASHRAE 55 Comfort Warnings
+    ZoneAveraged,            !- Mean Radiant Temperature Calculation GasType
+    ,                        !- Surface Name/Angle Factor List Name
+    1PerimWorkEfficiency,  !- Work Efficiency Schedule Name
+    DynamicClothingModelASHRAE55,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
+    ,                        !- Clothing Insulation Schedule Name
+    1PerimAirVelocity,!- Air Velocity Schedule Name
+    AdaptiveASH55;           !- Thermal Comfort Model 1 GasType
+
+Schedule:Constant, 1PerimPeopleActivity, Any Number, 125.28; ! - Watts per person, uses Metabolic Rate input (1 met = 58 W/m2) and assumes adult body surface area of 1.8 m2
+Schedule:Constant, 1PerimAirVelocity, Any Number, 0.2;
+Schedule:Constant, 1PerimWorkEfficiency, Any Number, 0;
+
+
+! ------------------------ EQUIPMENT
+ElectricEquipment,
+  1Perim Equipment 1,!- Name
+  1Perim,            !- Zone or ZoneList Name
+  60HrWk,                    !- Schedule Name
+  Watts/Area,          !- Design Level Calculation Method
+  ,                !- Design Level [W]
+  15,                        !- Watts per Zone Floor Area [W/m2]
+  ,                        !- Watts per Person [W/person]
+  0,                       !- Fraction Latent
+  .2,                      !- Fraction Radiant
+  0,                       !- Fraction Lost
+  ;                        !- End-Use Subcategory
+
+! ------------------------ LIGHTS
+Lights,
+  1Perim General lighting,   !- Name
+  1Perim,                    !- Zone or ZoneList Name
+  60HrWk,          !- Schedule Name
+  Watts/Area,              !- Design Level Calculation Method
+  ,                        !- Lighting Level [W]
+  10,         !- Watts per Zone Floor Area [W/m2]
+  ,                        !- Watts per Person [W/person]
+  0,                       !- Return Air Fraction
+  .42,                     !- Fraction Radiant
+  .18,                     !- Fraction Visible
+  1,                       !- Fraction Replaceable
+  ;                        !- End-Use Subcategory
+
+
+! ------------------------ DAYLIGHT CONTROLS
+Daylighting:Controls,
+1Perim,            !-Zone Name
+1,                       !-Total Daylighting Reference Points
+501.465179679651,                  !-X - Coordinate of First Reference Point {m}
+-586.527287891797,                  !-Y - Coordinate of First Reference Point {m}
+13.8908455882352,                      !-Z - Coordinate of First Reference Point {m}
+,                        !-X - Coordinate of Second Reference Point {m}
+,                        !-Y - Coordinate of Second Reference Point {m}
+,                        !-Z - Coordinate of Second Reference Point {m}
+1,                       !-Fraction of Zone Controlled by First Reference Point
+0,                       !-Fraction of Zone Controlled by Second Reference Point
+500,                     !-Illuminance Setpoint at First Reference Point {lux}
+500,                     !-Illuminance Setpoint at Second Reference Point {lux}
+1 ,                       !-Lighting control type {1=continuous,2=stepped,3=continuous/off}
+0,                       !-Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
+22,                      !-Maximum Allowable Discomfort Glare Index
+0.1,                     !-Minimum Input Power Fraction for Continuous Dimming Control
+0.1,                     !-Minimum Light Output Fraction for Continuous Dimming Control
+3,                       !-Number of Stepped Control Steps
+1;                       !-Probability Lighting will be Reset When Needed in Manual Stepped Control
+
+! ------------------------ HVAC
+Schedule:Constant,
+1PerimHeating_SP_Sch, !- Name
+Temperature, !- Schedule GasType Limits Name
+22; !- Hourly Value
+
+Schedule:Constant,
+1PerimCooling_SP_Sch, !- Name
+Temperature, !- Schedule GasType Limits Name
+22; !- Hourly Value
+
+ZoneControl:Thermostat,
+  1Perim Thermostat, !- Name
+  1Perim,            !- Zone or ZoneList Name
+  1PerimZoneControlTypeSched, !- Control GasType Schedule Name
+  ThermostatSetpoint:DualSetpoint,  !- Control 1 Object GasType
+  Dual Setpoint - Zone 1Perim;  !- Control 1 Name
+
+Schedule:Constant,
+  1PerimZoneControlTypeSched, !- Name
+  Any Number, !- Schedule GasType Limits Name
+  4; !- Hourly Value
+
+ThermostatSetpoint:DualSetpoint,
+  Dual Setpoint - Zone 1Perim,  !- Name
+  1PerimHeating_SP_Sch,  !- Heating Setpoint Temperature Schedule Name
+  1PerimCooling_SP_Sch;  !- Cooling Setpoint Temperature Schedule Name
+
+ZoneHVAC:EquipmentConnections,
+  1Perim,            !- Zone Name
+  1Perim Equipment,  !- Zone Conditioning Equipment List Name
+  1Perim Inlets,     !- Zone Air Inlet Node or NodeList Name
+  ,                        !- Zone Air Exhaust Node or NodeList Name
+  Node 1Perim Zone,  !- Zone Air Node Name
+  Node 1Perim Out;   !- Zone Return Air Node Name
+
+ZoneHVAC:EquipmentList,
+  1Perim Equipment,  !- Name
+  ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object GasType
+  1Perim Ideal Loads Air,  !- Zone Equipment 1 Name
+  1,                       !- Zone Equipment 1 Cooling Sequence
+  1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+
+NodeList,
+  1Perim Inlets,     !- Name
+  Node 1Perim In;    !- Node 1 Name
+
+ZoneHVAC:IdealLoadsAirSystem,
+  1Perim Ideal Loads Air,  !- Name
+  ,                        !- Availability Schedule Name
+  Node 1Perim In,    !- Zone Supply Air Node Name
+  ,                        !- Zone Exhaust Air Node Name
+  30,                      !- Maximum Heating Supply Air Temperature {C}
+  18,                      !- Minimum Cooling Supply Air Temperature {C}
+  0.01,                    !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
+  0.008,                   !- Minimum Cooling Supply Air Humidity Ratio {kgWater/kgDryAir}
+  NoLimit,                 !- Heating Limit
+  100,                        !- Maximum Heating Air Flow Rate [m3/s]
+  ,        				   !- Maximum Sensible Heating Capacity [W]
+  NoLimit,                 !- Cooling Limit
+  100 ,                        !- Maximum Cooling Air Flow Rate [m3/s]
+  ,                        !- Maximum Total Cooling Capacity [W]
+  AllOn,  !- Heating Availability Schedule Name
+  AllOn,  !- Cooling Availability Schedule Name
+  None,                    !- Dehumidification Control Type
+  ,                        !- Cooling Sensible Heat Ratio {dimensionless}
+  None,                    !- Humidification Control Type
+  1PerimMinFreshAir,                        !- Design Specification Outdoor Air Object Name
+  1Perim_OutDoorInlet,                        !- Outdoor Air Inlet Node Name
+  OccupancySchedule,                        !- Demand Controlled Ventilation GasType
+  NoEconomizer,                        !- Outdoor Air Economizer GasType
+  None,                        !- Heat Recovery GasType
+  0.7,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
+  0.65;                        !- Latent Heat Recovery Effectiveness {dimensionless}
+
+
+ZoneControl:Humidistat,
+    1PerimHumidistat,                  !-Name
+    1Perim,                   !-Zone Name
+    1PerimHumidMin,                !-Humidifying Relative Humidity Setpoint Schedule Name
+    1PerimHumidMax; !-Dehumidifying Relative Humidity Setpoint Schedule Name
+
+Schedule:Constant,
+    1PerimHumidMin,                !- Name
+    Any Number,              !- Schedule Type Limits Name
+    20;                      !- Hourly Value
+
+Schedule:Constant,
+    1PerimHumidMax,                !- Name
+    Any Number,              !- Schedule Type Limits Name
+    80;                      !- Hourly Value
+
+DesignSpecification:OutdoorAir,
+  1PerimMinFreshAir,                  !- Name
+  Sum,                     !- Outdoor Air Method
+  0.0005,                 !- Outdoor Air Flow per Person {m3/s-person}
+  0.0005,                   !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
+    ,                        !- Outdoor Air Flow per Zone {m3/s}
+    ,                        !- Outdoor Air Flow Air Changes per Hour {1/hr}
+    30HrWk;!- Outdoor Air Flow Rate Fraction Schedule Name
+! ------------------------ SCHEDULEDVENT
+ZoneVentilation:DesignFlowRate,
+1Perim ScheduledVent,  !- Name
+1Perim,                               !- Zone Name
+AllOn,                                       !- Natural Ventilation SCHEDULE Name
+AirChanges/Hour,                                  !- Design Volume Flow Rate calculation method
+,                                    !- Natural ventilation rate (m3/s)
+,                                           !- Volume Flow Rate per area {m3/s/m2}
+,                                           !- Volume Flow Rate per person {m3/s/person}
+0,                                           !- Air Changes Per Hour
+NATURAL,                                    !- Vent type - no fan energy
+0,                                          !- Pressure rise (Pa)
+1,                                          !- Total efficiency (0-1)
+1,                                          !- Constant Term Coefficient
+0,                                          !- Temperature Term Coefficient
+0,                                          !- Velocity Term Coefficient
+0,                                          !- Velocity Squared Term Coefficient
+18,                                         !- Minimum indoor temperature (degC)
+,                                           !- Minimum Indoor Temperature Schedule Name
+,                                           !- Maximum Indoor Temperature {C}
+,                                           !- Maximum Indoor Temperature Schedule Name
+1,                                          !- Max temperature difference for operation
+,                                           !- Delta Temperature Schedule Name
+,                                           !- Minimum outdoor Temperature (degC)
+,                                           !- Minimum outdoor Temperature Schedule Name
+,                                           !- Maximum outdoor Temperature {C}
+,                                           !- Maximum outdoor Temperature Schedule Name
+40;                                         !- Maximum WindSpeed {m/s}
+! ------------------------ NATVENT
+
+Schedule:Constant,NATVENT_AVAIL_SCHED_1Perim,Fraction,1;
+! Output:Variable,NATVENT_AVAIL_SCHED_1Perim,Schedule Value,Hourly;
+! Output:Variable,AllOff,Schedule Value,Hourly;
+
+EnergyManagementSystem:Actuator,
+  NATVENT_AVAIL_SCHED_ACTUATOR_1Perim,           !- Name
+  NATVENT_AVAIL_SCHED_1Perim,             !- Actuated Component Unique Name
+    Schedule:Constant,       !- Actuated Component GasType
+  Schedule Value;          !- Actuated Component Control GasType
+ 
+EnergyManagementSystem:Sensor,
+  USRNATVENT_1Perim,                  !- Name
+  AllOff,             !- Output:Variable or Output:Meter Index Key Name
+  Schedule Value;  !- Output:Variable or Output:Meter Name 
+
+EnergyManagementSystem:ProgramCallingManager,
+  My 1Perim_Setpoint_Schedule_Calculator_Example,  !- Name
+  BeginTimestepBeforePredictor,  !- EnergyPlus Model Calling Point
+  1Perim_ErlEnforceBinary;  !- Program Name
+
+EnergyManagementSystem:Program,
+  1Perim_ErlEnforceBinary,  !- Name
+  IF (USRNATVENT_1Perim > 0),
+    Set NATVENT_AVAIL_SCHED_ACTUATOR_1Perim = 1,
+  ELSE,
+    Set NATVENT_AVAIL_SCHED_ACTUATOR_1Perim = 0,
+  ENDIF;
+
+ZoneVentilation:WindandStackOpenArea,
+1PerimNatVent_Buoy,          !- Name
+1Perim,                  !- Zone Name
+8.3461411764706,                       !- Opening Area {m2}
+NATVENT_AVAIL_SCHED_1Perim,                !- Opening Area Fraction Schedule Name
+0,                     !- Opening Effectiveness {dimensionless}
+0,                     !- Effective Angle {deg}
+0.449684330628791,                       !- Height Difference {m}
+0.6,                       !- Discharge Coefficient for Opening
+22,                    !- Minimum Indoor Temperature {C}
+,                        !- Minimum Indoor Temperature Schedule Name
+100,                     !- Maximum Indoor Temperature {C}
+,                        !- Maximum Indoor Temperature Schedule Name
+1,                    !- Delta Temperature {deltaC}
+,                        !- Delta Temperature Schedule Name
+22,                    !- Minimum Outdoor Temperature {C}
+,                        !- Minimum Outdoor Temperature Schedule Name
+26,                     !- Maximum Outdoor Temperature {C}
+,                        !- Maximum Outdoor Temperature Schedule Name
+40;                      !- Maximum Wind Speed {m/s}
+
+! ------------------------ INFILTRATION
+ZoneInfiltration:DesignFlowRate,
+  1PerimInfiltration,  !- Name
+  1Perim,            !- Zone or ZoneList Name
+  On,                      !- Schedule Name
+  AirChanges/Hour,               !- Design Flow Rate Calculation Method
+  ,                        !- Design Flow Rate [m3/s] !-- .00756
+  ,                        !- Flow per Zone Floor Area {m3/s-m2}
+  ,                        !- Flow per Exterior Surface Area {m3/s-m2}
+  2,                        !- Air Changes per Hour {1/hr}
+  1,                       !-Constant Term Coefficient
+  0,                       !-Temperature Term Coefficient
+  0,                       !-Velocity Term Coefficient
+  0; !-Velocity Squared Term Coefficient
+
+! ------------------------ DHW
+WaterUse:Equipment,
+    DHW 1Perim,        !- Name
+    DHW 1Perim,        !- End-Use Subcategory
+    0,           !- Peak Flow Rate [m3/s]
+    equipOffice,                    !- Flow Rate Fraction Schedule Name
+    DHW Supply Temperature 1Perim,  !- Target Temperature Schedule Name
+    DHW Supply Temperature 1Perim,  !- Hot Water Supply Temperature Schedule Name
+    DHW Mains Temperature 1Perim,  !- Cold Water Supply Temperature Schedule Name
+    ,                        !- Zone Name
+    ,                        !- Sensible Fraction Schedule Name
+    ;                        !- Latent Fraction Schedule Name
+
+Schedule:Constant,
+    DHW Supply Temperature 1Perim, !- Name
+    Temperature, !- Schedule GasType Limits Name
+    65; !- Hourly Value
+Schedule:Constant,
+    DHW Mains Temperature 1Perim, !- Name
+    Temperature, !- Schedule GasType Limits Name
+    10; !- Hourly Value
+! ------------------------ GEOMETRY
+
+
+ ! FACE NORMAL  -0.632163227099206 -0.77483524332823 0
+BuildingSurface:Detailed,!-GasType
+1Perim:f0, !-Name
+Wall,                    !-Surface Type
+U0-4,                       !-Construction Name
+1Perim,            !-Zone Name
+Outdoors,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+SunExposed,              !-Sun Exposure
+WindExposed,             !-Wind Exposure
+0.5,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+502.3877, -590.1421, 17.3878,  !- X,Y,Z ==> Vertex
+497.7387, -586.3492, 17.3878,  !- X,Y,Z ==> Vertex
+497.7387, -586.3492, 13.0408,  !- X,Y,Z ==> Vertex
+502.3877, -590.1421, 13.0408;  !- X,Y,Z ==> Vertex
+
+FenestrationSurface:Detailed,
+1Perim:f0:w0, !-Name
+Window,                  !- Surface GasType
+Double,                    !- Construction Name
+1Perim:f0, !- Building Surface Name
+,                        !- Outside Boundary Condition Object
+Autocalculate,                      !- View Factor to Ground
+,                        !- Shading Control Name
+,                       !- Frame and Divider Name
+1,                       !- Multiplier
+4,                       !-Number of Vertices
+
+502.3102, -590.0789, 13.8908,  !- X,Y,Z ==> Vertex
+502.3102, -590.0789, 15.6896,  !- X,Y,Z ==> Vertex
+497.8162, -586.4124, 15.6896,  !- X,Y,Z ==> Vertex
+497.8162, -586.4124, 13.8908;  !- X,Y,Z ==> Vertex
+
+ ! FACE NORMAL  0.63216322709921 0.774835243328227 0
+BuildingSurface:Detailed,!-GasType
+1Perim:f1, !-Name
+Wall,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+1Perim,            !-Zone Name
+Surface,                !-Outside Boundary Condition
+1Core:f0,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+505.1916, -586.7054, 17.3878,  !- X,Y,Z ==> Vertex
+505.1916, -586.7054, 13.0408,  !- X,Y,Z ==> Vertex
+500.5426, -582.9124, 13.0408,  !- X,Y,Z ==> Vertex
+500.5426, -582.9124, 17.3878;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  0.774835243328229 -0.632163227099208 2.53436411819445E-16
+BuildingSurface:Detailed,!-GasType
+1Perim:f2, !-Name
+Wall,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+1Perim,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+505.1916, -586.7054, 13.0408,  !- X,Y,Z ==> Vertex
+505.1916, -586.7054, 17.3878,  !- X,Y,Z ==> Vertex
+502.3877, -590.1421, 17.3878,  !- X,Y,Z ==> Vertex
+502.3877, -590.1421, 13.0408;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  -0.77483524332823 0.632163227099207 -4.8544281249167E-15
+BuildingSurface:Detailed,!-GasType
+1Perim:f3, !-Name
+Wall,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+1Perim,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+500.5426, -582.9124, 13.0408,  !- X,Y,Z ==> Vertex
+497.7387, -586.3492, 13.0408,  !- X,Y,Z ==> Vertex
+497.7387, -586.3492, 17.3878,  !- X,Y,Z ==> Vertex
+500.5426, -582.9124, 17.3878;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  0 0 -1
+BuildingSurface:Detailed,!-GasType
+1Perim:f4, !-Name
+Floor,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+1Perim,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+497.7387, -586.3492, 13.0408,  !- X,Y,Z ==> Vertex
+500.5426, -582.9124, 13.0408,  !- X,Y,Z ==> Vertex
+505.1916, -586.7054, 13.0408,  !- X,Y,Z ==> Vertex
+502.3877, -590.1421, 13.0408;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  -1.05276325507033E-16 -1.29035989115107E-16 1
+BuildingSurface:Detailed,!-GasType
+1Perim:f5, !-Name
+Ceiling,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+1Perim,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+497.7387, -586.3492, 17.3878,  !- X,Y,Z ==> Vertex
+502.3877, -590.1421, 17.3878,  !- X,Y,Z ==> Vertex
+504.4907, -587.5646, 17.3878,  !- X,Y,Z ==> Vertex
+499.8417, -583.7716, 17.3878;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  -4.21105302028124E-16 -5.16143956460414E-16 1
+BuildingSurface:Detailed,!-GasType
+1Perim:f6, !-Name
+Roof,                    !-Surface Type
+U0-3,                       !-Construction Name
+1Perim,            !-Zone Name
+Outdoors,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+SunExposed,              !-Sun Exposure
+WindExposed,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+499.8417, -583.7716, 17.3878,  !- X,Y,Z ==> Vertex
+504.4907, -587.5646, 17.3878,  !- X,Y,Z ==> Vertex
+505.1916, -586.7054, 17.3878,  !- X,Y,Z ==> Vertex
+500.5426, -582.9124, 17.3878;  !- X,Y,Z ==> Vertex
+
+
+!------------------------------------------------ ZONE ----------------------------------------------------
+
+Zone,
+  1Core,            !- Name
+  0,                       !- Rotation [deg]
+  0,                       !- X origin [m]
+  0,                       !- Y origin [m]
+  0,                       !- Z origin [m]
+  1,                       !- GasType
+  1.0,                       !- Multiplier
+  ,                        !- Ceiling Height [m]
+  136.878256232801,                   !- Volume [m3]
+  31.4883544874468,                   !- Area [m2]
+  TARP,                    !- Zone Inside Convection Algorithm
+  DOE-2;                   !- Zone Outside Convection Algorithm
+
+! ------------------------ PEOPLE
+People,
+    People 1Core,                 !- Name
+    1Core,            !- Zone or ZoneList Name
+    30HrWk,        !- Number of People Schedule Name
+    People/Area,                  !- Number of People Calculation Method
+    ,                       !- Number of People
+    0.05,                        !- People per Zone Floor Area {person/m2}
+    ,                        !- Zone Floor Area per Person {m2/person}
+    0.3,                     !- Fraction Radiant
+    AUTOCALCULATE,           !- Sensible Heat Fraction
+    1CorePeopleActivity,                    !- Activity Level Schedule Name
+    0.0000000382,            !- Carbon Dioxide Generation Rate {m3/s-W}
+    No,                      !- Enable ASHRAE 55 Comfort Warnings
+    ZoneAveraged,            !- Mean Radiant Temperature Calculation GasType
+    ,                        !- Surface Name/Angle Factor List Name
+    1CoreWorkEfficiency,  !- Work Efficiency Schedule Name
+    DynamicClothingModelASHRAE55,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
+    ,                        !- Clothing Insulation Schedule Name
+    1CoreAirVelocity,!- Air Velocity Schedule Name
+    AdaptiveASH55;           !- Thermal Comfort Model 1 GasType
+
+Schedule:Constant, 1CorePeopleActivity, Any Number, 125.28; ! - Watts per person, uses Metabolic Rate input (1 met = 58 W/m2) and assumes adult body surface area of 1.8 m2
+Schedule:Constant, 1CoreAirVelocity, Any Number, 0.2;
+Schedule:Constant, 1CoreWorkEfficiency, Any Number, 0;
+
+
+! ------------------------ EQUIPMENT
+ElectricEquipment,
+  1Core Equipment 1,!- Name
+  1Core,            !- Zone or ZoneList Name
+  60HrWk,                    !- Schedule Name
+  Watts/Area,          !- Design Level Calculation Method
+  ,                !- Design Level [W]
+  15,                        !- Watts per Zone Floor Area [W/m2]
+  ,                        !- Watts per Person [W/person]
+  0,                       !- Fraction Latent
+  .2,                      !- Fraction Radiant
+  0,                       !- Fraction Lost
+  ;                        !- End-Use Subcategory
+
+! ------------------------ LIGHTS
+Lights,
+  1Core General lighting,   !- Name
+  1Core,                    !- Zone or ZoneList Name
+  60HrWk,          !- Schedule Name
+  Watts/Area,              !- Design Level Calculation Method
+  ,                        !- Lighting Level [W]
+  10,         !- Watts per Zone Floor Area [W/m2]
+  ,                        !- Watts per Person [W/person]
+  0,                       !- Return Air Fraction
+  .42,                     !- Fraction Radiant
+  .18,                     !- Fraction Visible
+  1,                       !- Fraction Replaceable
+  ;                        !- End-Use Subcategory
+
+
+! ------------------------ DAYLIGHT CONTROLS
+Daylighting:Controls,
+1Core,            !-Zone Name
+1,                       !-Total Daylighting Reference Points
+504.525958018994,                  !-X - Coordinate of First Reference Point {m}
+-582.775726858706,                  !-Y - Coordinate of First Reference Point {m}
+13.8908455882352,                      !-Z - Coordinate of First Reference Point {m}
+,                        !-X - Coordinate of Second Reference Point {m}
+,                        !-Y - Coordinate of Second Reference Point {m}
+,                        !-Z - Coordinate of Second Reference Point {m}
+1,                       !-Fraction of Zone Controlled by First Reference Point
+0,                       !-Fraction of Zone Controlled by Second Reference Point
+500,                     !-Illuminance Setpoint at First Reference Point {lux}
+500,                     !-Illuminance Setpoint at Second Reference Point {lux}
+1 ,                       !-Lighting control type {1=continuous,2=stepped,3=continuous/off}
+0,                       !-Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
+22,                      !-Maximum Allowable Discomfort Glare Index
+0.1,                     !-Minimum Input Power Fraction for Continuous Dimming Control
+0.1,                     !-Minimum Light Output Fraction for Continuous Dimming Control
+3,                       !-Number of Stepped Control Steps
+1;                       !-Probability Lighting will be Reset When Needed in Manual Stepped Control
+
+! ------------------------ HVAC
+Schedule:Constant,
+1CoreHeating_SP_Sch, !- Name
+Temperature, !- Schedule GasType Limits Name
+22; !- Hourly Value
+
+Schedule:Constant,
+1CoreCooling_SP_Sch, !- Name
+Temperature, !- Schedule GasType Limits Name
+22; !- Hourly Value
+
+ZoneControl:Thermostat,
+  1Core Thermostat, !- Name
+  1Core,            !- Zone or ZoneList Name
+  1CoreZoneControlTypeSched, !- Control GasType Schedule Name
+  ThermostatSetpoint:DualSetpoint,  !- Control 1 Object GasType
+  Dual Setpoint - Zone 1Core;  !- Control 1 Name
+
+Schedule:Constant,
+  1CoreZoneControlTypeSched, !- Name
+  Any Number, !- Schedule GasType Limits Name
+  4; !- Hourly Value
+
+ThermostatSetpoint:DualSetpoint,
+  Dual Setpoint - Zone 1Core,  !- Name
+  1CoreHeating_SP_Sch,  !- Heating Setpoint Temperature Schedule Name
+  1CoreCooling_SP_Sch;  !- Cooling Setpoint Temperature Schedule Name
+
+ZoneHVAC:EquipmentConnections,
+  1Core,            !- Zone Name
+  1Core Equipment,  !- Zone Conditioning Equipment List Name
+  1Core Inlets,     !- Zone Air Inlet Node or NodeList Name
+  ,                        !- Zone Air Exhaust Node or NodeList Name
+  Node 1Core Zone,  !- Zone Air Node Name
+  Node 1Core Out;   !- Zone Return Air Node Name
+
+ZoneHVAC:EquipmentList,
+  1Core Equipment,  !- Name
+  ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object GasType
+  1Core Ideal Loads Air,  !- Zone Equipment 1 Name
+  1,                       !- Zone Equipment 1 Cooling Sequence
+  1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+
+NodeList,
+  1Core Inlets,     !- Name
+  Node 1Core In;    !- Node 1 Name
+
+ZoneHVAC:IdealLoadsAirSystem,
+  1Core Ideal Loads Air,  !- Name
+  ,                        !- Availability Schedule Name
+  Node 1Core In,    !- Zone Supply Air Node Name
+  ,                        !- Zone Exhaust Air Node Name
+  30,                      !- Maximum Heating Supply Air Temperature {C}
+  18,                      !- Minimum Cooling Supply Air Temperature {C}
+  0.01,                    !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
+  0.008,                   !- Minimum Cooling Supply Air Humidity Ratio {kgWater/kgDryAir}
+  NoLimit,                 !- Heating Limit
+  100,                        !- Maximum Heating Air Flow Rate [m3/s]
+  ,        				   !- Maximum Sensible Heating Capacity [W]
+  NoLimit,                 !- Cooling Limit
+  100 ,                        !- Maximum Cooling Air Flow Rate [m3/s]
+  ,                        !- Maximum Total Cooling Capacity [W]
+  AllOn,  !- Heating Availability Schedule Name
+  AllOn,  !- Cooling Availability Schedule Name
+  None,                    !- Dehumidification Control Type
+  ,                        !- Cooling Sensible Heat Ratio {dimensionless}
+  None,                    !- Humidification Control Type
+  1CoreMinFreshAir,                        !- Design Specification Outdoor Air Object Name
+  1Core_OutDoorInlet,                        !- Outdoor Air Inlet Node Name
+  OccupancySchedule,                        !- Demand Controlled Ventilation GasType
+  NoEconomizer,                        !- Outdoor Air Economizer GasType
+  None,                        !- Heat Recovery GasType
+  0.7,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
+  0.65;                        !- Latent Heat Recovery Effectiveness {dimensionless}
+
+
+ZoneControl:Humidistat,
+    1CoreHumidistat,                  !-Name
+    1Core,                   !-Zone Name
+    1CoreHumidMin,                !-Humidifying Relative Humidity Setpoint Schedule Name
+    1CoreHumidMax; !-Dehumidifying Relative Humidity Setpoint Schedule Name
+
+Schedule:Constant,
+    1CoreHumidMin,                !- Name
+    Any Number,              !- Schedule Type Limits Name
+    20;                      !- Hourly Value
+
+Schedule:Constant,
+    1CoreHumidMax,                !- Name
+    Any Number,              !- Schedule Type Limits Name
+    80;                      !- Hourly Value
+
+DesignSpecification:OutdoorAir,
+  1CoreMinFreshAir,                  !- Name
+  Sum,                     !- Outdoor Air Method
+  0.0005,                 !- Outdoor Air Flow per Person {m3/s-person}
+  0.0005,                   !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
+    ,                        !- Outdoor Air Flow per Zone {m3/s}
+    ,                        !- Outdoor Air Flow Air Changes per Hour {1/hr}
+    30HrWk;!- Outdoor Air Flow Rate Fraction Schedule Name
+
+! ------------------------ DHW
+WaterUse:Equipment,
+    DHW 1Core,        !- Name
+    DHW 1Core,        !- End-Use Subcategory
+    8.74676513540189E-06,           !- Peak Flow Rate [m3/s]
+    60HrWk,                    !- Flow Rate Fraction Schedule Name
+    DHW Supply Temperature 1Core,  !- Target Temperature Schedule Name
+    DHW Supply Temperature 1Core,  !- Hot Water Supply Temperature Schedule Name
+    DHW Mains Temperature 1Core,  !- Cold Water Supply Temperature Schedule Name
+    ,                        !- Zone Name
+    ,                        !- Sensible Fraction Schedule Name
+    ;                        !- Latent Fraction Schedule Name
+
+Schedule:Constant,
+    DHW Supply Temperature 1Core, !- Name
+    Temperature, !- Schedule GasType Limits Name
+    65; !- Hourly Value
+Schedule:Constant,
+    DHW Mains Temperature 1Core, !- Name
+    Temperature, !- Schedule GasType Limits Name
+    10; !- Hourly Value
+! ------------------------ GEOMETRY
+
+
+ ! FACE NORMAL  -0.63216322709921 -0.774835243328227 0
+BuildingSurface:Detailed,!-GasType
+1Core:f0, !-Name
+Wall,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+1Core,            !-Zone Name
+Surface,                !-Outside Boundary Condition
+1Perim:f1,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+505.1916, -586.7054, 17.3878,  !- X,Y,Z ==> Vertex
+500.5426, -582.9124, 17.3878,  !- X,Y,Z ==> Vertex
+500.5426, -582.9124, 13.0408,  !- X,Y,Z ==> Vertex
+505.1916, -586.7054, 13.0408;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  0.632163227099214 0.774835243328223 0
+BuildingSurface:Detailed,!-GasType
+1Core:f1, !-Name
+Wall,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+1Core,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+508.5093, -582.6390, 17.3878,  !- X,Y,Z ==> Vertex
+508.5093, -582.6390, 13.0408,  !- X,Y,Z ==> Vertex
+503.8603, -578.8460, 13.0408,  !- X,Y,Z ==> Vertex
+503.8603, -578.8460, 17.3878;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  0.774835243328229 -0.632163227099208 6.37504659583339E-15
+BuildingSurface:Detailed,!-GasType
+1Core:f2, !-Name
+Wall,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+1Core,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+508.5093, -582.6390, 13.0408,  !- X,Y,Z ==> Vertex
+508.5093, -582.6390, 17.3878,  !- X,Y,Z ==> Vertex
+505.1916, -586.7054, 17.3878,  !- X,Y,Z ==> Vertex
+505.1916, -586.7054, 13.0408;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  -0.77483524332823 0.632163227099207 8.36750512816396E-15
+BuildingSurface:Detailed,!-GasType
+1Core:f3, !-Name
+Wall,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+1Core,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+503.8603, -578.8460, 13.0408,  !- X,Y,Z ==> Vertex
+500.5426, -582.9124, 13.0408,  !- X,Y,Z ==> Vertex
+500.5426, -582.9124, 17.3878,  !- X,Y,Z ==> Vertex
+503.8603, -578.8460, 17.3878;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  0 0 -1
+BuildingSurface:Detailed,!-GasType
+1Core:f4, !-Name
+Floor,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+1Core,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+500.5426, -582.9124, 13.0408,  !- X,Y,Z ==> Vertex
+503.8603, -578.8460, 13.0408,  !- X,Y,Z ==> Vertex
+508.5093, -582.6390, 13.0408,  !- X,Y,Z ==> Vertex
+505.1916, -586.7054, 13.0408;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  1.05276325507032E-16 1.29035989115105E-16 1
+BuildingSurface:Detailed,!-GasType
+1Core:f5, !-Name
+Ceiling,                    !-Surface Type
+115mmSandLimeBrick,                       !-Construction Name
+1Core,            !-Zone Name
+Adiabatic,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+NoSun,              !-Sun Exposure
+NoWind,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+500.5426, -582.9124, 17.3878,  !- X,Y,Z ==> Vertex
+505.1916, -586.7054, 17.3878,  !- X,Y,Z ==> Vertex
+507.6799, -583.6556, 17.3878,  !- X,Y,Z ==> Vertex
+503.0309, -579.8626, 17.3878;  !- X,Y,Z ==> Vertex
+
+
+ ! FACE NORMAL  -4.21105302028113E-16 -5.16143956460402E-16 1
+BuildingSurface:Detailed,!-GasType
+1Core:f6, !-Name
+Roof,                    !-Surface Type
+U0-3,                       !-Construction Name
+1Core,            !-Zone Name
+Outdoors,                !-Outside Boundary Condition
+,                        !-Outside Boundary Condition Object
+SunExposed,              !-Sun Exposure
+WindExposed,             !-Wind Exposure
+0,                      !-View Factor to Ground
+4,                       !-Number of Vertices
+
+503.0309, -579.8626, 17.3878,  !- X,Y,Z ==> Vertex
+507.6799, -583.6556, 17.3878,  !- X,Y,Z ==> Vertex
+508.5093, -582.6390, 17.3878,  !- X,Y,Z ==> Vertex
+503.8603, -578.8460, 17.3878;  !- X,Y,Z ==> Vertex
+
+
+
+! ------------------------ OUTPUTS
+
+Output:Variable,*,Zone Lights Electric Energy,Monthly;
+Output:Variable,*,Zone Electric Equipment Electric Energy,Monthly;
+Output:Variable,*,Zone Ideal Loads Supply Air Total Heating Energy,Monthly;
+Output:Variable,*,Zone Ideal Loads Supply Air Total Cooling Energy,Monthly;
+Output:Variable,*,Water Use Equipment Heating Energy,Monthly;
+
+
+Output:VariableDictionary, IDF;
+Output:Surfaces:Drawing,DXF,Triangulate3DFace;
+Output:Surfaces:List,Details;
+Output:Constructions,Construction;
+!Output:Diagnostics,DisplayExtraWarnings;
+!Output:Diagnostics,DisplayUnusedSchedules;
+!Output:Diagnostics,DisplayUnusedObjects;
+Output:Diagnostics,DisplayAdvancedReportVariables;
+
+Output:Table:SummaryReports,
+Output:Table:SummaryReports,
+    EnvelopeSummary,         !- Report 1 Name
+    InputVerificationandResultsSummary,  !- Report 2 Name
+    ShadingSummary;          !- Report 3 Name
+
+Shading:Building:Detailed,
+SHADER_0,
+  ,   !-Transmittance schedule
+4 ,   !-Number of vertices
+-12.797, -523.241, 0,               !-Vertex 1
+-5.522, -520.019, 0,               !-Vertex 2
+-5.522, -520.019, 17.911,               !-Vertex 3
+-12.797, -523.241, 17.911;               !-Vertex 4
+
+Shading:Building:Detailed,
+SHADER_1,
+  ,   !-Transmittance schedule
+4 ,   !-Number of vertices
+-34.759, -516.51, 0,               !-Vertex 1
+-26.087, -521.192, 0,               !-Vertex 2
+-26.087, -521.192, 17.911,               !-Vertex 3
+-34.759, -516.51, 17.911;               !-Vertex 4
+
+Shading:Building:Detailed,
+SHADER_2,
+  ,   !-Transmittance schedule
+4 ,   !-Number of vertices
+-24.584, -539.844, 0,               !-Vertex 1
+-24.584, -539.844, 17.832,               !-Vertex 2
+-54.792, -560.328, 17.832,               !-Vertex 3
+-54.792, -560.328, 0;               !-Vertex 4
