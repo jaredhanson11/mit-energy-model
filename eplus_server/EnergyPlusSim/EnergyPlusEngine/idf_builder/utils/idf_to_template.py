@@ -17,8 +17,6 @@ def general_converter(name_to_template):
             if value_name in name_to_template:
                 template_var_name = name_to_template[value_name]
                 if type(template_var_name) == list:
-                    if is_perim == -1:
-                        raise Exception("No zone type")
                     if is_perim == 1:
                         converted_line = idf_utils.convert_value(line, VAR_TEMPLATE%template_var_name[1])
                     elif is_perim == 0:
@@ -64,7 +62,7 @@ outdoor_air_template = {
 }
 
 energy_management_template = {
-    'Output:Variable or Output:Meter Index Key Name': 'INP_NV_SCH'
+    'Output:Variable or Output:Meter Index Key Name': ['INP_NV_SCH', 'INP_NV_SCH'] # Force the converter to check a zone is present
 }
 
 infiltration_template = {
