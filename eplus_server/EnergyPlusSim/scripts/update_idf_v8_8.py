@@ -23,7 +23,6 @@ arg_parser.add_argument('-v', '--version', required=True)
 args = arg_parser.parse_args()
 
 def main(args):
-    engine = EnergyPlusEngine.EnergyPlusEngine()
-    engine.update_idf_file(args.input, args.version)
+    EnergyPlusEngine.update_idf_file(args.input, args.version)
 
 main(args)

@@ -21,7 +21,6 @@ arg_parser.add_argument('-n', '--simulation-name', type=str)
 args = arg_parser.parse_args()
 
 def main(args):
-    engine = EnergyPlusEngine.EnergyPlusEngine()
-    engine.simulate(args.idf_template, args.idf_vals, args.building, args.simulation_name)
+    EnergyPlusEngine.simulate(args.idf_template, args.idf_vals, args.building, args.simulation_name)
 
 main(args)

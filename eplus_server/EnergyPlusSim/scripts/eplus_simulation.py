@@ -26,10 +26,10 @@ arg_parser.add_argument('-y', '--year', type=int)
 args = arg_parser.parse_args()
 
 def main(args):
-    engine = EnergyPlusEngine.EnergyPlusEngine()
     save = False
     if args.simulation_name:
         save=True
-    engine.run_simulation(args.idf, args.epw, args.building, simulation_name=args.simulation_name, simulation_year=args.year, save=save)
+    save= False
+    EnergyPlusEngine.run_simulation(args.idf, args.epw, args.building, simulation_name=args.simulation_name, simulation_year=args.year, save=save)
 
 main(args)
