@@ -1,13 +1,10 @@
 import os
 import peewee
 
-path_to_db = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)),
-    'db',
-    'model_simulations.db'
-)
+db = peewee.MySQLDatabase('campus_energy_model', user='sdl', password='SDL@2017', host='52.11.126.32', port=3306)
 
-db = peewee.SqliteDatabase(path_to_db)
+def connect_db():
+    db.connect()
 
 class BaseModel(peewee.Model):
     class Meta:
@@ -16,7 +13,7 @@ class BaseModel(peewee.Model):
 class CampusSimulationDataModel(BaseModel):
     id = peewee.PrimaryKeyField()
     building_number = peewee.CharField(unique = True)
-    # simulations through backref
+    # building_simulations through backref
 
     def simulation_exists(self, simulation_name, simulation_year):
         for simulation in self.simulations:
@@ -32,7 +29,7 @@ class CampusSimulationDataModel(BaseModel):
         return new_building
 
     @staticmethod
-    def get_building_simulation(building_number, default_measured={}):
+    def get_building_simulation(building_number, default_measured={}): # TODO FIX THIS
         '''
         Need a default for when simulations aren't present, thats why extra parameter.
             TODO remove default_measured once every building has simulation
@@ -40,28 +37,78 @@ class CampusSimulationDataModel(BaseModel):
         building_rec = CampusSimulationDataModel.get_or_none(CampusSimulationDataModel.building_number==building_number)
         if not building_rec:
             building_rec = CampusSimulationDataModel.add_building(building_number)
-        year_simulation = {'simulation_name': None, 'simulation': None}
+        year_simulation = {'simulation_name': None, 'simulations': None}
         simulations = []
-        for sim in building_rec.simulations:
+        for building_sim in building_rec.building_simulations:
             for existing in simulations:
-                if existing['simulation_name'] == sim.simulation_name:
-                    existing['simulation'].update(sim.get_json())
+                if existing['simulation_name'] == building_sim.simulation_name:
+                    existing['simulations'].update(building_sim.get_json())
                     break
             else:
                 new_year = {}
                 new_year.update(year_simulation)
-                new_year['simulation_name'] = sim.simulation_name
-                new_year['simulation'] = sim.get_json()
+                new_year['simulation_name'] = building_sim.simulation_name
+                new_year['simulations'] = building_sim.get_json()
                 simulations.append(new_year)
         simulations = sorted(simulations, key=lambda k: k['simulation_name'])
         return simulations
 
-
 class BuildingSimulationModel(BaseModel):
     id = peewee.PrimaryKeyField()
     simulation_name = peewee.CharField(null=False)
-    building_id = peewee.ForeignKeyField(CampusSimulationDataModel, backref='simulations')
+    building_id = peewee.ForeignKeyField(CampusSimulationDataModel, backref='building_simulations')
     simulation_year = peewee.IntegerField(null=False)
+    simulation_id = peewee.CharField(null=False)
+    # simulations through backref
+
+
+    def delete_simulation(self):
+        for simulation in self.simulations:
+            simulation.delete_instance()
+        self.delete_instance()
+
+    @staticmethod
+    def add_simulation(simulation_name, sim_year, building_number, sim_id, results):
+        building = CampusSimulationDataModel.get_or_none(CampusSimulationDataModel.building_number==building_number)
+        if not building:
+            building = CampusSimulationDataModel.add_building(building_number.lower())
+        prior_simulation = building.simulation_exists(simulation_name, sim_year)
+        if prior_simulation:
+            if prior_simulation.simulation_id != sim_id:
+                y_n = 'y'
+                if y_n.lower().strip() == 'y':
+                    print 'Deleting prior simulation ...'
+                    prior_simulation.delete_simulation()
+                else:
+                    print 'Quitting ...'
+                    return
+        else:
+            new_building_sim = BuildingSimulationModel(simulation_name=simulation_name, building_id=building.id , simulation_year=sim_year, simulation_id=sim_id)
+            prior_simulation = new_building_sim
+
+        new_sim = BaseSimulation(building_simulation_id=prior_simulation.id)
+        for resource_type in ['chw', 'stm', 'elec']:
+            if resource_type not in results:
+                raise Exception('Results did not have %s data' % resource_type)
+            year_by_month = results[resource_type]
+            for i, month in enumerate(year_by_month):
+                month_i = i + 1
+                attr_name = resource_type + '_' + str(month_i)
+                print attr_name, month
+                setattr(new_sim, attr_name, month)
+        new_sim.save()
+        return new_sim
+
+    def get_json(self):
+        return {self.simulation_year: map(lambda x: x.get_json(), self.simulations)}
+
+
+
+
+
+class BaseSimulation(BaseModel):
+    id = peewee.PrimaryKeyField()
+    building_simulation_id = peewee.ForeignKeyField(BuildingSimulationModel, backref='simulations')
 
     # Results of an eplus simulation for the building in format
     #   [resource type]_[month number] = [energy used in joules]
@@ -103,36 +150,6 @@ class BuildingSimulationModel(BaseModel):
     elec_11 = peewee.FloatField()
     elec_12 = peewee.FloatField()
 
-    @staticmethod
-    def add_simulation(simulation_name, sim_year, building_number, results):
-        building = CampusSimulationDataModel.get_or_none(CampusSimulationDataModel.building_number==building_number)
-        if not building:
-            building = CampusSimulationDataModel.add_building(building_number.lower())
-        prior_simulation = building.simulation_exists(simulation_name, sim_year)
-        print prior_simulation
-        if prior_simulation:
-            print 'This simulation exists in your database already, delete it?'
-            y_n = raw_input('y/(n)')
-            if y_n.lower().strip() == 'y':
-                print 'Deleting prior simulation ...'
-                prior_simulation.delete_instance()
-            else:
-                print 'Quitting ...'
-                return
-
-        new_sim = BuildingSimulationModel(simulation_name=simulation_name, building_id=building.id , simulation_year=sim_year)
-        for resource_type in ['chw', 'stm', 'elec']:
-            if resource_type not in results:
-                raise Exception('Results did not have %s data' % resource_type)
-            year_by_month = results[resource_type]
-            for i, month in enumerate(year_by_month):
-                month_i = i + 1
-                attr_name = resource_type + '_' + str(month_i)
-                print attr_name, month
-                setattr(new_sim, attr_name, month)
-        new_sim.save()
-        return new_sim
-
     def get_json(self):
         results = {}
         for resource_type in ['chw', 'stm', 'elec']:
@@ -141,5 +158,4 @@ class BuildingSimulationModel(BaseModel):
                 attr_name = resource_type + '_' + str(i)
                 year_by_month.append(int(getattr(self, attr_name)))
             results[resource_type] = year_by_month
-        ret = {self.simulation_year: results}
-        return ret
+        return results

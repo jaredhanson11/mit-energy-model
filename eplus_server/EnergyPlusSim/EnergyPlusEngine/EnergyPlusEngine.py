@@ -7,6 +7,7 @@ import json
 import sys
 import shutil
 import time
+import uuid
 
 from zone_multipliers import ZoneMultiplierInterface
 from idf_builder import IDFBuilder
@@ -124,11 +125,11 @@ def _translate_simulation(eplusout_csv_file, building_number):
     print "Sum(total) = %s" % str(sum(ret['stm']) + sum(ret['elec']) + sum(ret['chw']))
     return ret
 
-def _save_results(simulation_name, sim_year, building_number, results, extra_years=[]): # TODO DELETE THE EXTRA YEARS PARAMETER ONLY FOR STATA CENTER PRESENTATION
-    if BuildingSimulationModel.add_simulation(simulation_name, sim_year, building_number, results):
+def _save_results(simulation_name, sim_year, building_number, sim_id, results, extra_years=[]): # TODO DELETE THE EXTRA YEARS PARAMETER ONLY FOR STATA CENTER PRESENTATION
+    if BuildingSimulationModel.add_simulation(simulation_name, sim_year, building_number, sim_id, results):
         print "SUCCESS: Results for simulation: %s, number: %s were saved" % (simulation_name, building_number)
         for year in extra_years:
-            if BuildingSimulationModel.add_simulation(simulation_name, year, building_number, results):
+            if BuildingSimulationModel.add_simulation(simulation_name, year, building_number, sim_id, results,):
                 print "SUCCESS: Results for simulation: %s, number: %s were saved" % (simulation_name, building_number)
     else:
         print "ERROR: Results for simulation: %s, number: %s were NOT saved" % (simulation_name, building_number)
@@ -179,7 +180,8 @@ def _parallelized_run(simulation):
     simulation_name = args['simulation_name']
     simulation_year = args['simulation_year']
     simulation_dir = args['output_directory']
-    return run_simulation(idf_file, epw_file, building_number, simulation_dir, simulation_name, simulation_year)
+    sim_id = args['simulation_id']
+    return run_simulation(idf_file, epw_file, building_number, sim_id, simulation_dir, simulation_name, simulation_year)
 
 def parallelize_simulations(idfs, processes=None):
     pool = Pool(processes=processes)
@@ -192,7 +194,7 @@ def parallelize_simulations(idfs, processes=None):
     print "Total time elapsed: " + str(elapsed)
     return
 
-def run_simulation(idf_file, epw_file, building_number, simulation_dir=None, simulation_name=None, simulation_year=None, save=False, extra_years=[]):
+def run_simulation(idf_file, epw_file, building_number, sim_id, simulation_dir=None, simulation_name=None, simulation_year=None, save=False, extra_years=[]):
     ENERGYPLUS_CMD = '/usr/local/bin/EnergyPlus'
     idf_file_path = os.path.abspath(idf_file)
     epw_file_path = os.path.abspath(epw_file)
@@ -212,13 +214,14 @@ def run_simulation(idf_file, epw_file, building_number, simulation_dir=None, sim
 
     results = _translate_simulation(eplusout_csv_file, building_number)
     if save == True:
-        _save_results(simulation_name, simulation_year, building_number, results, extra_years=extra_years)
+        _save_results(simulation_name, simulation_year, building_number, sim_id, results, extra_years=extra_years)
     _write_results(results, eplusout_csv_file)
 
 def simulate(idf_template_path, idf_vals_csv, building_number, simulation_name, save=False):
     args = RUN_ARGS.copy()
     args['building_number'] = building_number
     args['simulation_name'] = simulation_name
+    args['simulation_id'] = str(uuid.uuid4())
 
     simulation_dir = _make_simulation_dir(building_number, simulation_name)
     epws_by_year = _get_epws()
