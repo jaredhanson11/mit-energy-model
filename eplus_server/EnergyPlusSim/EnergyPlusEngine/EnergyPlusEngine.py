@@ -6,6 +6,7 @@ import csv
 import json
 import sys
 import shutil
+import time
 
 from zone_multipliers import ZoneMultiplierInterface
 from idf_builder import IDFBuilder
@@ -180,11 +181,15 @@ def _parallelized_run(simulation):
     simulation_dir = args['output_directory']
     return run_simulation(idf_file, epw_file, building_number, simulation_dir, simulation_name, simulation_year)
 
-def parallelize_simulations(idfs, processes=1):
+def parallelize_simulations(idfs, processes=None):
     pool = Pool(processes=processes)
     print "Starting simulations with %s cores" % str(processes)
-    pool.map(_parallelized_run, idfs)
+    start_time = time.time()
+    r = pool.map_async(_parallelized_run, idfs)
+    r.wait()
+    elapsed = time.time() - start_time
     print "Finished simulations"
+    print "Total time elapsed: " + str(elapsed)
     return
 
 def run_simulation(idf_file, epw_file, building_number, simulation_dir=None, simulation_name=None, simulation_year=None, save=False, extra_years=[]):
@@ -211,7 +216,6 @@ def run_simulation(idf_file, epw_file, building_number, simulation_dir=None, sim
     _write_results(results, eplusout_csv_file)
 
 def simulate(idf_template_path, idf_vals_csv, building_number, simulation_name, save=False):
-    idf_simulation_runs = []
     args = RUN_ARGS.copy()
     args['building_number'] = building_number
     args['simulation_name'] = simulation_name
@@ -224,6 +228,7 @@ def simulate(idf_template_path, idf_vals_csv, building_number, simulation_name, 
         idf_vals = idf_vals_csv
     idfs = _get_idfs(idf_template_path, idf_vals, simulation_dir)
     for year in epws_by_year:
+        idf_simulation_runs = []
         year_dir = os.path.join(simulation_dir, str(year) + '/')
         os.mkdir(year_dir)
         args = args.copy()
@@ -237,5 +242,5 @@ def simulate(idf_template_path, idf_vals_csv, building_number, simulation_name, 
             args['output_directory'] = sim_i_dir
             simulation_run = [idf, args]
             idf_simulation_runs.append(simulation_run)
-        break # TODO REMOVE TRYING WITH JUST ONE YEAR HERE
-    parallelize_simulations(idf_simulation_runs, processes=1)
+        print 'Running simulation: %s for building: %s, year: %s' % (simulation_name, building_number, year)
+        parallelize_simulations(idf_simulation_runs)
