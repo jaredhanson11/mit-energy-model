@@ -6,6 +6,9 @@ export default class DefaultDataProcessor {
     }
 
     getEnergyUnitsHTML() {
+        if (this.filterState.selectedDataSource == 'warning'){
+            return '\xa0';
+        }
         var that = this;
         var unit_keys = ['unitsType', 'unitsNormalized'];
         return unit_keys.reduce(function(accum, key) {

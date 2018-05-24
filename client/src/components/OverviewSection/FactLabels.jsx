@@ -45,15 +45,42 @@ export class AreaLabel extends React.Component {
     }
 
     render() {
-        var area = this.props.area;
-        var units = (<div dangerouslySetInnerHTML={{__html: 'm&#178;'}}></div>);
+        var _area = this.props.area;
+        var _area_label = 'Area: ' + _area.toString() + ' m&#178;';
+        var area = (<div dangerouslySetInnerHTML={{__html: _area_label}}></div>);
         return(
             <AreaLabelContainer>
-                Area: {area}&nbsp;{units}
+                {area}
             </AreaLabelContainer>
         );
     }
+}
+
+var GOFWarningImg = styled.img`
+    height: 17%;
+`;
+
+class GOFWarning extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        if (this.props.visible == true) {
+            return (<GOFWarningImg src='./imgs/warning-mode-icon.png' />);
+        } else {
+            return (<div></div>);
+        }
+    }
 };
+
+var Row = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+`;
 
 var EUILabelContainer = styled.div`
     width: 100%;
@@ -80,9 +107,10 @@ export class EUILabel extends React.Component {
         if (this.props.color) {
             euiProps.color = this.props.color;
         }
+        var warning = (<GOFWarning visible={this.props.gofWarning} />);
         return (
             <EUILabelContainer>
-                <EUI color={this.props.color}>{eui}</EUI>
+                <Row><EUI color={this.props.color}>{eui}</EUI> {warning} </Row>
                 {units}
             </EUILabelContainer>
         );
