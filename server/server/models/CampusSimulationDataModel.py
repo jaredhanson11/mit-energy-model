@@ -16,7 +16,7 @@ class CampusSimulationDataModel(BaseModel):
     # building_simulations through backref
 
     def simulation_exists(self, simulation_name, simulation_year):
-        for simulation in self.simulations:
+        for simulation in self.building_simulations:
             if simulation.simulation_name == simulation_name \
                     and simulation.simulation_year == simulation_year:
                 return simulation
@@ -37,18 +37,18 @@ class CampusSimulationDataModel(BaseModel):
         building_rec = CampusSimulationDataModel.get_or_none(CampusSimulationDataModel.building_number==building_number)
         if not building_rec:
             building_rec = CampusSimulationDataModel.add_building(building_number)
-        year_simulation = {'simulation_name': None, 'simulations': None}
+        year_simulation = {'simulation_name': None, 'simulation': None}
         simulations = []
         for building_sim in building_rec.building_simulations:
             for existing in simulations:
                 if existing['simulation_name'] == building_sim.simulation_name:
-                    existing['simulations'].update(building_sim.get_json())
+                    existing['simulation'].update(building_sim.get_json())
                     break
             else:
                 new_year = {}
                 new_year.update(year_simulation)
                 new_year['simulation_name'] = building_sim.simulation_name
-                new_year['simulations'] = building_sim.get_json()
+                new_year['simulation'] = building_sim.get_json()
                 simulations.append(new_year)
         simulations = sorted(simulations, key=lambda k: k['simulation_name'])
         return simulations
@@ -79,12 +79,16 @@ class BuildingSimulationModel(BaseModel):
                 if y_n.lower().strip() == 'y':
                     print 'Deleting prior simulation ...'
                     prior_simulation.delete_simulation()
+                    new_building_sim = BuildingSimulationModel(simulation_name=simulation_name, building_id=building.id , simulation_year=sim_year, simulation_id=sim_id)
+                    prior_simulation = new_building_sim
+                    prior_simulation.save()
                 else:
                     print 'Quitting ...'
                     return
         else:
             new_building_sim = BuildingSimulationModel(simulation_name=simulation_name, building_id=building.id , simulation_year=sim_year, simulation_id=sim_id)
             prior_simulation = new_building_sim
+            prior_simulation.save()
 
         new_sim = BaseSimulation(building_simulation_id=prior_simulation.id)
         for resource_type in ['chw', 'stm', 'elec']:
@@ -100,7 +104,7 @@ class BuildingSimulationModel(BaseModel):
         return new_sim
 
     def get_json(self):
-        return {self.simulation_year: map(lambda x: x.get_json(), self.simulations)}
+        return {self.simulation_year: map(lambda x: x.get_json(), self.simulations)[0]}
 
 
 

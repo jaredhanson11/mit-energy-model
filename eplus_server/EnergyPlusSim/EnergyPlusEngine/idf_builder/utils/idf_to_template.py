@@ -5,6 +5,7 @@ Converts IDFs in Shreshth Nagpal's (shreshth@mit.edu) workflow output form to
     building's energy usage.
 """
 import idf_utils
+import os
 VAR_TEMPLATE = '&&%s&&'
 
 def general_converter(name_to_template):
@@ -85,7 +86,7 @@ objects_to_convert = {
     'SCHEDULE:CONSTANT': thermostat_converter
 }
 
-def convert_idf(input_idf):
+def convert_idf(input_idf, output_dir):
     idf_fh = open(input_idf, 'r')
 
     converted_lines = []
@@ -107,6 +108,9 @@ def convert_idf(input_idf):
             i += offset
             converted_lines.extend(curr_object)
     idf_fh.close()
-    idf_fh=open(input_idf + '.template', 'w')
+
+    filename = os.path.basename(input_idf) + '.template'
+    output_filename = os.path.join(output_dir, filename)
+    idf_fh=open(output_filename, 'w')
     idf_fh.writelines(converted_lines)
 

@@ -181,7 +181,7 @@ def _parallelized_run(simulation):
     simulation_year = args['simulation_year']
     simulation_dir = args['output_directory']
     sim_id = args['simulation_id']
-    return run_simulation(idf_file, epw_file, building_number, sim_id, simulation_dir, simulation_name, simulation_year)
+    return run_simulation(idf_file, epw_file, building_number, sim_id, simulation_dir, simulation_name, simulation_year, save=True)
 
 def parallelize_simulations(idfs, processes=None):
     pool = Pool(processes=processes)
@@ -247,3 +247,4 @@ def simulate(idf_template_path, idf_vals_csv, building_number, simulation_name, 
             idf_simulation_runs.append(simulation_run)
         print 'Running simulation: %s for building: %s, year: %s' % (simulation_name, building_number, year)
         parallelize_simulations(idf_simulation_runs)
+	break
