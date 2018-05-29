@@ -96,6 +96,7 @@ class BuildingOverview extends React.Component {
         if (selectedBuilding) {
             var that = this;
             var dataProcessor = this.props.dataProcessor;
+            var isGOFWarning = dataProcessor.isGOFWarning(selectedBuilding);
 
             var type = (<TypeLabel key={1} selectedBuildingTypes={dataProcessor.getBuildingType(selectedBuilding)} />)
 
@@ -105,7 +106,7 @@ class BuildingOverview extends React.Component {
             var campus_max = dataProcessor.getCampusMax();
             var energy_use = dataProcessor.getBuildingEnergyUsage(selectedBuilding);
             var color = chroma.scale(['#7d8180', '#d91111']).domain([campus_min, campus_max])(energy_use);
-            var eui = (<EUILabel key={3} eui={dataProcessor.printBuildingEnergyUsage(selectedBuilding)} unitsHTML={dataProcessor.printEnergyUnitsHTML()} color={color}/>);
+            var eui = (<EUILabel key={3} eui={dataProcessor.printBuildingEnergyUsage(selectedBuilding)} unitsHTML={dataProcessor.printEnergyUnitsHTML()} color={color} gofWarning={isGOFWarning}/> );
 
             var Items = [type, area, eui];
         } else {

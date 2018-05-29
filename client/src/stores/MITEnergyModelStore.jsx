@@ -11,7 +11,7 @@ var MITEnergyModelState = {
         selectedUnits: 'kwh',
         selectedUnitsNormalized: 'per_year',
         selectedDataSource: 'metered',
-        selectedYear: '2018',
+        selectedYear: '2017',
         selectedGraphToggle: 'overview'
     },
 

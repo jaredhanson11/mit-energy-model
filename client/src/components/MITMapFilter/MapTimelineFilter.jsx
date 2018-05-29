@@ -57,7 +57,7 @@ class Timeline extends React.Component {
     render() {
         return(
             <TimelineDiv>
-                <Slider onAfterChange={this.selectYear} step={null} marks={marks} defaultValue={4} min={0} max={10} included={false}/>
+                <Slider onAfterChange={this.selectYear} step={null} marks={marks} defaultValue={3} min={0} max={10} included={false}/>
             </TimelineDiv>
         );
     }

@@ -192,6 +192,14 @@ export default class MITGraphDataProcessor extends DefaultDataProcessor {
             simulations[simulation.simulation_name] = finalSim;
         }
 
+        var thisMonth = new Date().getMonth();
+        if ('2018' in measured) {
+            for (var i = thisMonth; i < 12; i++) { // measured metered energy data lags by one month so this month = 0
+                for (var res in measured['2018']) {
+                    measured['2018'][res][i] = 0;
+                }
+            }
+        }
         return {metadata: metadata, measured: measured, simulations: simulations};
     }
 }
