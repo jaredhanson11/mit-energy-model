@@ -12,6 +12,10 @@ You'll probably want to install all the requirements.txt in a virtualenv. If `pg
 
 Running run.py should start the server.
 
+### Client
+
+Use `npx webpack` to generate bundle, which should setup index.html to be used as the entry point to the website.
+
 ## Additional Links
 
 * I'm not really sure what this is: <https://docs.google.com/spreadsheets/d/1eGXjn9asQPbWnCO5T6WDdJWYGP_QLKxdDDpCAPJLON0/edit#gid=0>
