@@ -14,5 +14,5 @@ db = SQLAlchemy(app)
 api = Api(app)
 
 # Attach routes to the Flask-RESTful Resource objects found at controllers/*
-import routes
+from . import routes
 routes.add_routes()

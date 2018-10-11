@@ -1,14 +1,17 @@
-# mit-energy-model
+# MIT Energy Model
 
-An interactive web app for users to access and process simulation results from the MIT campus model developed by the Course 4 Department. The web app is live at <https://web-cert.mit.edu/campusenergymodel/www/>.
+Website: <https://web-cert.mit.edu/campusenergymodel/www/>
 
-The server runs with the following APIs:
-* flask
-* React
-* babel
-* webpack
-* Node.js
+An interactive web app for users to access and process simulation results from the MIT campus model developed by the Course 4 Department.
+
+## Installation and Setup
+
+### Server
+
+You'll probably want to install all the requirements.txt in a virtualenv. If `pg_config` executable not found, then you'll need to install PostgreSQL and add the bin to PATH. See <https://stackoverflow.com/questions/26717436/pg-config-executable-not-found-when-using-pgxnclient-on-windows-7-x64>.
+
+Running run.py should start the server.
 
 ## Additional Links
 
-<https://docs.google.com/spreadsheets/d/1eGXjn9asQPbWnCO5T6WDdJWYGP_QLKxdDDpCAPJLON0/edit#gid=0>
+* I'm not really sure what this is: <https://docs.google.com/spreadsheets/d/1eGXjn9asQPbWnCO5T6WDdJWYGP_QLKxdDDpCAPJLON0/edit#gid=0>

@@ -77,13 +77,13 @@ class BuildingSimulationModel(BaseModel):
             if prior_simulation.simulation_id != sim_id:
                 y_n = 'y'
                 if y_n.lower().strip() == 'y':
-                    print 'Deleting prior simulation ...'
+                    print('Deleting prior simulation ...')
                     prior_simulation.delete_simulation()
                     new_building_sim = BuildingSimulationModel(simulation_name=simulation_name, building_id=building.id , simulation_year=sim_year, simulation_id=sim_id)
                     prior_simulation = new_building_sim
                     prior_simulation.save()
                 else:
-                    print 'Quitting ...'
+                    print('Quitting ...')
                     return
         else:
             new_building_sim = BuildingSimulationModel(simulation_name=simulation_name, building_id=building.id , simulation_year=sim_year, simulation_id=sim_id)
@@ -98,7 +98,7 @@ class BuildingSimulationModel(BaseModel):
             for i, month in enumerate(year_by_month):
                 month_i = i + 1
                 attr_name = resource_type + '_' + str(month_i)
-                print attr_name, month
+                print(attr_name, month)
                 setattr(new_sim, attr_name, month)
         new_sim.save()
         return new_sim

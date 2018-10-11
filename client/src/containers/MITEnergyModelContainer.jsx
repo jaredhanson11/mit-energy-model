@@ -74,7 +74,7 @@ class MITEnergyModelContainer extends React.Component {
     render() {
         return (
             <FullScreenContainer>
-                <SiteTitle title="MIT GHG EMISSIONS MANAGEMENT" />
+                <SiteTitle title="MIT Campus Energy Model" />
                 <ColumnsContainer>
                     <MainColumn width={'70%'}>
                         <MainColumnSection height={'calc(30% - 2.5px)'} padding={'10px'}
