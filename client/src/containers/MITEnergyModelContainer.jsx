@@ -7,7 +7,7 @@ import { actionCreators } from '../actions';
 import store from '../stores/MITEnergyModelStore.jsx';
 import MITMap from '../components/MITMap.jsx';
 import MITMapFilter from '../components/MITMapFilter';
-import SiteTitle from '../components/SiteTitle.jsx';
+import SiteTitle from '../components/MenuBar.jsx';
 import GraphSection from '../components/GraphSection';
 import SubGraphSection from '../components/SubGraphSection';
 import OverviewSection from '../components/OverviewSection';
@@ -25,7 +25,7 @@ var FullScreenContainer = styled.div`
 
 var ColumnsContainer = styled.div`
     width: 100%;
-    height: calc(100% - 50px);
+    height: calc(100% - 70px);
 
     display: flex;
     flex-direction: row;
@@ -58,7 +58,6 @@ var MainColumnSection = styled.div`
 
     border-radius: 5px;
 `;
-
 
 class MITEnergyModelContainer extends React.Component {
 
