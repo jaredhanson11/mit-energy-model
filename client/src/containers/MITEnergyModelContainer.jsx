@@ -7,7 +7,7 @@ import { actionCreators } from '../actions';
 import store from '../stores/MITEnergyModelStore.jsx';
 import MITMap from '../components/MITMap.jsx';
 import MITMapFilter from '../components/MITMapFilter';
-import SiteTitle from '../components/MenuBar.jsx';
+import MenuBarContainer from '../components/MenuBar.jsx';
 import GraphSection from '../components/GraphSection';
 import SubGraphSection from '../components/SubGraphSection';
 import OverviewSection from '../components/OverviewSection';
@@ -23,12 +23,14 @@ var FullScreenContainer = styled.div`
     flex-direction: column;
 `;
 
-var ColumnsContainer = styled.div`
+var MainContainer = styled.div`
     width: 100%;
-    height: calc(100% - 70px);
+    height: 100%;
+    flex-grow: 0;
 
     display: flex;
     flex-direction: row;
+
     align-items: center;
     align-content: center;
     justify-content: center;
@@ -37,7 +39,7 @@ var ColumnsContainer = styled.div`
 var MainColumn = styled.div`
     height: 100%;
     width: ${props => props.width};
-    padding: 10px;
+    padding: 0px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -73,40 +75,33 @@ class MITEnergyModelContainer extends React.Component {
     render() {
         return (
             <FullScreenContainer>
-                <SiteTitle title="MIT Campus Energy Model" />
-                <ColumnsContainer>
-                    <MainColumn width={'70%'}>
-                        <MainColumnSection height={'calc(30% - 2.5px)'} padding={'10px'}
-                            style={{paddingTop: 0}}>
+                <MenuBarContainer title="MIT Campus Energy Model"></MenuBarContainer>
+                <MainContainer>
+                    <MainColumn width={'50%'} style={{paddingRight: '10px'}}>
+                        <MainColumnSection height={'calc(30%)'} padding={'0px'} style={{paddingTop: 0}}>
                             <MITMapFilter />
                         </MainColumnSection>
-                        <MainColumnSection height={'calc(70% - 2.5px)'}>
+                        <MainColumnSection height={'calc(70%)'}>
                             <MITMap
-                                width={_style.MITMap.width} />
+                                width={'100%'} />
                         </MainColumnSection>
                     </MainColumn>
-                    <MainColumn width={'30%'}>
-                        <MainColumnSection height={'calc(30% - 2.5px)'} padding={'10px'}>
-                            <OverviewSection
-                                filterState={this.props.filterState}
-                                buildingData={this.props.buildingMapData}
-                            />
-                        </MainColumnSection>
-                        <MainColumnSection height={'calc(50% - 5px)'} padding={'10px'}>
+                    <MainColumn width={'50%'} style={{paddingLeft: '10px'}}>
+                        <MainColumnSection height={'calc(70%)'} padding={'0px'}>
                             <GraphSection
                                 filterState={this.props.filterState}
                                 buildingData={this.props.buildingMapData}
                                 dispatch={this.props.dispatch}
                             />
                         </MainColumnSection>
-                        <MainColumnSection height={'calc(20% - 2.5px)'} padding={'10px'}>
+                        <MainColumnSection height={'calc(30%)'} padding={'0px'}>
                             <SubGraphSection
                                 filterState={this.props.filterState}
                                 buildingData={this.props.buildingMapData}
                             />
                         </MainColumnSection>
                     </MainColumn>
-                </ColumnsContainer>
+                </MainContainer>
             </FullScreenContainer>
         )
     }
@@ -116,7 +111,7 @@ var mapStateToProps = function(state) {
     var immutableState = Immutable.fromJS(state);
     var newState = immutableState.toJS();
     return newState;
-}
+};
 
 var _MITEnergyModelContainer = connect(mapStateToProps)(MITEnergyModelContainer);
 

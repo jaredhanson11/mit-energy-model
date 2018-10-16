@@ -1,4 +1,3 @@
-
 export function reformatBackendData(campusData, historicalData) {
     var c02_factors = {'elec' : 0.193411, 'stm' : 0.272202, 'chw' : 0.205706};
     var campus_final = {};

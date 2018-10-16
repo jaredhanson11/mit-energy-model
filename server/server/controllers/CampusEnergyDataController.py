@@ -38,9 +38,9 @@ class MonthlyEnergyDataController(Resource):
         db = psycopg2.connect(app.config['PI_ENERGY_DB_URI'])
         cursor = db.cursor()
         tables = {
-            'chw': 'monthly_utility_chw',
-            'stm': 'monthly_utility_stm',
-            'elec': 'monthly_utility_elec'
+            'stm': 'sustain.pi_stm',
+            'elec': 'sustain.pi_elec',
+            'chw': 'sustain.pi_chw'
         }
         query_base = sql.SQL('SELECT * from sustain.{}')
 
