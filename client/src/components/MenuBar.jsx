@@ -25,9 +25,11 @@ const TitleInner = styled.div`
     margin: auto;
 `;
 
+//-2 because I'm a piece of shit
 const ModeSelectorContainer = styled(ButtonGroup)`
 	width: 40%;
 	height: 100%;
+	right: -2px;
 `;
 
 const ModeSelectorButton = styled(Button)`
