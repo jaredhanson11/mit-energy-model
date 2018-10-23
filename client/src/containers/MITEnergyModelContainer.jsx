@@ -5,12 +5,12 @@ import styled from 'styled-components';
 
 import { actionCreators } from '../actions';
 import store from '../stores/MITEnergyModelStore.jsx';
-import MITMap from '../components/MITMap.jsx';
 import MITMapFilter from '../components/MITMapFilter';
-import MenuBarContainer from '../components/MenuBar.jsx';
+import TitleBarContainer from '../components/TitleBar.jsx';
 import GraphSection from '../components/GraphSection';
 import SubGraphSection from '../components/SubGraphSection';
 import OverviewSection from '../components/OverviewSection';
+import ListMapSelector from '../components/ListMapSelector.jsx';
 
 import _style from '../styles/MITEnergyModelContainerStyle.js';
 
@@ -57,12 +57,9 @@ var MainColumnSection = styled.div`
     height: ${props => props.height};
     width: 100%;
     padding: ${props => props.padding ? props.padding : '0'};
-
-    border-radius: 5px;
 `;
 
 class MITEnergyModelContainer extends React.Component {
-
     constructor(props) {
       super(props);
     }
@@ -75,32 +72,70 @@ class MITEnergyModelContainer extends React.Component {
     render() {
         return (
             <FullScreenContainer>
-                <MenuBarContainer title="MIT Campus Energy Model"></MenuBarContainer>
+                <TitleBarContainer title="MIT Campus Energy Model"></TitleBarContainer>
+
                 <MainContainer>
-                    <MainColumn width={'50%'} style={{paddingRight: '10px'}}>
-                        <MainColumnSection height={'calc(30%)'} padding={'0px'} style={{paddingTop: 0}}>
-                            <MITMapFilter />
+
+                    {/* Selection panel */}
+                    <MainColumn 
+                        width={'50%'} 
+                        style={{
+                            paddingRight: '0px'
+                        }}>
+                        <MainColumnSection 
+                            height={'calc(30%)'} 
+                            padding={'0px'} 
+                            style={{
+                                paddingTop: 0,
+                                backgroundColor: 'blue'
+                            }}>
+                            Filter
                         </MainColumnSection>
-                        <MainColumnSection height={'calc(70%)'}>
-                            <MITMap
-                                width={'100%'} />
+                        <MainColumnSection 
+                            height={'calc(70%)'}
+                            style={{
+                                backgroundColor: 'green'
+                            }}>
+                            <ListMapSelector>
+
+                            </ListMapSelector>
                         </MainColumnSection>
                     </MainColumn>
-                    <MainColumn width={'50%'} style={{paddingLeft: '10px'}}>
-                        <MainColumnSection height={'calc(70%)'} padding={'0px'}>
-                            <GraphSection
-                                filterState={this.props.filterState}
-                                buildingData={this.props.buildingMapData}
-                                dispatch={this.props.dispatch}
-                            />
+
+                    {/* Graph panel */}
+                    <MainColumn 
+                        width={'50%'} 
+                        style={{
+                            paddingLeft: '0px'
+                        }}>
+                        <MainColumnSection 
+                            height={'calc(70%)'} 
+                            padding={'0px'}
+                            style={{
+                                backgroundColor: 'purple'
+                            }}>
+                            Main graph
                         </MainColumnSection>
-                        <MainColumnSection height={'calc(30%)'} padding={'0px'}>
-                            <SubGraphSection
-                                filterState={this.props.filterState}
-                                buildingData={this.props.buildingMapData}
-                            />
+                        <MainColumnSection 
+                            height={'calc(30%)'} 
+                            padding={'0px'}
+                            style={{
+                                backgroundColor: 'yellow'
+                            }}>
+                            Sub graph
                         </MainColumnSection>
                     </MainColumn>
+
+                    {/* Updates/budget panel */}
+                    <MainColumn 
+                        width={'50%'} 
+                        style={{
+                            paddingLeft: '10px',
+                            display: 'none',
+                            backgroundColor: 'brown'
+                        }}>
+                    </MainColumn>
+
                 </MainContainer>
             </FullScreenContainer>
         )

@@ -82,9 +82,7 @@ class MITMap extends React.Component {
     render() {
         this.dataProcessing = new MITMapDataProcessor(this.props.buildingMapData, this.props.filterState);
         const mapStyle = Object.assign({}, _style.map, {
-            width: this.props.width,
-            borderRadius: '10px',
-            marginTop: '10px'
+            width: this.props.width
         });
         return (
             <Map style={mapStyle}
@@ -106,22 +104,23 @@ class MITMap extends React.Component {
                     filter={this.filterFeatures}
                 />
             </Map>
-        )}
+        );
     }
+}
 
-    const mapStateToProps = (state) => {
-        return {
-            filterState: state.filterState,
-            buildingMapApi: state.buildingMapApi,
-            buildingMapData: state.buildingMapData,
-            geojsonData : state.geojsonData
-        }
+const mapStateToProps = (state) => {
+    return {
+        filterState: state.filterState,
+        buildingMapApi: state.buildingMapApi,
+        buildingMapData: state.buildingMapData,
+        geojsonData : state.geojsonData
     }
+}
 
-    const mapDispatchToProps = (dispatch) => {
-        return {
-            selectBuilding: (buildingNumber) => dispatch(actionCreators.selectBuilding(buildingNumber))
-        }
+const mapDispatchToProps = (dispatch) => {
+    return {
+        selectBuilding: (buildingNumber) => dispatch(actionCreators.selectBuilding(buildingNumber))
     }
+}
 
-    export default connect(mapStateToProps, mapDispatchToProps)(MITMap);
+export default connect(mapStateToProps, mapDispatchToProps)(MITMap);

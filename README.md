@@ -16,7 +16,7 @@ Not sure how integration between server and client works yet.
 
 ### Client
 
-Use `npx webpack` under client to generate bundle, which should setup index.html to be used as the entry point to the website.
+Use `npx webpack` under client to generate bundle, which should setup index.html to be used as the entry point to the website. `npx webpack --watch` compiles changed code on the spot, and is good for development.
 
 ### Database
 

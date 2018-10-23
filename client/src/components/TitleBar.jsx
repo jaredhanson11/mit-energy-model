@@ -2,14 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { Button, ButtonGroup } from 'reactstrap';
 
-const MenuBarContainer = styled.div`
+const TitleBarContainer = styled.div`
     width: 100%;
     height: 70px;
     display: flex;
 	flex-direction: row;
 	flex-shrink: 0;
-
-	margin-bottom: 10px;
 `;
 
 const TitleContainer = styled.div`
@@ -35,7 +33,7 @@ const ModeSelectorContainer = styled(ButtonGroup)`
 const ModeSelectorButton = styled(Button)`
 	width: calc(100% / 3);
 	height: 100%;
-	font-size: 1.5em;
+	font-size: 1.75em;
 	border-radius: 0px;
 	box-shadow: none!important;
 
@@ -48,43 +46,50 @@ class _MenuBar extends React.Component {
     constructor(props) {
         super(props);
 
+		this.onMenuBtnClick = this.onMenuBtnClick.bind(this);
 		this.state = { };
-		this.state.rSelected = 1;
-	
-		this.onRadioBtnClick = this.onRadioBtnClick.bind(this);
+		this.state.selectedText = "VIEW";
     }
 
-    onRadioBtnClick(rSelected) {
-        this.setState({ rSelected });
+    onMenuBtnClick(selectedText) {
+		this.state.selectedText = selectedText;
+		this.forceUpdate();
 	}
 	
-	getColor(rSelected) {
-		if (this.state.rSelected === rSelected) {
-			return 'primary';
+	getColor(selectedText) {
+		if (this.state.selectedText === selectedText) {
+			return "primary";
 		}
-		return 'secondary';
+		return "secondary";
+	}
+
+	isActive(text) {
+		return this.state.selectedText === text;
+	}
+
+	getButton(text) {
+		return (<ModeSelectorButton
+			color={this.getColor(text)}
+			onClick={() => this.onMenuBtnClick(text)}
+			active={this.isActive(text)}>
+			{text}
+		</ModeSelectorButton>);
 	}
 
     render() {
         return (
-            <MenuBarContainer>
+            <TitleBarContainer>
                 <TitleContainer>
                     <TitleInner>
                         {this.props.title}
                     </TitleInner>
                 </TitleContainer>
                 <ModeSelectorContainer>
-					<ModeSelectorButton color={this.getColor(1)} 
-					onClick={() => this.onRadioBtnClick(1)} active={this.state.rSelected === 1}>VIEW
-					</ModeSelectorButton>
-					<ModeSelectorButton color={this.getColor(2)} 
-					onClick={() => this.onRadioBtnClick(2)} active={this.state.rSelected === 2}>PREDICT
-					</ModeSelectorButton>
-					<ModeSelectorButton color={this.getColor(3)} 
-					onClick={() => this.onRadioBtnClick(3)} active={this.state.rSelected === 3}>VERIFY
-					</ModeSelectorButton>
+					{this.getButton("VIEW")}
+					{this.getButton("PREDICT")}
+					{this.getButton("VERIFY")}
                 </ModeSelectorContainer>
-            </MenuBarContainer>
+            </TitleBarContainer>
         );
     }
 }
