@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 
 import _style from '../styles/MITMapStyle.js';
 import MITMapDataProcessor from '../utils/dataProcessing/MITMapDataProcessor.jsx';
+import MapGradientLegend from './BuildingFilter/MapGradientLegend.jsx';
+import OverviewDataProcessor from '../utils/dataProcessing/OverviewDataProcessor.jsx';
 
 import chroma from 'chroma-js';
 import DefaultBuildingStyle from '../styles/DefaultBuildingStyle.jsx';
@@ -80,6 +82,8 @@ class MITMap extends React.Component {
     }
 
     render() {
+        var dataProcessor = new OverviewDataProcessor(this.props.buildingData, this.props.filterState);
+
         this.dataProcessing = new MITMapDataProcessor(this.props.buildingMapData, this.props.filterState);
         const mapStyle = Object.assign({}, _style.map, {
             width: this.props.width
@@ -103,6 +107,10 @@ class MITMap extends React.Component {
                     onEachFeature={this.onEachFeature()}
                     filter={this.filterFeatures}
                 />
+                <MapGradientLegend
+                    dataProcessor={dataProcessor}
+                    selectedBuilding={this.props.filterState.selectedBuilding}>
+                </MapGradientLegend>
             </Map>
         );
     }

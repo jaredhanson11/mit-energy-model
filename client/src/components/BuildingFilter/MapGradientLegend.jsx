@@ -9,28 +9,32 @@ var Container = styled.div`
     align-items: center;
     align-content: center;
     justify-content: flex-start;
-    width: 100%;
-    height: 48%;
+    
+    position: absolute;
+    left: 3%;
+    right: 50%;
+    bottom: 1%;
+    top: 94%;
+
+    z-index: 100000;
 
     >:first-child {
-        width: 90%;
-        padding-bottom: 15px;
     }
 `;
 
 var Gradient = styled.div`
     display: flex;
     align-items: center;
-    height: 30%;
+    height: 70%;
     max-height: 40px;
-    width: 85%;
+    width: 100%;
     background: linear-gradient(to right, ${(props) => props.min}, ${(props) => props.max});
     opacity: .5;
 `;
 
 var ScaleDiv = styled.div`
-    padding-top: 5px;
-    width: 85%;
+    padding-top: 2px;
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -98,7 +102,6 @@ export default class MapGradientLegend extends React.Component {
         }
         return(
             <Container>
-                <TitleContainer>SCALE</TitleContainer>
                 <Gradient max={maxColor} min={minColor}>
                     {selectedBuilding}
                 </Gradient>

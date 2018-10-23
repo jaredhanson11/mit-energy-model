@@ -63,7 +63,7 @@ class Timeline extends React.Component {
     }
 }
 
-export default class MapTimelineFilter extends React.Component {
+class MapTimelineFilter extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -77,3 +77,5 @@ export default class MapTimelineFilter extends React.Component {
         );
     }
 }
+
+export default MapTimelineFilter;
