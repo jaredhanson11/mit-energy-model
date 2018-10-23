@@ -11,6 +11,7 @@ var MITEnergyModelState = {
         selectedUnits: 'kwh',
         selectedUnitsNormalized: 'per_year',
         selectedDataSource: 'metered',
+        selectedUpgradesCompleted: ['water', 'windows', 'cooling'],
         selectedYear: '2017',
         selectedGraphToggle: 'overview'
     },

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import { actionCreators } from '../actions';
 import store from '../stores/MITEnergyModelStore.jsx';
-import MITMapFilter from '../components/MITMapFilter';
+import BuildingFilter from '../components/BuildingFilter';
 import TitleBarContainer from '../components/TitleBar.jsx';
 import GraphSection from '../components/GraphSection';
 import SubGraphSection from '../components/SubGraphSection';
@@ -75,7 +75,7 @@ class MITEnergyModelContainer extends React.Component {
                 <TitleBarContainer title="MIT Campus Energy Model"></TitleBarContainer>
 
                 <MainContainer>
-
+                    
                     {/* Selection panel */}
                     <MainColumn 
                         width={'50%'} 
@@ -87,9 +87,11 @@ class MITEnergyModelContainer extends React.Component {
                             padding={'0px'} 
                             style={{
                                 paddingTop: 0,
-                                backgroundColor: 'blue'
+                                backgroundColor: 'white'
                             }}>
-                            Filter
+                            <BuildingFilter>
+
+                            </BuildingFilter>
                         </MainColumnSection>
                         <MainColumnSection 
                             height={'calc(70%)'}

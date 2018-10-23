@@ -9,42 +9,35 @@ export var FilterContainer = styled.div`
     align-items: flex-start;
     align-content: flex-start;
     justify-content: flex-start;
+
     width: 100%;
     height: 50%;
-`;
 
-export var TitleContainer = styled.div`
-    width: 100%;
-    font-size: 1em;
-    color: rgb(46, 117, 182);
-    font-weight: light;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    align-content: flex-start;
-    justify-content: flex-start;
+    padding: 5%;
 `;
 
 var IconsContainer = styled.div`
     width: 100%;
-    height: 90%;
+    height: 80%;
+
     display: flex;
     flex-direction: row;
+
     align-items: flex-start;
     align-content: center;
     justify-content: center;
-    padding-top: 3px;
 `;
 
 var Icon = styled.div`
     width: ${props => props.width}%;
-    max-width: 28%;
-    max-height: 95%;
-    padding-left: 2px;
-    padding-right: 2px;
+    max-width: 25%;
+    max-height: 90%;
     display: flex;
     flex-direction: column;
     ${props => props.selected ? '' : 'opacity: .2;'}
+
+    margin-left: -5px;
+    margin-right: -5px;
 `;
 
 var IconImg = styled.img`
@@ -52,13 +45,32 @@ var IconImg = styled.img`
     max-height: 100%;
     cursor: pointer;
     ${props => props.noClick ? 'cursor: not-allowed;' : ''}
-    margin-bottom: 2px;
+
+    z-index: 0;
 `;
 
 var IconCaption = styled.div`
-    font-size: .5em;
+    font-size: 1em;
     width: 100%;
     text-align: center;
+    
+    margin-top: -15%;
+
+    z-index: 1;
+`;
+
+export var TitleContainer = styled.div`
+    width: 100%;
+    height: 20%;
+
+    font-size: 1.5em;
+    color: black;
+
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    align-content: flex-start;
+    justify-content: flex-start;
 `;
 
 class SelectFilter extends React.Component {
@@ -108,7 +120,7 @@ class SelectFilter extends React.Component {
             var onclick = that.changeFilter(key);
             var _IconCaption = (
                     <IconCaption
-                        dangerouslySetInnerHTML={{__html: that._config.translations[key].toUpperCase().replace(" ", "&nbsp;")}}
+                        dangerouslySetInnerHTML={{__html: that._config.translations[key].replace(" ", "&nbsp;")}}
                     />
             );
             if (that.props.iconsOnly) {
@@ -146,8 +158,19 @@ class SelectFilter extends React.Component {
         }
         return (
             <FilterContainer>
-                <TitleContainer><div>{this._config.title.toUpperCase()}</div></TitleContainer>
-                <IconsContainer>{icons}</IconsContainer>
+                <TitleContainer>
+                    <div
+                        style={{
+                            margin: 'auto',
+                            marginBottom: '0px',
+                            zIndex: 1
+                        }}>
+                        {this._config.title.toUpperCase()}
+                    </div>
+                </TitleContainer>
+                <IconsContainer>
+                    {icons}
+                </IconsContainer>
             </FilterContainer>
         );
     }

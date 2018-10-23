@@ -5,7 +5,7 @@ import actionCreators from '../../actions/actionCreators.jsx';
 
 import { mainGraphOptions } from './graphConfig.jsx';
 import MITGraphDataProcessor from '../../utils/dataProcessing/MITGraphDataProcessor.jsx';
-import { ToggleFilter } from '../MITMapFilter/ToggleFilter.jsx';
+import { ToggleFilter } from '../BuildingFilter/ToggleFilter.jsx';
 
 
 var GraphSectionContainer = styled.div`

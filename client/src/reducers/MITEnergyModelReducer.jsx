@@ -45,6 +45,17 @@ var filterStateReducer = function(state={}, action){
             newState = newState.toJS();
             newState.selectedDataSource = action.selectedDataSource;
             return newState;
+        case actionTypes.SELECT_UPGRADES_COMPLETED:
+            var newState = Immutable.fromJS(state);
+            newState = newState.toJS();
+            var currentlySelected = newState.selectedUpgradesCompleted;
+            var indexOfSelected = currentlySelected.indexOf(action.selectedUpgradesCompleted.toLowerCase());
+            if (indexOfSelected > -1) {
+                currentlySelected.splice(indexOfSelected, 1);
+            } else {
+                currentlySelected.push(action.selectedUpgradesCompleted.toLowerCase());
+            }
+            return newState;
         case actionTypes.SELECT_UNITS_NORMALIZED:
             var newState = Immutable.fromJS(state);
             newState = newState.toJS();

@@ -3,8 +3,8 @@ import ToggleButton from 'react-toggle-button';
 import styled from 'styled-components';
 
 import { getToggleFilterConfig } from '../../config.jsx';
-import {TitleContainer} from './SelectFilter.jsx';
-import {FilterContainer} from './SelectFilter.jsx';
+import { TitleContainer } from './SelectFilter.jsx';
+import { FilterContainer } from './SelectFilter.jsx';
 
 var FiltersContainer = styled.div`
     width: 100%;

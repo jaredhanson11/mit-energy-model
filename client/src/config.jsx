@@ -36,6 +36,23 @@ var FILTER_CONFIG = {
             warning: './imgs/warning-mode-icon.png'
         }
     },
+    upgradesCompleted: {
+        filterStateKey: 'selectedUpgradesCompleted',
+        title: 'Upgrades Completed',
+        keys: ['water', 'windows', 'cooling'],
+        translations: {
+            water: 'Water',
+            windows: 'Windows',
+            cooling: 'Cooling'
+        },
+        icons: {
+            all: './imgs/total-icon.png',
+            water: './imgs/academic-icon.png',
+            windows: './imgs/laboratory-icon.png',
+            cooling: './imgs/residential-icon.png'
+        },
+        selectAll: true
+    },
     resourceType: {
         filterStateKey: 'selectedResource',
         title: 'Energy Type',
@@ -59,7 +76,6 @@ var FILTER_CONFIG = {
         translations: {
             kwh: 'Kilowatt Hours',
             co2: 'Carbon Dioxide',
-            //co2_normalized: 'Carbon Dioxide / Building Square Footage'
         },
         names: {
             kwh: 'kWh',
@@ -97,7 +113,7 @@ var FILTER_CONFIG = {
     }
 };
 
-const SELECT_FILTERS = ['buildingType', 'resourceType', 'dataSource'];
+const SELECT_FILTERS = ['buildingType', 'resourceType', 'dataSource', 'upgradesCompleted'];
 export function getSelectFilterConfig(filterKey) {
     if (SELECT_FILTERS.includes(filterKey)) {
         return FILTER_CONFIG[filterKey];

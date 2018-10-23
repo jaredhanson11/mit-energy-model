@@ -48,6 +48,13 @@ function selectDataSource(dataSourceSelected) {
     }
 }
 
+function selectUpgradesCompleted(upgradesCompletedSelected) {
+    return {
+        type: actionTypes.SELECT_UPGRADES_COMPLETED,
+        selectedUpgradesCompleted: upgradesCompletedSelected
+    }
+}
+
 function selectTimelineYear(year) {
     return {
         type: actionTypes.SELECT_YEAR,
@@ -104,6 +111,7 @@ export default {
     selectUnitsNormalizedType,
     selectBuilding,
     selectDataSource,
+    selectUpgradesCompleted,
     selectTimelineYear,
     selectGraphToggle,
     toggleFilter

@@ -1,8 +1,8 @@
 import React from 'react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { actionCreators } from '../../actions';
 
-import { FilterContainer, FilterColumn } from '../../styles/MITMapFilterStyle.js';
 import OverviewDataProcessor from '../../utils/dataProcessing/OverviewDataProcessor.jsx';
 
 import SelectFilter from './SelectFilter.jsx';
@@ -10,7 +10,26 @@ import ToggleFilter from './ToggleFilter.jsx';
 import MapGradientLegend from './MapGradientLegend.jsx';
 import MapTimelineFilter from './MapTimelineFilter.jsx';
 
-class MITMapFilter extends React.Component {
+let FilterContainer = styled.div`
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: space-around;
+    justify-content: flex-start;
+`;
+
+let FilterColumn = styled.div`
+    width: ${props => props.width};
+    height: 100%;
+
+    display: flex;
+    flex-flow: column nowrap;
+`;
+
+class BuildingFilter extends React.Component {
 
     constructor(props) {
         super(props);
@@ -20,7 +39,8 @@ class MITMapFilter extends React.Component {
         var dataProcessor = new OverviewDataProcessor(this.props.buildingData, this.props.filterState);
         return (
             <FilterContainer>
-                <FilterColumn width={'24%'}>
+                <FilterColumn 
+                    width={'50%'}>
                     <SelectFilter
                         filterKey={'buildingType'}
                         filterState={this.props.filterState}
@@ -32,25 +52,17 @@ class MITMapFilter extends React.Component {
                         changeFilter={this.props.changeFilter}
                     />
                 </FilterColumn>
-                <FilterColumn width={'24%'}>
+                <FilterColumn 
+                    width={'50%'}>
                     <SelectFilter
                         filterKey={'dataSource'}
                         filterState={this.props.filterState}
                         changeFilter={this.props.changeFilter}
                     />
-                    <ToggleFilter
-                        filterKeys={['unitsType', 'unitsNormalized']}
+                    <SelectFilter
+                        filterKey={'upgradesCompleted'}
                         filterState={this.props.filterState}
                         changeFilter={this.props.changeFilter}
-                    />
-                </FilterColumn>
-                <FilterColumn width={'48%'}>
-                    <MapTimelineFilter
-                        changeYear={this.props.changeYear}
-                        filterState={this.props.filterState} />
-                    <MapGradientLegend
-                        dataProcessor={dataProcessor}
-                        selectedBuilding={this.props.filterState.selectedBuilding}
                     />
                 </FilterColumn>
             </FilterContainer>
@@ -73,7 +85,7 @@ const mapDispatchToProps = (dispatch) => {
         unitsType: actionCreators.selectUnits,
         buildingType: actionCreators.selectBuildingType,
         dataSource: actionCreators.selectDataSource,
-
+        upgradesCompleted: actionCreators.selectUpgradesCompleted,
     };
     return {
         changeFilter: (filterTypeKey, filterKey) => dispatch(functionMap[filterTypeKey](filterKey)),
@@ -81,4 +93,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MITMapFilter);
+export default connect(mapStateToProps, mapDispatchToProps)(BuildingFilter);

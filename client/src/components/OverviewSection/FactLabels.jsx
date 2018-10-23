@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import SelectFilter from '../MITMapFilter/SelectFilter.jsx';
+import SelectFilter from '../BuildingFilter/SelectFilter.jsx';
 
 var TypeLabelContainer = styled.div`
     width: 100%;
