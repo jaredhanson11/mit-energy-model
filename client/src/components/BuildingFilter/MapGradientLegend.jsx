@@ -13,8 +13,8 @@ var Container = styled.div`
     position: absolute;
     left: 3%;
     right: 50%;
-    bottom: 1%;
-    top: 94%;
+    bottom: 2%;
+    top: 93%;
 
     z-index: 100000;
 

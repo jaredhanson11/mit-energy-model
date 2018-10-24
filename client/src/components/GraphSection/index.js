@@ -12,36 +12,34 @@ var GraphSectionContainer = styled.div`
     height: 100%;
     width: 100%;
 
-    padding: 5px;
-    padding-top: 0;
-
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    align-content: center;
-
 `;
 
 var GraphSectionHeader = styled.div`
     width: 100%;
-    height: 15%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    align-content: center;
+    height: 10%;
+
     margin-bottom: 10px;
 `;
 
-var GraphTitle = styled.div`
+var GraphOptions = styled.div`
+    height: 100%;
     width: 30%;
-    > :nth-child(2) {
-        margin-left: 10px;
-    }
+
+    display: flex;
+    flex-flow: column nowrap;
+
+    float: left;
 `
 var Title = styled.div`
-    font-size: 1.3em;
-    font-weight: bold;
+    font-size: 2.25em;
+    height: 100%;
+    width: 40%;
+
+    display: flex;
+
+    float: left;
 `;
 
 var ToggleContainer = styled.div`
@@ -55,15 +53,20 @@ var GraphContainer = styled.div`
 `;
 
 const GraphLegend = styled.img`
-    height: 70%;
-    margin-right: 10px;
+    max-height: 100%;
+    max-width: 30%;
+
+    display: block;
+    width: auto;
+    height: auto;
+
+    margin: auto;
 `
 
 class Graph extends React.Component {
     constructor(props) {
         super(props);
     }
-
 
     render() {
         var graph = this.props.graph;
@@ -117,13 +120,27 @@ class GraphSection extends React.Component {
         return(
             <GraphSectionContainer>
                 <GraphSectionHeader>
-                    <GraphTitle><Title>{graph.title}</Title>
-                    <ToggleFilter
-                        noToggle={noToggle}
-                        filterKey={'graphToggle'}
-                        filterState={this.props.filterState}
-                        changeFilter={this.toggleFilter} />
-                    </GraphTitle>
+                    <GraphOptions>
+                        <ToggleFilter
+                            noToggle={noToggle}
+                            filterKey={'unitsType'}
+                            filterState={this.props.filterState}
+                            changeFilter={this.toggleFilter} />
+                        <ToggleFilter
+                            noToggle={noToggle}
+                            filterKey={'unitsNormalized'}
+                            filterState={this.props.filterState}
+                            changeFilter={this.toggleFilter} />
+                    </GraphOptions>
+                    <Title>
+                        <div
+                            style={{
+                                margin: 'auto'
+                        }}>
+                            {/* {graph.title} */}
+                            Energy Usage
+                        </div>
+                    </Title>
                     <GraphLegend src='./imgs/graph-legend.png' />
                 </GraphSectionHeader>
                 <Graph

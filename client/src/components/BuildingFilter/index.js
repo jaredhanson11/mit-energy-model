@@ -14,11 +14,15 @@ let FilterContainer = styled.div`
     width: 100%;
     height: 100%;
 
+    padding: 5px;
+
     display: flex;
     flex-direction: row;
     align-content: center;
     align-items: space-around;
     justify-content: flex-start;
+
+    background-color: white;
 `;
 
 let FilterColumn = styled.div`

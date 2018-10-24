@@ -4,73 +4,82 @@ import styled from 'styled-components';
 import { getSelectFilterConfig } from '../../config.jsx';
 
 export var FilterContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    align-content: flex-start;
-    justify-content: flex-start;
+    width: calc(100% - 10px);
+    height: calc(50% - 10px);
 
-    width: 100%;
-    height: 50%;
+    margin: 5px;
+    overflow: hidden;
 
-    padding: 5%;
+    border-width: 1px;
+    border-style: solid;
+
+    background-color: white;
 `;
 
+//box around all the icons & captions
 var IconsContainer = styled.div`
+    margin: auto;
+    height: 70%;
     width: 100%;
-    height: 80%;
 
     display: flex;
-    flex-direction: row;
+    flex-flow: row nowrap;
 
     align-items: flex-start;
     align-content: center;
     justify-content: center;
 `;
 
+//box around each icon and image
 var Icon = styled.div`
-    width: ${props => props.width}%;
-    max-width: 25%;
-    max-height: 90%;
-    display: flex;
-    flex-direction: column;
-    ${props => props.selected ? '' : 'opacity: .2;'}
+    max-width: ${props => props.width}%;
+    min-width: 15%;
+    height: 100%;
 
-    margin-left: -5px;
-    margin-right: -5px;
+    margin: 0 3px;
+
+    display: flex;
+    flex-flow: column nowrap;
+
+    ${props => props.selected ? '' : 'opacity: .2;'}
 `;
 
 var IconImg = styled.img`
+    display: block;
     max-width: 100%;
-    max-height: 100%;
+    max-height: 65%;
+    width: auto;
+    height: auto;
     cursor: pointer;
     ${props => props.noClick ? 'cursor: not-allowed;' : ''}
 
     z-index: 0;
+    margin: auto;
+    margin-top: 0;
+    margin-bottom: 0;
 `;
 
 var IconCaption = styled.div`
     font-size: 1em;
     width: 100%;
+    height: 35%;
     text-align: center;
     
-    margin-top: -15%;
+    margin-top: auto;
+    margin-bottom: 0;
 
     z-index: 1;
 `;
 
 export var TitleContainer = styled.div`
     width: 100%;
-    height: 20%;
+    height: 30%;
 
     font-size: 1.5em;
     color: black;
 
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
-    align-content: flex-start;
-    justify-content: flex-start;
 `;
 
 class SelectFilter extends React.Component {
@@ -140,7 +149,9 @@ class SelectFilter extends React.Component {
             );
         });
         if (this.props.iconsOnly) {
-            return (<IconsContainer>{icons}</IconsContainer>);
+            return (
+                <IconsContainer>{icons}</IconsContainer>
+            );
         }
         if (this._config.selectAll){
             var that = this;

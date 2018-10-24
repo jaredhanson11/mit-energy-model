@@ -112,19 +112,28 @@ class MITEnergyModelContainer extends React.Component {
                         }}>
                         <MainColumnSection 
                             height={'calc(70%)'} 
-                            padding={'0px'}
+                            padding={'20px'}
                             style={{
-                                backgroundColor: 'purple'
+                                backgroundColor: 'white'
                             }}>
-                            Main graph
+                            <GraphSection
+                                filterState={this.props.filterState}
+                                buildingData={this.props.buildingMapData}
+                                dispatch={this.props.dispatch}
+                            >
+                            </GraphSection>
                         </MainColumnSection>
                         <MainColumnSection 
                             height={'calc(30%)'} 
-                            padding={'0px'}
+                            padding={'20px'}
                             style={{
-                                backgroundColor: 'yellow'
+                                backgroundColor: 'white',
+                                paddingTop: '0'
                             }}>
-                            Sub graph
+                            <SubGraphSection
+                                filterState={this.props.filterState}
+                                buildingData={this.props.buildingMapData}
+                            />
                         </MainColumnSection>
                     </MainColumn>
 

@@ -23,6 +23,8 @@ var SwitchContainer = styled.div`
     align-items: space-around;
     justify-content: space-around;
     align-content: space-around;
+
+    margin: auto;
 `;
 
 var FilterLabel = styled.div`

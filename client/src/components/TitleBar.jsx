@@ -4,7 +4,8 @@ import { Button, ButtonGroup } from 'reactstrap';
 
 const TitleBarContainer = styled.div`
     width: 100%;
-    height: 70px;
+	height: 8%;
+	min-height: 45px;
     display: flex;
 	flex-direction: row;
 	flex-shrink: 0;
@@ -12,7 +13,6 @@ const TitleBarContainer = styled.div`
 
 const TitleContainer = styled.div`
     width: 60%;
-    padding: 10px;
     display: flex;
 
     background-image: linear-gradient(90deg, #8c8c8c, #FFFFFF);
