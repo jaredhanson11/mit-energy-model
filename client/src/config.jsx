@@ -38,7 +38,7 @@ var FILTER_CONFIG = {
     },
     upgradesCompleted: {
         filterStateKey: 'selectedUpgradesCompleted',
-        title: 'Upgrades Completed',
+        title: 'Upgrades',
         keys: ['water', 'windows', 'cooling'],
         translations: {
             water: 'Water',

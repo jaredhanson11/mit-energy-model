@@ -11,6 +11,8 @@ import GraphSection from '../components/GraphSection';
 import SubGraphSection from '../components/SubGraphSection';
 import OverviewSection from '../components/OverviewSection';
 import ListMapSelector from '../components/ListMapSelector.jsx';
+import UpgradesSelector from '../components/UpgradesSelector.jsx';
+import BudgetGraph from '../components/BudgetGraph.jsx';
 
 import _style from '../styles/MITEnergyModelContainerStyle.js';
 
@@ -31,6 +33,8 @@ var MainContainer = styled.div`
     display: flex;
     flex-direction: row;
 
+    border-top: 1px solid;
+
     align-items: center;
     align-content: center;
     justify-content: center;
@@ -40,8 +44,10 @@ var MainColumn = styled.div`
     height: 100%;
     width: ${props => props.width};
     padding: 0px;
-    display: flex;
+
+    display: ${props => props.show ? 'flex' : 'none'};
     flex-direction: column;
+
     align-items: center;
     align-content: center;
     justify-content: space-between;
@@ -62,6 +68,20 @@ var MainColumnSection = styled.div`
 class MITEnergyModelContainer extends React.Component {
     constructor(props) {
       super(props);
+
+      this.state = { };
+
+      this.setMenuSelect = this.setMenuSelect.bind(this);
+      this.getMenuSelect = this.getMenuSelect.bind(this);
+    }
+
+    setMenuSelect(selectedMenu) {
+        this.state.selectedMenu = selectedMenu;
+        this.forceUpdate();
+    }
+
+    getMenuSelect() {
+        return this.state.selectedMenu;
     }
 
     componentWillMount() {
@@ -72,15 +92,21 @@ class MITEnergyModelContainer extends React.Component {
     render() {
         return (
             <FullScreenContainer>
-                <TitleBarContainer title="MIT Campus Energy Model"></TitleBarContainer>
+                <TitleBarContainer 
+                    title="MIT Campus Energy Model"
+                    setMenu={this.setMenuSelect}
+                    getMenu={this.getMenuSelect}>
+                </TitleBarContainer>
 
                 <MainContainer>
                     
                     {/* Selection panel */}
                     <MainColumn 
                         width={'50%'} 
+                        show={this.getMenuSelect() !== "VERIFY"}
                         style={{
-                            paddingRight: '0px'
+                            paddingRight: '0px',
+                            borderRight: '1px solid'
                         }}>
                         <MainColumnSection 
                             height={'calc(30%)'} 
@@ -104,9 +130,37 @@ class MITEnergyModelContainer extends React.Component {
                         </MainColumnSection>
                     </MainColumn>
 
+                    {/* Updates/budget panel */}
+                    <MainColumn 
+                        width={'50%'} 
+                        show={this.getMenuSelect() === "PREDICT"}
+                        style={{
+                        }}>
+                        <MainColumnSection 
+                            height={'calc(60%)'} 
+                            style={{
+                                backgroundColor: 'white',
+                                borderBottom: '1px solid'
+                            }}>
+                            <UpgradesSelector>
+
+                            </UpgradesSelector>
+                        </MainColumnSection>
+                        <MainColumnSection 
+                            height={'calc(40%)'} 
+                            style={{
+                                backgroundColor: 'white'
+                            }}>
+                            <BudgetGraph>
+
+                            </BudgetGraph>
+                        </MainColumnSection>
+                    </MainColumn>
+
                     {/* Graph panel */}
                     <MainColumn 
                         width={'50%'} 
+                        show={this.getMenuSelect() === "VIEW"}
                         style={{
                             paddingLeft: '0px'
                         }}>
@@ -114,7 +168,8 @@ class MITEnergyModelContainer extends React.Component {
                             height={'calc(70%)'} 
                             padding={'20px'}
                             style={{
-                                backgroundColor: 'white'
+                                backgroundColor: 'white',
+                                borderBottom: '1px solid'
                             }}>
                             <GraphSection
                                 filterState={this.props.filterState}
@@ -127,24 +182,13 @@ class MITEnergyModelContainer extends React.Component {
                             height={'calc(30%)'} 
                             padding={'20px'}
                             style={{
-                                backgroundColor: 'white',
-                                paddingTop: '0'
+                                backgroundColor: 'white'
                             }}>
                             <SubGraphSection
                                 filterState={this.props.filterState}
                                 buildingData={this.props.buildingMapData}
                             />
                         </MainColumnSection>
-                    </MainColumn>
-
-                    {/* Updates/budget panel */}
-                    <MainColumn 
-                        width={'50%'} 
-                        style={{
-                            paddingLeft: '10px',
-                            display: 'none',
-                            backgroundColor: 'brown'
-                        }}>
                     </MainColumn>
 
                 </MainContainer>

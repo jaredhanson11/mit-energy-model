@@ -47,24 +47,23 @@ class _MenuBar extends React.Component {
         super(props);
 
 		this.onMenuBtnClick = this.onMenuBtnClick.bind(this);
-		this.state = { };
-		this.state.selectedText = "VIEW";
+		this.props.setMenu("VIEW");
     }
 
-    onMenuBtnClick(selectedText) {
-		this.state.selectedText = selectedText;
+    onMenuBtnClick(text) {
+		this.props.setMenu(text);
 		this.forceUpdate();
 	}
 	
-	getColor(selectedText) {
-		if (this.state.selectedText === selectedText) {
+	getColor(text) {
+		if (this.props.getMenu() === text) {
 			return "primary";
 		}
 		return "secondary";
 	}
 
 	isActive(text) {
-		return this.state.selectedText === text;
+		return this.props.getMenu() === text;
 	}
 
 	getButton(text) {
