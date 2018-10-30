@@ -55,7 +55,6 @@ class MonthlyEnergyDataController(Resource):
                 if i < 3:
                     continue
                 building = CampusEnergyData.name_translations(building)
-                print(building)
                 if building not in values_by_building:
                     values_by_building[building] = [0 for i in range(12)]
 

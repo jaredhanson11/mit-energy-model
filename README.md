@@ -4,7 +4,7 @@ Website: <https://web-cert.mit.edu/campusenergymodel/www/>
 
 An interactive web app for users to access and process simulation results from the MIT campus model developed by the Course 4 Department.
 
-## Installation and Setup
+## Local Setup
 
 ### Server
 
@@ -35,21 +35,7 @@ See `db-connect.bat` for an executable/credentials for connecting. The password 
 * `sustain.pi_elec`
 * `sustain.pi_chw`
 
-## Additional Links
-
-* I'm not really sure what this is: <https://docs.google.com/spreadsheets/d/1eGXjn9asQPbWnCO5T6WDdJWYGP_QLKxdDDpCAPJLON0/edit#gid=0>
-
-## Jared's Notes
-
-The following sections are notes from Jared on running the server.
-
-### Intro
-
-The energyplus ec2 instance is responsible for running the webserver that
-powers the CampusEnergyModel website. This document will guide you through how
-the server is structured and some useful different commands that will help get
-the server running.
-
+## Remote Setup
 
 ### AWS
 
@@ -60,7 +46,6 @@ on/off, spinning up new instances) visit the AWS console.
 
     Username: sustainable_design_lab_aws@mit.edu
     Password: SDL@2017
-
 
 ### Access
 
@@ -79,6 +64,20 @@ give a new computer ssh access to the server, edit the file on the server at
 /home/sdl/.ssh/authorized_keys, and add a new line with the user's id_rsa.pub
 contents.
 
+## Additional Links
+
+* I'm not really sure what this is: <https://docs.google.com/spreadsheets/d/1eGXjn9asQPbWnCO5T6WDdJWYGP_QLKxdDDpCAPJLON0/edit#gid=0>
+
+## Other (Jared's Notes)
+
+The following sections are notes from Jared on running the server.
+
+### Intro
+
+The energyplus ec2 instance is responsible for running the webserver that
+powers the CampusEnergyModel website. This document will guide you through how
+the server is structured and some useful different commands that will help get
+the server running.
 
 ### Directory Structure
 
