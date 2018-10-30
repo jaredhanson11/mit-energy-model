@@ -24,6 +24,9 @@ class MonthlyEnergyDataController(Resource):
             if building not in meu:
                 continue
             simulations = CampusSimulationDataModel.get_building_simulation(building.lower(), default_measured=meu[building])
+            
+            print(building)
+
             campus[building] = {
                     'measured': meu[building],
                     'metadata': building_metadata[building],
@@ -37,11 +40,11 @@ class MonthlyEnergyDataController(Resource):
         db = psycopg2.connect('host=pg-prod-dsg-vpc.c1nco6fiolky.us-east-1.rds.amazonaws.com user=sustdesignlab password=I78ZQ10 dbname=dsg_prod')
         cursor = db.cursor()
         tables = {
-            'stm': 'pi_stm',
-            'elec': 'pi_elec',
-            'chw': 'pi_chw'
+            'stm': 'cdr_stm',
+            'elec': 'cdr_elec',
+            'chw': 'cdr_chw'
         }
-        query_base = sql.SQL('SELECT * from sustain.{} LIMIT 1000')
+        query_base = sql.SQL('SELECT * from sustain.{}')
 
         for table in tables:
             values_by_building = {}
@@ -53,7 +56,7 @@ class MonthlyEnergyDataController(Resource):
             headers = [desc[0] for desc in cursor.description]
             for i, building in enumerate(headers):
                 #ignore the date fields
-                if i < 5:
+                if i < 3:
                     continue
                 building = CampusEnergyData.name_translations(building)
                 if building not in values_by_building:
@@ -65,8 +68,8 @@ class MonthlyEnergyDataController(Resource):
                     if value == None:
                         value = 0
                     #ignore the date fields but keep track of month
-                    if j < 5:
-                        if j == 2:
+                    if j < 3:
+                        if j == 1:
                             month_index = int(value) - 1
                         continue
                     building_number = CampusEnergyData.name_translations(headers[j])

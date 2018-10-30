@@ -32,7 +32,13 @@ TRANSLATIONS = {
     'NW12_NW12A' : 'NW12',
     'W2_W4' : 'W2',
     'W53_W53A_W53B_W53C_W53D' : 'W53',
-    'W85_W85ABC_W85DE_W85FG_W85HJK' : 'W85'
+    'W85_W85ABC_W85DE_W85FG_W85HJK' : 'W85',
+    'M6C' : '6',
+    'M10LIB' : '10',
+    'E62E60' : 'E62',
+    'E25N' : 'E25',
+    'E25S' : 'E25',
+    'E18PH' : 'E18'
 }
 
 def name_translations(building_num):
@@ -40,6 +46,8 @@ def name_translations(building_num):
         return TRANSLATIONS[building_num]
     else:
         tmp_name = building_num.split('_')[0]
+        if tmp_name in TRANSLATIONS:
+            return TRANSLATIONS[tmp_name]
         if tmp_name[0] == 'M':
             return tmp_name[1:]
         else:
