@@ -39,4 +39,8 @@ def name_translations(building_num):
     if building_num in TRANSLATIONS:
         return TRANSLATIONS[building_num]
     else:
-        return building_num.split('_')[0]
+        tmp_name = building_num.split('_')[0]
+        if tmp_name[0] == 'M':
+            return tmp_name[1:]
+        else:
+            return tmp_name

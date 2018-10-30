@@ -60,6 +60,8 @@ startup commands above.
 
 Use `npx webpack` under client to generate bundle, which should setup index.html to be used as the entry point to the website. `npx webpack --watch` compiles changed code on the spot, and is good for development.
 
+You'll probably want to run `npm install` under the client directory to install all the dependencies in `package.json` as well, before running `webpack`. Sometimes, `webpack` will need to be installed as well. Just Google those instructions
+
 ### nginx Proxy
 
 We use Nginx to sit in front of our gunicorn process and reverse proxy all api

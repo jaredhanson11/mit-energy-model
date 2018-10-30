@@ -52,7 +52,8 @@ class MonthlyEnergyDataController(Resource):
 
             headers = [desc[0] for desc in cursor.description]
             for i, building in enumerate(headers):
-                if i < 3:
+                #ignore the date fields
+                if i < 5:
                     continue
                 building = CampusEnergyData.name_translations(building)
                 if building not in values_by_building:
@@ -63,7 +64,8 @@ class MonthlyEnergyDataController(Resource):
                 for j, value in enumerate(row):
                     if value == None:
                         value = 0
-                    if j < 4:
+                    #ignore the date fields but keep track of month
+                    if j < 5:
                         if j == 2:
                             month_index = int(value) - 1
                         continue
