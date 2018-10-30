@@ -39,4 +39,4 @@ def name_translations(building_num):
     if building_num in TRANSLATIONS:
         return TRANSLATIONS[building_num]
     else:
-        return building_num
+        return building_num.split('_')[0]

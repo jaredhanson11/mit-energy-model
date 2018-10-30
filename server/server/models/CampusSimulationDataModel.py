@@ -104,7 +104,7 @@ class BuildingSimulationModel(BaseModel):
         return new_sim
 
     def get_json(self):
-        return {self.simulation_year: map(lambda x: x.get_json(), self.simulations)[0]}
+        return {self.simulation_year: list(map(lambda x: x.get_json(), self.simulations))[0]}
 
 
 

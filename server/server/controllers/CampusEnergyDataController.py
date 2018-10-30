@@ -29,20 +29,19 @@ class MonthlyEnergyDataController(Resource):
                     'metadata': building_metadata[building],
                     'simulations': simulations
             }
-
         return responses.success({'campus': campus})
 
     def _get_monthly_energy(self):
         meu_by_building = {}
 
-        db = psycopg2.connect(app.config['PI_ENERGY_DB_URI'])
+        db = psycopg2.connect('host=pg-prod-dsg-vpc.c1nco6fiolky.us-east-1.rds.amazonaws.com user=sustdesignlab password=I78ZQ10 dbname=dsg_prod')
         cursor = db.cursor()
         tables = {
-            'stm': 'sustain.pi_stm',
-            'elec': 'sustain.pi_elec',
-            'chw': 'sustain.pi_chw'
+            'stm': 'pi_stm',
+            'elec': 'pi_elec',
+            'chw': 'pi_chw'
         }
-        query_base = sql.SQL('SELECT * from sustain.{}')
+        query_base = sql.SQL('SELECT * from sustain.{} LIMIT 1000')
 
         for table in tables:
             values_by_building = {}
@@ -56,14 +55,17 @@ class MonthlyEnergyDataController(Resource):
                 if i < 3:
                     continue
                 building = CampusEnergyData.name_translations(building)
+                print(building)
                 if building not in values_by_building:
                     values_by_building[building] = [0 for i in range(12)]
 
             monthly_data = cursor.fetchall()
             for row in monthly_data:
                 for j, value in enumerate(row):
-                    if j < 3:
-                        if j == 1:
+                    if value == None:
+                        value = 0
+                    if j < 4:
+                        if j == 2:
                             month_index = int(value) - 1
                         continue
                     building_number = CampusEnergyData.name_translations(headers[j])

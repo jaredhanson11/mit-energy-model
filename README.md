@@ -18,6 +18,13 @@ Not sure how integration between server and client works yet.
 
 Use `npx webpack` under client to generate bundle, which should setup index.html to be used as the entry point to the website. `npx webpack --watch` compiles changed code on the spot, and is good for development.
 
+### Server
+
+The server can be run using gunicorn on Linux distributions, as well as waitress on Windows. Under waitress, start the server with the following commands:
+
+    cd server
+    waitress-serve --port=8000 server:app
+
 ### Database
 
 See `db-connect.bat` for an executable/credentials for connecting. The password is `I78ZQ10`.

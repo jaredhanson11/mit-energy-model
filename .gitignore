@@ -8,3 +8,4 @@ venv
 *HobolinkParser/*
 *RadiationSplit/gen_reindl_files*
 *.db
+nginx-1.15.5
