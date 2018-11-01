@@ -101,9 +101,9 @@ See `db-connect.bat` for an executable/credentials for connecting. The password 
 
 `\dt` doesn't show all the tables. The relevant tables are:
 
-* `sustain.pi_stm`
-* `sustain.pi_elec`
-* `sustain.pi_chw`
+* `sustain.cdr_stm`
+* `sustain.cdr_elec`
+* `sustain.cdr_chw`
 
 ## Remote Setup
 
