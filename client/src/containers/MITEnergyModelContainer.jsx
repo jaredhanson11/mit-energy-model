@@ -113,7 +113,8 @@ class MITEnergyModelContainer extends React.Component {
                             padding={'0px'} 
                             style={{
                                 paddingTop: 0,
-                                backgroundColor: 'white'
+                                backgroundColor: 'white',
+                                borderBottom: '1px solid'
                             }}>
                             <BuildingFilter>
 
@@ -180,8 +181,7 @@ class MITEnergyModelContainer extends React.Component {
                             height={'calc(70%)'} 
                             padding={'20px'}
                             style={{
-                                backgroundColor: 'white',
-                                borderBottom: '1px solid'
+                                backgroundColor: 'white'
                             }}>
                             <GraphSection
                                 filterState={this.props.filterState}

@@ -57,6 +57,10 @@ var IconImg = styled.img`
     margin: auto;
     margin-top: 0;
     margin-bottom: 0;
+
+	&:hover{
+		transform: scale(1.1);
+	}
 `;
 
 var IconCaption = styled.div`

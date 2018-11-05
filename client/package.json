@@ -36,6 +36,7 @@
     "radium": "^0.25.0",
     "react": "^16.5.2",
     "react-bootstrap": "^0.31.5",
+    "react-bootstrap-treeview": "^0.1.0",
     "react-chartjs-2": "^2.7.0",
     "react-dom": "^16.5.2",
     "react-dropdown": "^1.3.2",
@@ -48,6 +49,7 @@
     "recharts": "^1.0.0-beta.1",
     "redux": "^3.7.2",
     "redux-api-middleware": "^2.0.0-beta.4",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "treeview-react-bootstrap": "^0.4.6"
   }
 }
