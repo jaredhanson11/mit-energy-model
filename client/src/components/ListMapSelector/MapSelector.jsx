@@ -8,14 +8,13 @@ import { connect } from 'react-redux';
 
 import _style from '../../styles/MITMapStyle.js';
 import MITMapDataProcessor from '../../utils/dataProcessing/MITMapDataProcessor.jsx';
-import MapGradientLegend from '../BuildingFilter/MapGradientLegend.jsx';
+import MapGradientLegend from '../GraphSection/MapGradientLegend.jsx';
 import OverviewDataProcessor from '../../utils/dataProcessing/OverviewDataProcessor.jsx';
 
 import chroma from 'chroma-js';
 import DefaultBuildingStyle from '../../styles/DefaultBuildingStyle.jsx';
 
 class MITMap extends React.Component {
-
     constructor(props) {
         super(props);
         this.featureStyle = this.featureStyle.bind(this);
@@ -28,15 +27,16 @@ class MITMap extends React.Component {
         var that = this;
         function _onEachFeature(feature, layer) {
             layer.bindPopup('<h3>Building ' + feature.properties.building_number.toUpperCase() + '</h3>');
-            layer.on('click', function(e) {
+            layer.on('click', function (e) {
                 if (feature.properties && feature.properties.building_number) {
+                    //here when building is clicked
                     const building_number = feature.properties.building_number;
                     that.props.selectBuilding(building_number);
                     this.closePopup();
                 }
             });
-            layer.on('mouseover', function() {this.openPopup()})
-            layer.on('mouseout', function() {this.closePopup()})
+            layer.on('mouseover', function () { this.openPopup() })
+            layer.on('mouseout', function () { this.closePopup() })
         }
         return _onEachFeature;
     }
@@ -46,7 +46,7 @@ class MITMap extends React.Component {
     }
 
     interpolate(min, max, val) {
-        return (val-min)/ (max-min)
+        return (val - min) / (max - min)
     }
 
     getBuildingStyle(campus_min, campus_max, buildingEnergyData, selected) {
@@ -82,12 +82,14 @@ class MITMap extends React.Component {
     }
 
     render() {
-        var dataProcessor = new OverviewDataProcessor(this.props.buildingData, this.props.filterState);
-
         this.dataProcessing = new MITMapDataProcessor(this.props.buildingMapData, this.props.filterState);
+
+        var dataProcessor = new OverviewDataProcessor(this.props.buildingMapData, this.props.filterState);
+
         const mapStyle = Object.assign({}, _style.map, {
             width: this.props.width
         });
+        
         return (
             <Map style={mapStyle}
                 minZoom={_style.zoomSettings.minZoom}
@@ -121,7 +123,7 @@ const mapStateToProps = (state) => {
         filterState: state.filterState,
         buildingMapApi: state.buildingMapApi,
         buildingMapData: state.buildingMapData,
-        geojsonData : state.geojsonData
+        geojsonData: state.geojsonData
     }
 }
 

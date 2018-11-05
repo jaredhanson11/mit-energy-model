@@ -12,7 +12,7 @@ var MITEnergyModelState = {
         selectedUnitsNormalized: 'per_year',
         selectedDataSource: 'metered',
         selectedUpgradesCompleted: ['water', 'windows', 'cooling'],
-        selectedYear: '2020',
+        selectedYear: '2018',
         selectedGraphToggle: 'overview'
     },
 

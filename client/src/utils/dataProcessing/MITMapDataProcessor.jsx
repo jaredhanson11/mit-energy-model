@@ -137,12 +137,12 @@ export default class MITMapDataProcessor extends DefaultDataProcessor{
         var that = this;
         var values = Object.values(that.data).map(function(x) {
             if (that.filterState.selectedUnitsNormalized == 'per_m2_per_year') {
-                return parseInt(x.energy / x.metadata.area_m2)
+                return parseInt(x.energy / x.metadata.area_m2);
             }
-            return x.energy
+            return x.energy;
         });
         if (values.length > 0){
-            return parseInt(Math.max(...values));
+            return Math.max(...values);
         } else {
             return 1;
         }
@@ -159,12 +159,12 @@ export default class MITMapDataProcessor extends DefaultDataProcessor{
         var that = this;
         var values = Object.values(that.data).map(function(x) {
             if (that.filterState.selectedUnitsNormalized == 'per_m2_per_year') {
-                return parseInt(x.energy / x.metadata.area_m2)
+                return parseInt(x.energy / x.metadata.area_m2);
             }
-            return x.energy
+            return x.energy;
         });
         if (values.length > 0) {
-            return parseInt(Math.min(...values));
+            return Math.min(...values);
         } else {
             return 0;
         }

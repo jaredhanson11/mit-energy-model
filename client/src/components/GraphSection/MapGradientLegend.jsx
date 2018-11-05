@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { TitleContainer } from './SelectFilter.jsx';
-
 var Container = styled.div`
     display: flex;
     flex-direction: column;
@@ -43,7 +41,7 @@ var ScaleDiv = styled.div`
 var SelectedBuilding = styled.div`
     border-right: 3px dashed black
     height: calc(100% + 8px);
-    width: ${(props)=> 100 * (props.selected-props.min)/(props.max-props.min)}%;
+    width: ${(props) => 100 * (props.selected - props.min) / (props.max - props.min)}%;
     position: relative;
 `;
 
@@ -65,7 +63,7 @@ class Scale extends React.Component {
         return (
             <ScaleDiv>
                 <div>{this.props.min}</div>
-                <div dangerouslySetInnerHTML={{__html: this.props.units}}></div>
+                <div dangerouslySetInnerHTML={{ __html: this.props.units }}></div>
                 <div>{this.props.max}</div>
             </ScaleDiv>
         );
@@ -80,7 +78,7 @@ export default class MapGradientLegend extends React.Component {
     render() {
         var max_min = gradient_colors;
         var minColor = max_min[0];
-        var maxColor =  max_min[1];
+        var maxColor = max_min[1];
         var campusMin = this.props.dataProcessor.printCampusMin();
         var campusMax = this.props.dataProcessor.printCampusMax();
         var unitsHTML = this.props.dataProcessor.printEnergyUnitsHTML();
@@ -89,10 +87,10 @@ export default class MapGradientLegend extends React.Component {
             var buildingEnergy = this.props.dataProcessor.getBuildingEnergyUsage(this.props.selectedBuilding);
             var min = this.props.dataProcessor.getCampusMin();
             var max = this.props.dataProcessor.getCampusMax();
-            if (!this.props.dataProcessor.unitsNormalized() && !this.props.dataProcessor.filterState.selectedDataSource=='warning') {
+            if (!this.props.dataProcessor.unitsNormalized() && !this.props.dataProcessor.filterState.selectedDataSource == 'warning') {
                 buildingEnergy = parseInt(buildingEnergy / 1000);
                 min = parseInt(min / 1000);
-                max = parseInt(max/ 1000);
+                max = parseInt(max / 1000);
             }
             selectedBuilding = (
                 <SelectedBuilding max={max} min={min} selected={buildingEnergy}>
@@ -100,12 +98,11 @@ export default class MapGradientLegend extends React.Component {
                 </SelectedBuilding>
             );
         }
-        return(
+        return (
             <Container>
                 <Gradient max={maxColor} min={minColor}>
-                    {selectedBuilding}
                 </Gradient>
-                <Scale min={campusMin} max={campusMax} units={unitsHTML}/>
+                <Scale min={campusMin} max={campusMax} units={unitsHTML} />
             </Container>
         );
     }
