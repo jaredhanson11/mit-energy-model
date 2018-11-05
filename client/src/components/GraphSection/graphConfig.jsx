@@ -21,8 +21,6 @@ var getYAxisTitle = function(dataProcessor) {
         var units = dataProcessor.getEnergyUnitsHTML();
         units = units.replace('&#178;', '\u00B2');
         units = units.replace('&#8322;', '\u2082');
-        console.log(units);
-        console.log(units.indexOf('&#178;'));
         return units;
     } else {
         var units = dataProcessor.getEnergyUnitsHTML().replace('kWh', 'MWh');

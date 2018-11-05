@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Bar } from 'react-chartjs-2';
 import actionCreators from '../../actions/actionCreators.jsx';
@@ -6,7 +7,6 @@ import actionCreators from '../../actions/actionCreators.jsx';
 import { mainGraphOptions } from './graphConfig.jsx';
 import MITGraphDataProcessor from '../../utils/dataProcessing/MITGraphDataProcessor.jsx';
 import { ToggleFilter } from '../BuildingFilter/ToggleFilter.jsx';
-
 
 var GraphSectionContainer = styled.div`
     height: 100%;
@@ -71,13 +71,13 @@ class Graph extends React.Component {
     render() {
         var graph = this.props.graph;
 
-        return(
-                <GraphContainer>
-                    <Bar
-                        data={graph.data}
-                        options={graph.options}
-                    />
-                </GraphContainer>
+        return (
+            <GraphContainer>
+                <Bar
+                    data={graph.data}
+                    options={graph.options}
+                />
+            </GraphContainer>
         );
     }
 }
@@ -95,7 +95,7 @@ class GraphSection extends React.Component {
             return graphOptions.createLineDataset(sim.label.toUpperCase(), sim.data);
         })
         var datasets = [];
-        simulatedDatasets.map(function(obj){ datasets.push(obj) })
+        simulatedDatasets.map(function (obj) { datasets.push(obj) })
         var data = {
             datasets: datasets
         }
@@ -115,28 +115,30 @@ class GraphSection extends React.Component {
 
     render() {
         this.dataProcessor = new MITGraphDataProcessor(this.props.buildingData, this.props.filterState);
+
         var graph = this.getGraph();
         var noToggle = (this.props.filterState.selectedBuilding == "");
-        return(
+
+        return (
             <GraphSectionContainer>
                 <GraphSectionHeader>
                     <GraphOptions>
                         <ToggleFilter
-                            noToggle={noToggle}
                             filterKey={'unitsType'}
                             filterState={this.props.filterState}
-                            changeFilter={this.toggleFilter} />
+                            changeFilter={this.props.changeFilter}
+                        />
                         <ToggleFilter
-                            noToggle={noToggle}
                             filterKey={'unitsNormalized'}
                             filterState={this.props.filterState}
-                            changeFilter={this.toggleFilter} />
+                            changeFilter={this.props.changeFilter}
+                        />
                     </GraphOptions>
                     <Title>
                         <div
                             style={{
                                 margin: 'auto'
-                        }}>
+                            }}>
                             {/* {graph.title} */}
                             Energy Usage
                         </div>
@@ -151,4 +153,27 @@ class GraphSection extends React.Component {
     }
 }
 
-export default GraphSection;
+const mapStateToProps = (state) => {
+    return {
+        filterState: state.filterState,
+        buildingData: state.buildingMapData
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+
+    const functionMap = {
+        unitsNormalized: actionCreators.selectUnitsNormalizedType,
+        resourceType: actionCreators.selectResourceType,
+        unitsType: actionCreators.selectUnits,
+        buildingType: actionCreators.selectBuildingType,
+        dataSource: actionCreators.selectDataSource,
+        upgradesCompleted: actionCreators.selectUpgradesCompleted,
+    };
+    return {
+        changeFilter: (filterTypeKey, filterKey) => dispatch(functionMap[filterTypeKey](filterKey)),
+        changeYear: (value) => dispatch(actionCreators.selectTimelineYear(value))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(GraphSection);

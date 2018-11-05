@@ -34,7 +34,6 @@ export default class MITGraphDataProcessor extends DefaultDataProcessor {
                 })
             }
             return that.data.measured[that.filterState.selectedYear][resourceType];
-
         } else {
             return [null, null, null, null, null, null, null, null, null, null, null, null];
         }

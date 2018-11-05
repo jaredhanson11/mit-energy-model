@@ -3,12 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { actionCreators } from '../../actions';
 
-import OverviewDataProcessor from '../../utils/dataProcessing/OverviewDataProcessor.jsx';
-
 import SelectFilter from './SelectFilter.jsx';
-import ToggleFilter from './ToggleFilter.jsx';
-import MapGradientLegend from './MapGradientLegend.jsx';
-import MapTimelineFilter from './MapTimelineFilter.jsx';
 
 let FilterContainer = styled.div`
     width: 100%;
@@ -40,7 +35,6 @@ class BuildingFilter extends React.Component {
     }
 
     render() {
-        var dataProcessor = new OverviewDataProcessor(this.props.buildingData, this.props.filterState);
         return (
             <FilterContainer>
                 <FilterColumn 

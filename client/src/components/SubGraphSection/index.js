@@ -17,14 +17,22 @@ var SubGraphDiv = styled.div`
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 30%;
+    width: 32%;
+
+    border: 1px solid;
+    padding: 10px;
 `;
 
-var SubGraphTitle = styled.div``;
+var SubGraphTitle = styled.div`
+    font-size: 1.5em;
+    text-align: center;
+    margin: auto;
+`;
 
 var SubGraphContainer = styled.div`
-    height: 92%;
+    height: 100%;
     width: 100%;
+    margin: auto;
 `;
 
 class SubGraph extends React.Component {

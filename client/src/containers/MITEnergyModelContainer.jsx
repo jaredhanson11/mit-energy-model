@@ -167,7 +167,7 @@ class MITEnergyModelContainer extends React.Component {
                         }}>
                         <MainColumnSection 
                             height={'calc(30%)'} 
-                            padding={'20px'}
+                            padding={'10px'}
                             style={{
                                 backgroundColor: 'white',
                                 borderBottom: '1px solid'
