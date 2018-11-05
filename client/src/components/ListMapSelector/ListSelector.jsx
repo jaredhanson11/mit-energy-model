@@ -1,15 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
 import CheckboxTree from 'react-checkbox-tree';
+import buildingData from './building-data';
 
-const nodes = [{
-    value: 'mars',
-    label: 'Mars',
-    children: [
-        { value: 'phobos', label: 'Phobos' },
-        { value: 'deimos', label: 'Deimos' },
-    ],
-}];
+const nodes = [];
+for (let a = 0; a < buildingData.length; a++) {
+    nodes.push({
+        value: buildingData[a],
+        label: buildingData[a],
+        children: []
+    });
+}
+
+const CheckboxTreeStyled = styled(CheckboxTree)`
+`;
 
 class _ListSelector extends React.Component {
     constructor() {
@@ -27,9 +31,11 @@ class _ListSelector extends React.Component {
                 style={{
                     backgroundColor: 'white',
                     width: '100%',
-                    height: '100%'
+                    height: '100%',
+                    paddingTop: '5px',
+                    overflowY: 'auto'
                 }}>
-                <CheckboxTree
+                <CheckboxTreeStyled
                     nodes={nodes}
                     checked={this.state.checked}
                     expanded={this.state.expanded}
