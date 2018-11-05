@@ -44,6 +44,14 @@ class _ListSelector extends React.Component {
 
     onCheck(checked) {
         this.setState({ checked });
+
+        //update global state
+        //todo multiselect
+        if (checked != null) {
+            this.props.dataProcessor.filterState.selectedBuilding = checked[0];
+        }
+        console.log(checked);
+        console.log(this.props.dataProcessor.filterState.selectedBuilding);
     }
 
     render() {
