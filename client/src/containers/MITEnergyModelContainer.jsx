@@ -9,7 +9,6 @@ import BuildingFilter from '../components/BuildingFilter';
 import TitleBarContainer from '../components/TitleBar.jsx';
 import GraphSection from '../components/GraphSection';
 import SubGraphSection from '../components/SubGraphSection';
-import OverviewSection from '../components/OverviewSection';
 import ListMapSelector from '../components/ListMapSelector/ListMapSelector.jsx';
 import UpgradesSelector from '../components/UpgradesSelector.jsx';
 import BudgetGraph from '../components/BudgetGraph.jsx';
@@ -125,7 +124,10 @@ class MITEnergyModelContainer extends React.Component {
                             style={{
                                 backgroundColor: 'green'
                             }}>
-                            <ListMapSelector>
+                            <ListMapSelector
+                                filterState={this.props.filterState}
+                                buildingMapData={this.props.buildingMapData}
+                            >
 
                             </ListMapSelector>
                         </MainColumnSection>

@@ -5,6 +5,8 @@ import { Button, ButtonGroup } from 'reactstrap';
 import MapSelector from './MapSelector.jsx';
 import ListSelector from './ListSelector.jsx';
 
+import OverviewDataProcessor from '../../utils/dataProcessing/OverviewDataProcessor.jsx';
+
 const ListMapSelector = styled.div`
     width: 100%;
 	height: 100%;
@@ -52,7 +54,7 @@ class _ListMapSelector extends React.Component {
 
 		this.onMenuBtnClick = this.onMenuBtnClick.bind(this);
 		this.state = { };
-		this.state.selectedText = "MAP";
+        this.state.selectedText = "MAP";
     }
 
     onMenuBtnClick(selectedText) {
@@ -89,15 +91,20 @@ class _ListMapSelector extends React.Component {
 	getSelectorInner() {
 		if (this.state.selectedText === "MAP") {
 			return (<MapSelector
-				width={'100%'}>
+                width={'100%'}
+                dataProcessor={this.dataProcessing}
+			>
 			</MapSelector>);
 		} else if (this.state.selectedText === "LIST") {
-			return (<ListSelector>
+			return (<ListSelector
+                dataProcessor={this.dataProcessing}
+            >
 			</ListSelector>);
 		}
 	}
 
     render() {
+        this.dataProcessing = new OverviewDataProcessor(this.props.buildingMapData, this.props.filterState);
         return (
 			<ListMapSelector>
 				<ModeSelectorContainer>
@@ -105,7 +112,7 @@ class _ListMapSelector extends React.Component {
 					{this.getButton("LIST", '-1px')}
 				</ModeSelectorContainer>
 				<SelectorContainer>
-					{this.getSelectorInner()}					
+					{this.getSelectorInner()}
 				</SelectorContainer>
 			</ListMapSelector>
         );

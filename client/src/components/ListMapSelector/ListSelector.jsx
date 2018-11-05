@@ -4,11 +4,28 @@ import CheckboxTree from 'react-checkbox-tree';
 import buildingData from './building-data';
 
 const nodes = [];
-for (let a = 0; a < buildingData.length; a++) {
+const umbrellas = [['Main Campus', ''],
+['North', 'N'],
+['East', 'E'],
+['North-west', 'NW'],
+['West', 'W'],
+];
+for (let a = 0; a < umbrellas.length; a++) {
+    let children = [];
+    for (let b = 0; b < buildingData.length; b++) {
+        if ((buildingData[b].lastIndexOf(umbrellas[a][1], 0) === 0 && buildingData[b][umbrellas[a][1].length] <= '9' && umbrellas[a][0] != 'Main Campus') || 
+            (umbrellas[a][0] == 'Main Campus' && buildingData[b][0] <= '9')) {
+            children.push({
+                value: buildingData[b],
+                label: buildingData[b],
+                children: []
+            });
+        }
+    }
     nodes.push({
-        value: buildingData[a],
-        label: buildingData[a],
-        children: []
+        value: umbrellas[a][0],
+        label: umbrellas[a][0],
+        children: children
     });
 }
 
@@ -23,6 +40,10 @@ class _ListSelector extends React.Component {
             checked: [],
             expanded: [],
         };
+    }
+
+    onCheck(checked) {
+        this.setState({ checked });
     }
 
     render() {
@@ -40,7 +61,7 @@ class _ListSelector extends React.Component {
                     checked={this.state.checked}
                     expanded={this.state.expanded}
                     showNodeIcon={false}
-                    onCheck={checked => this.setState({ checked })}
+                    onCheck={checked => this.onCheck(checked)}
                     onExpand={expanded => this.setState({ expanded })}
                 />
             </div>
