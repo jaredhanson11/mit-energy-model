@@ -127,8 +127,6 @@ export function getToggleFilterConfig(filterKey) {
     }
 }
 
-
-
 var _default = {
     API_CONFIG
 };

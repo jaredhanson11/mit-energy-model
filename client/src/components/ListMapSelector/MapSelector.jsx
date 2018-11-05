@@ -2,17 +2,17 @@ import React from 'react';
 import { Map, TileLayer, GeoJSON, Marker, Popup, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 const GJV = require("geojson-validation");
-import { actionCreators } from '../actions';
+import { actionCreators } from '../../actions';
 
 import { connect } from 'react-redux';
 
-import _style from '../styles/MITMapStyle.js';
-import MITMapDataProcessor from '../utils/dataProcessing/MITMapDataProcessor.jsx';
-import MapGradientLegend from './BuildingFilter/MapGradientLegend.jsx';
-import OverviewDataProcessor from '../utils/dataProcessing/OverviewDataProcessor.jsx';
+import _style from '../../styles/MITMapStyle.js';
+import MITMapDataProcessor from '../../utils/dataProcessing/MITMapDataProcessor.jsx';
+import MapGradientLegend from '../BuildingFilter/MapGradientLegend.jsx';
+import OverviewDataProcessor from '../../utils/dataProcessing/OverviewDataProcessor.jsx';
 
 import chroma from 'chroma-js';
-import DefaultBuildingStyle from '../styles/DefaultBuildingStyle.jsx';
+import DefaultBuildingStyle from '../../styles/DefaultBuildingStyle.jsx';
 
 class MITMap extends React.Component {
 

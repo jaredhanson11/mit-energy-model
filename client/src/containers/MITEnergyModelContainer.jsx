@@ -10,7 +10,7 @@ import TitleBarContainer from '../components/TitleBar.jsx';
 import GraphSection from '../components/GraphSection';
 import SubGraphSection from '../components/SubGraphSection';
 import OverviewSection from '../components/OverviewSection';
-import ListMapSelector from '../components/ListMapSelector.jsx';
+import ListMapSelector from '../components/ListMapSelector/ListMapSelector.jsx';
 import UpgradesSelector from '../components/UpgradesSelector.jsx';
 import BudgetGraph from '../components/BudgetGraph.jsx';
 

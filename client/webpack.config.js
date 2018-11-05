@@ -24,8 +24,5 @@ module.exports = {
     },
     devServer: {
         contentBase: path.resolve(__dirname, 'main')
-    },
-    externals: {
-        'react': 'React'
     }
 };

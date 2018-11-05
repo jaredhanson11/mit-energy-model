@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { Button, ButtonGroup } from 'reactstrap';
 
-import MapSelector from '../components/MapSelector.jsx';
-import ListSelector from '../components/ListSelector.jsx';
+import MapSelector from './MapSelector.jsx';
+import ListSelector from './ListSelector.jsx';
 
 const ListMapSelector = styled.div`
     width: 100%;
