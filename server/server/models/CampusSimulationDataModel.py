@@ -1,7 +1,7 @@
 import os
 import peewee
 
-db = peewee.MySQLDatabase('campus_energy_model', user='sdl', password='SDL@2017', host='52.11.126.32', port=3306)
+db = peewee.MySQLDatabase('campus_energy_model', user='root', password='SDL@2017', host='52.11.126.32', port=3306)
 
 def connect_db():
     db.connect()
