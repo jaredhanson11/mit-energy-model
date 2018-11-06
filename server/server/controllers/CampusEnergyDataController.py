@@ -41,8 +41,7 @@ class MonthlyEnergyDataController(Resource):
 
         print(datetime.datetime.now(), 'get meu')
 
-        # pg-prod-dsg-vpc.c1nco6fiolky.us-east-1.rds.amazonaws.com
-        db = psycopg2.connect('host=52.86.127.46 user=sustdesignlab password=I78ZQ10 dbname=dsg_prod')
+        db = psycopg2.connect('host=pg-prod-dsg-vpc.c1nco6fiolky.us-east-1.rds.amazonaws.com user=sustdesignlab password=I78ZQ10 dbname=dsg_prod')
         cursor = db.cursor()
         tables = {
             'stm': 'cdr_stm',
