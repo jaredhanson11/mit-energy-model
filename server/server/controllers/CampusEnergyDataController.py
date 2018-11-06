@@ -9,6 +9,8 @@ from .. import app, CampusEnergyData
 from ..utils import responses
 from ..models.CampusSimulationDataModel import CampusSimulationDataModel
 
+import datetime
+
 class CampusEnergyDataController(Resource):
     def get(self):
         # Implement the hourly data retrieval methods here.
@@ -37,9 +39,10 @@ class MonthlyEnergyDataController(Resource):
     def _get_monthly_energy(self):
         meu_by_building = {}
 
-        print('get meu')
+        print(datetime.datetime.now(), 'get meu')
 
-        db = psycopg2.connect('host=pg-prod-dsg-vpc.c1nco6fiolky.us-east-1.rds.amazonaws.com user=sustdesignlab password=I78ZQ10 dbname=dsg_prod')
+        # pg-prod-dsg-vpc.c1nco6fiolky.us-east-1.rds.amazonaws.com
+        db = psycopg2.connect('host=52.86.127.46 user=sustdesignlab password=I78ZQ10 dbname=dsg_prod')
         cursor = db.cursor()
         tables = {
             'stm': 'cdr_stm',
